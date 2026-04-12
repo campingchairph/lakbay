@@ -2,627 +2,922 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>Lakbay PH</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 /* ============================================================
-   LAKBAY PH — DESIGN TOKENS
-   ============================================================ */
-:root {
-  --red:     #C0392B; --red-d: #922B21; --red-l: #FDEAEA;
-  --gold:    #F4A800; --gold-d: #B8860B; --gold-l: #FEF3D0;
-  --blue:    #1A4FA0; --blue-d: #0D2E6B; --blue-l: #E6EFFC;
-  --green:   #2D6A4F; --green-d: #1B4332; --green-l: #E8F5EE;
-  --coral:   #E8512A;
-  --ivory:   #FDF6E3; --cream:  #FAF0D7;
-  --earth:   #1C1008; --earth-m: #3D2B1F; --earth-l: #7A5C4A;
-  --white:   #FFFFFF;
-  --ff-display: 'Bebas Neue', sans-serif;
-  --ff-head:    'Playfair Display', serif;
-  --ff-body:    'DM Sans', sans-serif;
-  --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px; --r-pill: 999px;
-  --shadow: 0 2px 12px rgba(28,16,8,.1);
+   DESIGN TOKENS
+============================================================ */
+:root{
+  --red:#C0392B;--red-d:#922B21;--red-l:#FDEAEA;
+  --gold:#F4A800;--gold-d:#B8860B;--gold-l:#FEF3D0;
+  --blue:#1A4FA0;--blue-d:#0D2E6B;--blue-l:#E6EFFC;
+  --green:#2D6A4F;--green-d:#1B4332;--green-l:#E8F5EE;
+  --coral:#E8512A;
+  --ivory:#FDF6E3;--cream:#FAF0D7;
+  --earth:#1C1008;--earth-m:#3D2B1F;--earth-l:#7A5C4A;
+  --white:#FFFFFF;
+  --glass-bg:rgba(255,255,255,0.12);
+  --glass-border:rgba(255,255,255,0.22);
+  --glass-blur:blur(18px) saturate(1.6);
+  --ff-d:'Bebas Neue',sans-serif;
+  --ff-h:'Playfair Display',serif;
+  --ff-b:'DM Sans',sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;--r-xl:24px;--r-pill:999px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;font-family:var(--ff-body);background:var(--ivory);color:var(--earth);}
+html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14;color:var(--earth);}
 
 /* ============================================================
    SCREENS
-   ============================================================ */
+============================================================ */
 .screen{display:none;position:fixed;inset:0;flex-direction:column;overflow:hidden;}
 .screen.active{display:flex;}
 
 /* ============================================================
-   SPLASH / HOME
-   ============================================================ */
-#s-home{background:var(--blue-d);overflow-y:auto;}
-.home-hero{
+   HOME SCREEN
+============================================================ */
+#s-home{background:#0a1628;overflow-y:auto;overflow-x:hidden;}
+
+/* Auto-sliding hero background */
+.hero-bg{
+  position:fixed;top:0;left:0;right:0;height:100vh;
+  z-index:0;overflow:hidden;
+}
+.hero-slides{
+  display:flex;height:100%;
+  transition:transform 1s cubic-bezier(.77,0,.18,1);
+}
+.hero-slide{
+  min-width:100%;height:100%;background-size:cover;background-position:center;
+  position:relative;flex-shrink:0;
+}
+.hero-slide::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(10,22,40,.55) 0%,rgba(10,22,40,.3) 40%,rgba(10,22,40,.85) 80%,rgba(10,22,40,.97) 100%);
+}
+
+/* Slide dots */
+.hero-dots{
+  position:fixed;bottom:44%;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;z-index:10;
+}
+.hero-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,.35);transition:all .3s;
+}
+.hero-dot.active{background:var(--gold);width:20px;border-radius:3px;}
+
+/* Home content */
+.home-content{
+  position:relative;z-index:5;
   min-height:100vh;display:flex;flex-direction:column;
-  background:linear-gradient(160deg,#0a1e4a 0%,#1a4fa0 55%,#0d2e6b 100%);
-  padding:52px 28px 40px;position:relative;overflow:hidden;
+  padding:0 0 28px;
 }
-.home-sun{
-  position:absolute;top:-60px;right:-60px;width:260px;height:260px;
-  border-radius:50%;background:radial-gradient(circle,rgba(244,168,0,.15) 0%,transparent 70%);
-  pointer-events:none;
+
+/* Top bar */
+.home-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:52px 22px 0;
 }
-.home-sun::before{
-  content:'';position:absolute;inset:30px;border-radius:50%;
-  background:rgba(244,168,0,.08);
-  box-shadow:0 0 0 20px rgba(244,168,0,.04),0 0 0 40px rgba(244,168,0,.02);
+.home-greeting{
+  font-size:13px;color:rgba(255,255,255,.7);font-weight:400;
 }
-.home-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(244,168,0,.15);border:1px solid rgba(244,168,0,.3);
-  color:var(--gold);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  padding:6px 14px;border-radius:var(--r-pill);width:fit-content;margin-bottom:20px;
+.home-greeting strong{color:var(--gold);font-weight:600;}
+.auth-row{display:flex;gap:7px;align-items:center;}
+.auth-btn{
+  padding:7px 14px;border-radius:var(--r-pill);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:var(--ff-b);letter-spacing:.02em;
+  border:1px solid var(--glass-border);background:var(--glass-bg);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  color:rgba(255,255,255,.85);
+}
+.auth-btn:hover{background:rgba(255,255,255,.2);}
+.auth-btn.primary{background:var(--gold);color:var(--earth);border-color:var(--gold);}
+.auth-btn.primary:hover{background:#e09a00;}
+.auth-btn.logout{background:rgba(192,57,43,.25);border-color:rgba(192,57,43,.4);color:#f08b80;}
+
+/* App title */
+.home-title-wrap{padding:20px 22px 0;text-align:left;}
+.home-eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;
 }
 .home-title{
-  font-family:var(--ff-display);font-size:clamp(80px,22vw,120px);
-  letter-spacing:.03em;line-height:.88;color:var(--white);margin-bottom:6px;
+  font-family:var(--ff-d);font-size:clamp(72px,19vw,108px);
+  letter-spacing:.04em;line-height:.88;color:var(--white);
 }
 .home-title span{color:var(--gold);}
-.home-tagline{font-family:var(--ff-head);font-style:italic;font-size:17px;color:rgba(174,198,240,.8);margin-bottom:36px;}
-.dest-chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -28px;padding:0 28px 4px;}
-.dest-chips::-webkit-scrollbar{display:none;}
-.dest-chip{
-  flex-shrink:0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
-  color:rgba(255,255,255,.8);font-size:12px;font-weight:500;padding:7px 14px;
-  border-radius:var(--r-pill);cursor:pointer;transition:all .2s;white-space:nowrap;
+.home-subtitle{
+  font-family:var(--ff-h);font-style:italic;
+  font-size:16px;color:rgba(174,198,240,.75);
+  margin-top:6px;
 }
-.dest-chip:hover,.dest-chip.active{background:var(--gold);border-color:var(--gold);color:var(--earth);}
-.home-actions{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:32px;}
-.btn-primary{
-  background:var(--gold);color:var(--earth);border:none;
-  font-family:var(--ff-body);font-size:15px;font-weight:600;
-  padding:16px;border-radius:var(--r-md);cursor:pointer;transition:all .15s;text-align:center;
+
+/* Hotel cards */
+.hotel-section{padding:28px 22px 0;}
+.section-label{
+  font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);margin-bottom:12px;
 }
-.btn-primary:active{transform:scale(.97);}
-.btn-ghost{
-  background:transparent;color:rgba(255,255,255,.65);
-  border:1px solid rgba(255,255,255,.2);font-family:var(--ff-body);
-  font-size:14px;padding:14px;border-radius:var(--r-md);cursor:pointer;
-  transition:all .2s;text-align:center;
+.hotel-scroll{
+  display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;
+  margin:0 -22px;padding:0 22px 6px;
 }
-.btn-ghost:hover{color:var(--white);border-color:rgba(255,255,255,.4);}
+.hotel-scroll::-webkit-scrollbar{display:none;}
+
+/* Destination skyline cards — inspired by the reference image */
+.dest-skyline-card{
+  flex-shrink:0;width:200px;height:130px;border-radius:var(--r-lg);
+  overflow:hidden;cursor:pointer;transition:transform .2s;
+  position:relative;
+}
+.dest-skyline-card:active{transform:scale(.96);}
+.dsc-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center bottom;
+}
+.dsc-overlay{
+  position:absolute;inset:0;
+}
+/* Skyline silhouette SVG layer */
+.dsc-skyline{
+  position:absolute;bottom:0;left:0;right:0;
+  height:60%;opacity:.35;
+}
+.dsc-content{
+  position:absolute;inset:0;padding:12px 14px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.dsc-trip-to{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);}
+.dsc-name{font-family:var(--ff-d);font-size:28px;letter-spacing:.04em;color:var(--white);line-height:1;}
+.dsc-bottom{display:flex;justify-content:space-between;align-items:flex-end;}
+.dsc-days{font-size:10px;color:rgba(255,255,255,.6);}
+.dsc-price{font-size:13px;font-weight:700;color:var(--gold);}
+.dsc-klook-badge{
+  position:absolute;top:8px;right:8px;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.9);font-size:8px;font-weight:700;
+  padding:2px 7px;border-radius:var(--r-pill);letter-spacing:.04em;
+}
+
+/* CTA */
+.home-cta{padding:24px 22px 0;}
+.btn-plan{
+  width:100%;padding:17px;background:var(--gold);color:var(--earth);
+  border:none;border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;
+  letter-spacing:.01em;
+}
+.btn-plan:hover{background:#e09a00;box-shadow:0 6px 24px rgba(244,168,0,.4);}
+.btn-plan:active{transform:scale(.97);}
+.btn-view-sample{
+  width:100%;margin-top:10px;padding:14px;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:14px;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s;
+}
+.btn-view-sample:hover{color:var(--white);background:rgba(255,255,255,.18);}
+
+/* Destination auto-slide strip at bottom */
+.dest-strip{
+  margin-top:24px;overflow:hidden;position:relative;
+  height:90px;
+}
+.dest-strip-track{
+  display:flex;gap:10px;
+  animation:stripScroll 30s linear infinite;
+  width:max-content;
+}
+.dest-strip-track:hover{animation-play-state:paused;}
+@keyframes stripScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.dest-strip-card{
+  flex-shrink:0;width:140px;height:90px;border-radius:var(--r-md);
+  overflow:hidden;position:relative;cursor:pointer;
+}
+.dest-strip-card img{width:100%;height:100%;object-fit:cover;}
+.dest-strip-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(10,22,40,.8) 0%,transparent 60%);
+}
+.dest-strip-label{
+  position:absolute;bottom:7px;left:9px;
+  font-family:var(--ff-d);font-size:16px;letter-spacing:.04em;
+  color:var(--white);line-height:1;
+}
 
 /* ============================================================
-   JOIN SCREEN (guest name entry)
-   ============================================================ */
-#s-join{background:var(--ivory);align-items:center;justify-content:center;padding:32px 24px;}
-.join-card{
-  background:var(--white);border-radius:var(--r-xl);padding:32px 24px;
-  width:100%;max-width:380px;box-shadow:var(--shadow);
-  border:1px solid rgba(28,16,8,.06);
+   AUTH MODALS (glassmorphism)
+============================================================ */
+.auth-overlay{
+  display:none;position:fixed;inset:0;z-index:200;
+  background:rgba(5,12,30,.7);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:24px;
 }
-.join-trip-badge{
-  display:inline-block;background:var(--blue-l);color:var(--blue);
-  font-size:11px;font-weight:600;padding:4px 12px;border-radius:var(--r-pill);
-  margin-bottom:16px;letter-spacing:.04em;
+.auth-overlay.open{display:flex;}
+.auth-modal{
+  width:100%;max-width:360px;
+  background:rgba(15,28,60,.85);
+  backdrop-filter:blur(28px) saturate(1.8);
+  -webkit-backdrop-filter:blur(28px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:var(--r-xl);padding:28px 24px;
 }
-.join-title{font-family:var(--ff-head);font-size:24px;font-weight:700;color:var(--earth);margin-bottom:4px;}
-.join-sub{font-size:13px;color:var(--earth-l);margin-bottom:28px;line-height:1.5;}
+.auth-modal-title{
+  font-family:var(--ff-h);font-size:22px;font-weight:700;
+  color:var(--white);margin-bottom:4px;
+}
+.auth-modal-sub{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:22px;}
+.auth-field{margin-bottom:14px;}
+.auth-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.4);display:block;margin-bottom:6px;}
+.auth-input{
+  width:100%;padding:12px 14px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:14px;color:var(--white);outline:none;
+  transition:border-color .2s;
+}
+.auth-input:focus{border-color:rgba(244,168,0,.5);}
+.auth-input::placeholder{color:rgba(255,255,255,.25);}
+.btn-auth-submit{
+  width:100%;padding:14px;background:var(--gold);
+  color:var(--earth);border:none;border-radius:var(--r-md);
+  font-family:var(--ff-b);font-size:14px;font-weight:700;
+  cursor:pointer;margin-top:6px;transition:all .15s;
+}
+.btn-auth-submit:hover{background:#e09a00;}
+.auth-switch{
+  text-align:center;margin-top:14px;
+  font-size:12px;color:rgba(255,255,255,.4);
+}
+.auth-switch span{color:var(--gold);cursor:pointer;font-weight:600;}
+.auth-close{
+  float:right;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  width:26px;height:26px;border-radius:50%;cursor:pointer;
+  color:rgba(255,255,255,.5);font-size:12px;display:flex;align-items:center;justify-content:center;
+}
+
+/* ============================================================
+   JOIN SCREEN
+============================================================ */
+#s-join{
+  background:rgba(5,12,30,.95);backdrop-filter:blur(20px);
+  align-items:center;justify-content:center;padding:28px;
+}
+.join-glass{
+  width:100%;max-width:380px;
+  background:rgba(15,28,60,.8);
+  backdrop-filter:blur(28px) saturate(1.6);
+  -webkit-backdrop-filter:blur(28px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:var(--r-xl);padding:28px 22px;
+}
+.join-badge{
+  display:inline-block;background:rgba(26,79,160,.35);
+  border:1px solid rgba(174,198,240,.3);
+  color:var(--blue-l);font-size:10px;font-weight:600;
+  padding:4px 12px;border-radius:var(--r-pill);margin-bottom:14px;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.join-title{font-family:var(--ff-h);font-size:22px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.join-sub{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:18px;line-height:1.5;}
 .join-meta{
-  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;
-  padding:14px;background:var(--cream);border-radius:var(--r-md);
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;
+  padding:12px;background:rgba(255,255,255,.06);border-radius:var(--r-md);
+  border:1px solid rgba(255,255,255,.08);
 }
-.join-meta-item{font-size:12px;color:var(--earth-m);}
-.join-meta-item strong{color:var(--earth);font-weight:600;}
-.form-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--earth-l);display:block;margin-bottom:7px;}
-.form-input{
-  width:100%;padding:13px 14px;border:1.5px solid rgba(28,16,8,.15);
-  border-radius:var(--r-md);font-family:var(--ff-body);font-size:15px;
-  color:var(--earth);background:var(--white);outline:none;transition:border-color .2s;
+.join-meta span{font-size:11px;color:rgba(255,255,255,.6);}
+.join-meta strong{color:var(--gold);}
+.glass-input{
+  width:100%;padding:12px 14px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;
+  color:var(--white);outline:none;transition:border-color .2s;
 }
-.form-input:focus{border-color:var(--blue);}
-.btn-join{
-  width:100%;margin-top:16px;padding:15px;background:var(--red);color:var(--white);
-  border:none;border-radius:var(--r-md);font-family:var(--ff-body);font-size:15px;
-  font-weight:600;cursor:pointer;transition:all .15s;
+.glass-input:focus{border-color:rgba(244,168,0,.5);}
+.glass-input::placeholder{color:rgba(255,255,255,.25);}
+.btn-join-glass{
+  width:100%;margin-top:14px;padding:14px;background:var(--red);
+  color:var(--white);border:none;border-radius:var(--r-md);
+  font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;
 }
-.btn-join:hover{background:var(--red-d);}
+.join-skip{text-align:center;margin-top:10px;font-size:12px;color:rgba(255,255,255,.35);cursor:pointer;}
 
 /* ============================================================
    WIZARD
-   ============================================================ */
+============================================================ */
 #s-wizard{background:var(--ivory);}
-.wiz-header{background:var(--red);padding:50px 22px 26px;position:relative;}
-.wiz-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:22px;background:var(--ivory);border-radius:18px 18px 0 0;}
-.wiz-progress{display:flex;gap:5px;margin-bottom:18px;}
-.wiz-dot{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,.25);transition:background .3s;}
-.wiz-dot.done{background:var(--gold);}
-.wiz-dot.active{background:var(--white);}
-.wiz-h{font-family:var(--ff-head);font-size:24px;font-weight:700;color:var(--white);}
-.wiz-s{font-size:12px;color:rgba(255,255,255,.65);margin-top:3px;}
-.wiz-body{flex:1;overflow-y:auto;padding:24px 20px;}
-.wiz-panel{display:none;}
-.wiz-panel.active{display:block;}
-.wiz-footer{padding:14px 20px 28px;display:flex;gap:8px;}
-.btn-back{padding:13px 18px;background:transparent;border:1.5px solid rgba(28,16,8,.15);border-radius:var(--r-md);font-family:var(--ff-body);font-size:14px;color:var(--earth-m);cursor:pointer;}
-.btn-next{flex:1;padding:14px;background:var(--red);border:none;border-radius:var(--r-md);font-family:var(--ff-body);font-size:15px;font-weight:600;color:var(--white);cursor:pointer;transition:all .15s;}
-.btn-next:hover{background:var(--red-d);}
+.wiz-hdr{background:var(--red);padding:50px 22px 24px;position:relative;}
+.wiz-hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:20px;background:var(--ivory);border-radius:18px 18px 0 0;}
+.wiz-prog{display:flex;gap:4px;margin-bottom:16px;}
+.wdot{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,.25);transition:background .3s;}
+.wdot.done{background:var(--gold);}.wdot.active{background:var(--white);}
+.wiz-h{font-family:var(--ff-h);font-size:24px;font-weight:700;color:var(--white);}
+.wiz-s{font-size:12px;color:rgba(255,255,255,.6);margin-top:3px;}
+.wiz-body{flex:1;overflow-y:auto;padding:22px 20px;}
+.wiz-panel{display:none;}.wiz-panel.active{display:block;}
+.wiz-foot{padding:12px 20px 28px;display:flex;gap:8px;}
+.btn-wb{padding:13px 16px;background:transparent;border:1.5px solid rgba(28,16,8,.14);border-radius:var(--r-md);font-family:var(--ff-b);font-size:13px;color:var(--earth-m);cursor:pointer;}
+.btn-wn{flex:1;padding:13px;background:var(--red);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;font-weight:600;color:var(--white);cursor:pointer;transition:background .15s;}
+.btn-wn:hover{background:var(--red-d);}
 
-/* Destination grid */
+/* Dest grid */
 .dest-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.dest-card{
-  border-radius:var(--r-md);overflow:hidden;border:2.5px solid transparent;
-  cursor:pointer;transition:all .2s;position:relative;aspect-ratio:4/3;
-}
-.dest-card.sel{border-color:var(--gold);}
-.dest-card-bg{position:absolute;inset:0;background-size:cover;background-position:center;}
-.dest-card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,16,8,.85) 0%,rgba(28,16,8,.05) 60%);}
-.dest-card-label{position:absolute;bottom:10px;left:12px;right:12px;}
-.dest-card-name{font-family:var(--ff-head);font-size:14px;font-weight:700;color:var(--white);}
-.dest-card-region{font-size:10px;color:rgba(255,255,255,.6);font-family:var(--ff-body);}
-.dest-card-check{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--earth);font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-pill);display:none;}
-.dest-card.sel .dest-card-check{display:block;}
+.dc{border-radius:var(--r-md);overflow:hidden;border:2.5px solid transparent;cursor:pointer;transition:all .2s;position:relative;aspect-ratio:4/3;}
+.dc.sel{border-color:var(--gold);}
+.dc-bg{position:absolute;inset:0;background-size:cover;background-position:center;}
+.dc-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(28,16,8,.85) 0%,rgba(28,16,8,.05) 60%);}
+.dc-lbl{position:absolute;bottom:10px;left:12px;}
+.dc-name{font-family:var(--ff-h);font-size:14px;font-weight:700;color:var(--white);}
+.dc-reg{font-size:9px;color:rgba(255,255,255,.55);}
+.dc-chk{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--earth);font-size:9px;font-weight:700;padding:3px 7px;border-radius:var(--r-pill);display:none;}
+.dc.sel .dc-chk{display:block;}
 
-/* Days picker */
-.days-picker{text-align:center;padding:20px 0 28px;}
-.days-big{font-family:var(--ff-display);font-size:100px;line-height:1;color:var(--red);}
-.days-lbl{font-size:14px;color:var(--earth-l);margin-top:2px;}
-.days-btns{display:flex;justify-content:center;gap:16px;margin:20px 0;}
-.day-btn{
-  width:60px;height:60px;border-radius:50%;border:2px solid var(--red);
-  background:transparent;font-size:28px;color:var(--red);cursor:pointer;transition:all .15s;
-}
-.day-btn:hover{background:var(--red);color:var(--white);}
+/* Days */
+.days-pick{text-align:center;padding:18px 0 24px;}
+.days-big{font-family:var(--ff-d);font-size:96px;line-height:1;color:var(--red);}
+.days-lbl{font-size:13px;color:var(--earth-l);}
+.days-btns{display:flex;justify-content:center;gap:14px;margin:18px 0;}
+.dybtn{width:58px;height:58px;border-radius:50%;border:2px solid var(--red);background:transparent;font-size:26px;color:var(--red);cursor:pointer;transition:all .15s;}
+.dybtn:hover{background:var(--red);color:var(--white);}
 .presets{display:flex;gap:6px;flex-wrap:wrap;}
-.preset{
-  flex:1;min-width:0;padding:9px 6px;border-radius:var(--r-sm);
-  background:var(--cream);border:1px solid rgba(192,57,43,.12);
-  font-size:12px;font-weight:500;color:var(--earth-m);cursor:pointer;
-  transition:all .15s;text-align:center;
-}
+.preset{flex:1;min-width:0;padding:9px 6px;border-radius:var(--r-sm);background:var(--cream);border:1px solid rgba(192,57,43,.12);font-size:11px;font-weight:500;color:var(--earth-m);cursor:pointer;transition:all .15s;text-align:center;}
 .preset:hover,.preset.active{background:var(--red);color:var(--white);border-color:var(--red);}
 
-/* Budget & group */
-.field{margin-bottom:18px;}
-.toggle-row{display:flex;gap:6px;margin-bottom:12px;}
-.toggle-opt{
-  flex:1;padding:9px;border:1.5px solid rgba(28,16,8,.12);
-  border-radius:var(--r-sm);font-size:12px;font-weight:500;
-  color:var(--earth-m);cursor:pointer;transition:all .15s;text-align:center;
-  background:var(--white);
-}
-.toggle-opt.active{border-color:var(--blue);background:var(--blue);color:var(--white);}
-.budget-options{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
-.budget-opt-card{
-  padding:11px 12px;border:1.5px solid rgba(28,16,8,.1);
-  border-radius:var(--r-md);cursor:pointer;transition:all .15s;background:var(--white);
-}
-.budget-opt-card.active{border-color:var(--green);background:var(--green-l);}
-.boc-tier{font-size:10px;font-weight:600;color:var(--earth-l);text-transform:uppercase;letter-spacing:.05em;}
-.boc-amount{font-size:14px;font-weight:600;color:var(--earth);margin-top:2px;}
-.boc-desc{font-size:10px;color:var(--earth-l);margin-top:1px;}
+/* Form fields */
+.fld{margin-bottom:16px;}
+.flbl{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--earth-l);display:block;margin-bottom:6px;}
+.finp{width:100%;padding:12px 14px;border:1.5px solid rgba(28,16,8,.14);border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;color:var(--earth);background:var(--white);outline:none;transition:border-color .2s;}
+.finp:focus{border-color:var(--blue);}
+.tog-row{display:flex;gap:6px;margin-bottom:10px;}
+.tog-opt{flex:1;padding:9px;border:1.5px solid rgba(28,16,8,.12);border-radius:var(--r-sm);font-size:12px;font-weight:500;color:var(--earth-m);cursor:pointer;text-align:center;background:var(--white);transition:all .15s;}
+.tog-opt.active{border-color:var(--blue);background:var(--blue);color:var(--white);}
+.bud-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.bud-opt{padding:11px 12px;border:1.5px solid rgba(28,16,8,.1);border-radius:var(--r-md);cursor:pointer;background:var(--white);transition:all .15s;}
+.bud-opt.active{border-color:var(--green);background:var(--green-l);}
+.boc-t{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--earth-l);}
+.boc-a{font-size:13px;font-weight:600;color:var(--earth);margin-top:2px;}
+.boc-d{font-size:9px;color:var(--earth-l);margin-top:1px;}
 
 /* Filters */
-.filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.filter-chip{
-  display:flex;align-items:center;gap:9px;padding:11px 12px;
-  border:1.5px solid rgba(28,16,8,.1);border-radius:var(--r-md);
-  cursor:pointer;transition:all .2s;background:var(--white);
-}
-.filter-chip.active{border-color:var(--gold);background:var(--gold-l);}
-.filter-icon{width:34px;height:34px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.filter-name{font-size:12px;font-weight:600;color:var(--earth);line-height:1.2;}
+.flt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.flt-chip{display:flex;align-items:center;gap:9px;padding:11px 12px;border:1.5px solid rgba(28,16,8,.1);border-radius:var(--r-md);cursor:pointer;background:var(--white);transition:all .2s;}
+.flt-chip.active{border-color:var(--gold);background:var(--gold-l);}
+.flt-icon{width:32px;height:32px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.flt-name{font-size:12px;font-weight:600;color:var(--earth);}
 
 /* Review */
-.review-card{background:var(--white);border-radius:var(--r-lg);padding:18px;border:1px solid rgba(28,16,8,.06);margin-bottom:12px;}
-.review-title{font-family:var(--ff-head);font-size:20px;font-weight:700;color:var(--earth);margin-bottom:14px;}
-.review-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(28,16,8,.05);}
-.review-row:last-child{border-bottom:none;}
-.review-key{font-size:12px;color:var(--earth-l);}
-.review-val{font-size:13px;font-weight:600;color:var(--earth);}
+.rv-card{background:var(--white);border-radius:var(--r-lg);padding:16px;border:1px solid rgba(28,16,8,.06);margin-bottom:10px;}
+.rv-title{font-family:var(--ff-h);font-size:19px;font-weight:700;color:var(--earth);margin-bottom:12px;}
+.rv-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(28,16,8,.05);}
+.rv-row:last-child{border-bottom:none;}
+.rv-k{font-size:11px;color:var(--earth-l);}
+.rv-v{font-size:13px;font-weight:600;color:var(--earth);}
+
+/* ============================================================
+   GENERATING
+============================================================ */
+#s-generating{
+  background:linear-gradient(160deg,#050c1e 0%,#0d2044 100%);
+  align-items:center;justify-content:center;text-align:center;padding:40px;
+}
+.gen-icon{font-size:60px;animation:spin 8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.gen-t{font-family:var(--ff-d);font-size:38px;color:var(--gold);margin:16px 0 6px;}
+.gen-s{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:28px;}
+.gen-step{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;color:rgba(255,255,255,.3);transition:color .3s;}
+.gen-step.done{color:var(--gold);}.gen-step.active{color:var(--white);}
+.gen-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.12);flex-shrink:0;}
+.gen-step.done .gen-dot{background:var(--gold);}
+.gen-step.active .gen-dot{background:var(--white);animation:pulse .7s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.15}}
 
 /* ============================================================
    MAIN APP
-   ============================================================ */
+============================================================ */
 #s-app{background:var(--cream);}
-.app-header{
-  background:var(--blue-d);padding:50px 18px 0;flex-shrink:0;
-}
-.app-header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
-.app-dest-label{font-family:var(--ff-head);font-style:italic;font-size:12px;color:rgba(174,198,240,.7);}
-.app-trip-name{font-family:var(--ff-display);font-size:36px;letter-spacing:.03em;color:var(--white);line-height:1;}
-.app-trip-meta{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap;}
+.app-hdr{background:var(--blue-d);padding:48px 18px 0;flex-shrink:0;}
+.app-hdr-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.app-dest-lbl{font-family:var(--ff-h);font-style:italic;font-size:11px;color:rgba(174,198,240,.6);}
+.app-name{font-family:var(--ff-d);font-size:34px;letter-spacing:.03em;color:var(--white);line-height:1;}
+.app-meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;}
 .app-tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:var(--r-pill);background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);}
 .app-tag.gold{background:rgba(244,168,0,.2);color:var(--gold);}
-.share-btn{
-  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
-  color:var(--white);font-family:var(--ff-body);font-size:11px;font-weight:500;
-  padding:7px 13px;border-radius:var(--r-pill);cursor:pointer;transition:all .2s;white-space:nowrap;
-}
+.share-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:var(--white);font-family:var(--ff-b);font-size:11px;font-weight:500;padding:7px 12px;border-radius:var(--r-pill);cursor:pointer;transition:all .2s;white-space:nowrap;}
 
-/* Tab bar */
-.tab-bar{display:flex;border-bottom:1px solid rgba(255,255,255,.1);margin-top:14px;}
-.tab-item{
-  flex:1;padding:11px 4px;font-size:11px;font-weight:600;
-  color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2.5px solid transparent;
-  transition:all .2s;text-align:center;background:transparent;border-left:none;border-right:none;border-top:none;
-  font-family:var(--ff-body);
-}
-.tab-item.active{color:var(--gold);border-bottom-color:var(--gold);}
-
-/* Tab content */
+/* Tabs */
+.tab-bar{display:flex;border-bottom:1px solid rgba(255,255,255,.1);margin-top:12px;}
+.tab-btn{flex:1;padding:10px 4px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;text-align:center;background:transparent;border-left:none;border-right:none;border-top:none;font-family:var(--ff-b);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
 .app-body{flex:1;overflow-y:auto;padding-bottom:20px;}
-.tab-content{display:none;padding:16px;}
-.tab-content.active{display:block;}
+.tab-pane{display:none;padding:16px;}.tab-pane.active{display:block;}
 
 /* ============================================================
    TOUR TAB
-   ============================================================ */
-.day-tabs-scroll{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 10px;}
-.day-tabs-scroll::-webkit-scrollbar{display:none;}
-.day-tab-btn{
-  flex-shrink:0;padding:8px 16px;border-radius:var(--r-pill);
-  border:1.5px solid rgba(28,16,8,.12);background:var(--white);
-  font-size:12px;font-weight:600;color:var(--earth-m);cursor:pointer;transition:all .15s;
-}
+============================================================ */
+.day-tabs-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px 10px;}
+.day-tabs-row::-webkit-scrollbar{display:none;}
+.day-tab-btn{flex-shrink:0;padding:7px 16px;border-radius:var(--r-pill);border:1.5px solid rgba(28,16,8,.12);background:var(--white);font-size:12px;font-weight:600;color:var(--earth-m);cursor:pointer;transition:all .15s;}
 .day-tab-btn.active{background:var(--red);border-color:var(--red);color:var(--white);}
-.day-panel{display:none;}
-.day-panel.active{display:block;}
-.day-empty{text-align:center;padding:48px 20px;}
-.day-empty-icon{font-size:48px;margin-bottom:12px;}
-.day-empty-title{font-family:var(--ff-head);font-size:18px;font-weight:700;color:var(--earth);margin-bottom:6px;}
-.day-empty-sub{font-size:13px;color:var(--earth-l);line-height:1.5;}
-.add-activity-btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;margin-top:20px;padding:14px;background:var(--red);color:var(--white);
-  border:none;border-radius:var(--r-md);font-family:var(--ff-body);font-size:14px;
-  font-weight:600;cursor:pointer;transition:all .15s;
-}
-.add-activity-btn:hover{background:var(--red-d);}
-.stop-card{
-  background:var(--white);border-radius:var(--r-lg);margin-bottom:10px;
-  overflow:hidden;border:1px solid rgba(28,16,8,.06);
-}
-.stop-top{display:flex;align-items:center;gap:8px;padding:10px 14px 0;}
+.day-panel{display:none;}.day-panel.active{display:block;}
+.day-empty{text-align:center;padding:44px 20px;}
+.day-empty-icon{font-size:44px;margin-bottom:10px;}
+.day-empty-title{font-family:var(--ff-h);font-size:17px;font-weight:700;color:var(--earth);margin-bottom:5px;}
+.day-empty-sub{font-size:12px;color:var(--earth-l);line-height:1.5;}
+.add-act-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin-top:18px;padding:13px;background:var(--red);color:var(--white);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;}
+.add-act-btn:hover{background:var(--red-d);}
+
+/* Stop card */
+.stop-card{background:var(--white);border-radius:var(--r-lg);margin-bottom:10px;overflow:hidden;border:1px solid rgba(28,16,8,.06);}
+.stop-top{display:flex;align-items:center;gap:7px;padding:10px 14px 0;}
 .stop-time{font-size:10px;font-weight:700;color:var(--earth-l);letter-spacing:.05em;}
-.stop-cat{font-size:9px;font-weight:700;padding:2px 8px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em;}
+.stop-cat{font-size:9px;font-weight:700;padding:2px 7px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.03em;}
 .stop-body{display:flex;gap:10px;padding:7px 14px 12px;align-items:flex-start;}
-.stop-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:36px;}
+.stop-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:32px;}
 .stop-info{flex:1;}
 .stop-name{font-size:14px;font-weight:600;color:var(--earth);margin-bottom:2px;}
 .stop-area{font-size:11px;color:var(--earth-l);margin-bottom:4px;}
-.stop-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.stop-pills{display:flex;gap:5px;flex-wrap:wrap;}
 .stop-pill{font-size:10px;color:var(--earth-l);background:var(--cream);padding:2px 8px;border-radius:var(--r-pill);}
-.stop-actions{display:flex;gap:5px;align-items:center;}
-.stop-btn{background:transparent;border:1px solid rgba(28,16,8,.1);border-radius:var(--r-sm);padding:5px 9px;font-size:10px;font-weight:500;color:var(--earth-m);cursor:pointer;font-family:var(--ff-body);}
-.stop-btn.del{border-color:rgba(192,57,43,.2);color:var(--red);}
+.stop-del{background:transparent;border:1px solid rgba(192,57,43,.2);border-radius:var(--r-sm);padding:5px 8px;font-size:10px;color:var(--red);cursor:pointer;font-family:var(--ff-b);}
 
 /* ============================================================
-   POPUP / BOTTOM SHEET
-   ============================================================ */
-.overlay{
-  display:none;position:fixed;inset:0;background:rgba(28,16,8,.5);z-index:100;
-  align-items:flex-end;
-}
+   GLASS BOTTOM SHEETS
+============================================================ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(5,12,30,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:100;align-items:flex-end;}
 .overlay.open{display:flex;}
 .sheet{
-  background:var(--ivory);border-radius:22px 22px 0 0;
-  width:100%;max-height:88vh;display:flex;flex-direction:column;
+  background:rgba(18,32,68,.92);
+  backdrop-filter:blur(32px) saturate(1.8);
+  -webkit-backdrop-filter:blur(32px) saturate(1.8);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:22px 22px 0 0;
+  width:100%;max-height:90vh;display:flex;flex-direction:column;
 }
-.sheet-handle{width:36px;height:3px;border-radius:2px;background:rgba(28,16,8,.12);margin:14px auto 4px;}
-.sheet-header{padding:10px 20px 14px;display:flex;align-items:center;justify-content:space-between;}
-.sheet-title{font-family:var(--ff-head);font-size:18px;font-weight:700;color:var(--earth);}
-.sheet-close{background:rgba(28,16,8,.08);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;color:var(--earth-m);}
-.sheet-body{flex:1;overflow-y:auto;padding:0 16px 24px;}
+.sheet-handle{width:36px;height:3px;border-radius:2px;background:rgba(255,255,255,.2);margin:14px auto 4px;}
+.sheet-hdr{padding:8px 20px 12px;display:flex;align-items:center;justify-content:space-between;}
+.sheet-title{font-family:var(--ff-h);font-size:18px;font-weight:700;color:var(--white);}
+.sheet-close{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:13px;color:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;}
+.sheet-body{flex:1;overflow-y:auto;padding:0 16px 28px;}
 
 /* Category picker */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .cat-chip{
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  padding:14px 8px;border-radius:var(--r-md);border:1.5px solid rgba(28,16,8,.1);
-  background:var(--white);cursor:pointer;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:14px 6px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  cursor:pointer;transition:all .2s;
 }
-.cat-chip:hover{border-color:var(--gold);background:var(--gold-l);}
+.cat-chip:hover{background:rgba(244,168,0,.2);border-color:rgba(244,168,0,.4);}
 .cat-chip-icon{font-size:22px;}
-.cat-chip-label{font-size:11px;font-weight:600;color:var(--earth);text-align:center;line-height:1.2;}
+.cat-chip-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.8);text-align:center;line-height:1.2;}
 
-/* Places list */
+/* Places list — cards inspired by reference */
 .place-card{
-  display:flex;gap:12px;background:var(--white);border-radius:var(--r-md);
-  padding:12px;margin-bottom:8px;border:1px solid rgba(28,16,8,.06);cursor:pointer;
-  transition:all .15s;
+  display:flex;gap:10px;border-radius:var(--r-md);
+  padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);
 }
-.place-card:hover{border-color:var(--gold);}
+.place-card:hover{background:rgba(255,255,255,.12);border-color:rgba(244,168,0,.3);}
 .place-thumb{
-  width:70px;height:70px;border-radius:var(--r-sm);
-  background:var(--cream);flex-shrink:0;overflow:hidden;
+  width:68px;height:68px;border-radius:var(--r-sm);
+  background:rgba(255,255,255,.06);flex-shrink:0;overflow:hidden;
+  position:relative;
 }
 .place-thumb img{width:100%;height:100%;object-fit:cover;}
-.place-info{flex:1;min-width:0;}
-.place-name{font-size:13px;font-weight:600;color:var(--earth);margin-bottom:2px;}
-.place-area{font-size:11px;color:var(--earth-l);margin-bottom:5px;}
-.place-meta-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.place-meta-pill{
-  display:flex;align-items:center;gap:3px;font-size:10px;font-weight:500;
-  color:var(--earth-m);background:var(--cream);padding:2px 8px;border-radius:var(--r-pill);
+.place-thumb-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(26,79,160,.4) 0%,rgba(10,22,40,.3) 100%);
 }
+.place-info{flex:1;min-width:0;}
+.place-name{font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.place-area{font-size:10px;color:rgba(255,255,255,.5);margin-bottom:5px;}
+.place-pills{display:flex;gap:5px;flex-wrap:wrap;}
+.place-pill{font-size:9px;font-weight:500;color:rgba(255,255,255,.6);background:rgba(255,255,255,.08);padding:2px 7px;border-radius:var(--r-pill);}
+.place-tip{font-size:10px;color:rgba(244,168,0,.6);margin-top:4px;line-height:1.3;}
 .place-add-btn{
-  align-self:flex-end;padding:6px 12px;background:var(--red);color:var(--white);
+  align-self:flex-end;padding:6px 11px;background:var(--red);color:var(--white);
   border:none;border-radius:var(--r-sm);font-size:11px;font-weight:600;
-  cursor:pointer;font-family:var(--ff-body);white-space:nowrap;flex-shrink:0;
+  cursor:pointer;font-family:var(--ff-b);white-space:nowrap;flex-shrink:0;
 }
 
 /* ============================================================
    BUDGET TAB
-   ============================================================ */
-.budget-summary{
-  background:var(--green-d);margin:-16px -16px 16px;
-  padding:20px 18px;border-radius:0 0 var(--r-lg) var(--r-lg);
+============================================================ */
+.bud-summary{background:var(--green-d);margin:-16px -16px 14px;padding:18px 16px;border-radius:0 0 var(--r-lg) var(--r-lg);}
+.bud-total-lbl{font-size:10px;color:rgba(149,213,178,.65);font-weight:500;}
+.bud-total-val{font-family:var(--ff-h);font-size:26px;font-weight:700;color:var(--white);margin:2px 0;}
+.bud-bar-wrap{height:5px;background:rgba(255,255,255,.12);border-radius:3px;margin:8px 0 6px;overflow:hidden;}
+.bud-bar-fill{height:100%;border-radius:3px;background:linear-gradient(to right,var(--gold),var(--coral));transition:width .4s;}
+.bud-bar-lbls{display:flex;justify-content:space-between;}
+.bud-bar-lbl{font-size:10px;color:rgba(149,213,178,.6);}
+.bud-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.bud-stat{background:var(--white);border-radius:var(--r-md);padding:10px;border:1px solid rgba(28,16,8,.06);}
+.bud-stat-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--earth-l);}
+.bud-stat-val{font-family:var(--ff-h);font-size:15px;font-weight:700;color:var(--earth);margin-top:2px;}
+.bud-stat.hi .bud-stat-val{color:var(--green);}
+.exp-sec-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:9px;}
+
+/* Expense item — now with edit/delete */
+.exp-item{
+  background:var(--white);border-radius:var(--r-md);
+  margin-bottom:8px;border:1px solid rgba(28,16,8,.06);overflow:hidden;
 }
-.budget-total-label{font-size:11px;color:rgba(149,213,178,.7);font-weight:500;}
-.budget-total-amount{font-family:var(--ff-head);font-size:28px;font-weight:700;color:var(--white);margin:2px 0;}
-.budget-bar-wrap{height:6px;background:rgba(255,255,255,.15);border-radius:3px;margin:10px 0 8px;overflow:hidden;}
-.budget-bar-fill{height:100%;border-radius:3px;background:linear-gradient(to right,var(--gold),var(--coral));transition:width .4s;}
-.budget-bar-labels{display:flex;justify-content:space-between;}
-.budget-bar-label{font-size:10px;color:rgba(149,213,178,.7);}
-.budget-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
-.bud-stat{background:var(--white);border-radius:var(--r-md);padding:11px 10px;border:1px solid rgba(28,16,8,.06);}
-.bud-stat-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--earth-l);}
-.bud-stat-val{font-family:var(--ff-head);font-size:16px;font-weight:700;color:var(--earth);margin-top:3px;}
-.bud-stat.highlight .bud-stat-val{color:var(--green);}
-.expense-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:10px;}
-.expense-item{
-  display:flex;gap:11px;background:var(--white);border-radius:var(--r-md);
-  padding:12px;margin-bottom:8px;border:1px solid rgba(28,16,8,.06);
-  align-items:flex-start;
-}
-.exp-icon-wrap{
-  width:38px;height:38px;border-radius:var(--r-sm);
-  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
-}
+.exp-item-main{display:flex;gap:10px;padding:12px;align-items:flex-start;}
+.exp-icon-wrap{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;background:rgba(28,16,8,.05);}
 .exp-info{flex:1;}
-.exp-title{font-size:13px;font-weight:600;color:var(--earth);}
-.exp-meta{font-size:11px;color:var(--earth-l);margin-top:2px;}
+.exp-title-txt{font-size:13px;font-weight:600;color:var(--earth);}
+.exp-meta-txt{font-size:11px;color:var(--earth-l);margin-top:2px;}
 .exp-amounts{text-align:right;flex-shrink:0;}
-.exp-total{font-family:var(--ff-head);font-size:15px;font-weight:700;color:var(--earth);}
-.exp-pp{font-size:10px;color:var(--earth-l);margin-top:1px;}
-.add-expense-btn{
-  position:sticky;bottom:16px;width:100%;padding:14px;background:var(--green);
-  color:var(--white);border:none;border-radius:var(--r-md);font-family:var(--ff-body);
-  font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
+.exp-total-val{font-family:var(--ff-h);font-size:14px;font-weight:700;color:var(--earth);}
+.exp-pp-val{font-size:10px;color:var(--earth-l);margin-top:1px;}
+/* Edit/delete action row */
+.exp-actions{
+  display:flex;border-top:1px solid rgba(28,16,8,.05);
+}
+.exp-act-btn{
+  flex:1;padding:8px;font-size:11px;font-weight:600;cursor:pointer;
+  background:transparent;border:none;font-family:var(--ff-b);
+  transition:background .15s;
+}
+.exp-act-btn:hover{background:rgba(28,16,8,.04);}
+.exp-act-btn.edit{color:var(--blue);border-right:1px solid rgba(28,16,8,.05);}
+.exp-act-btn.delete{color:var(--red);}
+
+.add-exp-btn{
+  position:sticky;bottom:16px;width:100%;padding:13px;background:var(--green);
+  color:var(--white);border:none;border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:13px;font-weight:600;cursor:pointer;
   box-shadow:0 4px 16px rgba(45,106,79,.35);
 }
 
-/* Expense type picker */
-.exp-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;}
+/* Expense sheet */
+.exp-type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
 .exp-type-chip{
   display:flex;flex-direction:column;align-items:center;gap:4px;
-  padding:10px 6px;border-radius:var(--r-md);border:1.5px solid rgba(28,16,8,.1);
-  background:var(--white);cursor:pointer;transition:all .15s;
+  padding:9px 5px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);
+  cursor:pointer;transition:all .15s;
 }
-.exp-type-chip.active{border-color:var(--gold);background:var(--gold-l);}
-.exp-type-icon{font-size:20px;}
-.exp-type-label{font-size:9px;font-weight:600;color:var(--earth);text-align:center;line-height:1.2;}
-.exp-type-cat{font-size:8px;color:var(--earth-l);text-align:center;}
-.expense-form{padding-top:12px;}
-.member-check-grid{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
-.member-check{
-  padding:7px 12px;border-radius:var(--r-pill);border:1.5px solid rgba(28,16,8,.12);
-  font-size:12px;font-weight:500;color:var(--earth-m);cursor:pointer;transition:all .15s;
-  background:var(--white);
+.exp-type-chip.active{border-color:var(--gold);background:rgba(244,168,0,.2);}
+.exp-type-icon{font-size:18px;}
+.exp-type-lbl{font-size:9px;font-weight:600;color:rgba(255,255,255,.7);text-align:center;line-height:1.2;}
+.exp-type-cat{font-size:8px;color:rgba(255,255,255,.35);}
+.exp-form{padding-top:14px;}
+.glass-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.4);display:block;margin-bottom:6px;}
+.member-checks{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.member-chk{
+  padding:6px 12px;border-radius:var(--r-pill);border:1.5px solid rgba(255,255,255,.14);
+  font-size:12px;font-weight:500;color:rgba(255,255,255,.6);cursor:pointer;
+  background:rgba(255,255,255,.06);transition:all .15s;
 }
-.member-check.active{background:var(--blue);border-color:var(--blue);color:var(--white);}
+.member-chk.active{background:var(--blue);border-color:var(--blue);color:var(--white);}
 .split-preview{
-  background:var(--cream);border-radius:var(--r-md);padding:12px;margin-top:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r-md);padding:12px;margin-top:10px;
   display:flex;justify-content:space-between;align-items:center;
 }
-.split-label{font-size:12px;color:var(--earth-l);}
-.split-amount{font-family:var(--ff-head);font-size:22px;font-weight:700;color:var(--red);}
+.split-lbl{font-size:12px;color:rgba(255,255,255,.4);}
+.split-val{font-family:var(--ff-h);font-size:22px;font-weight:700;color:var(--gold);}
+.btn-save-exp{width:100%;margin-top:12px;padding:13px;background:var(--green);color:var(--white);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;}
 
 /* ============================================================
    MAP TAB
-   ============================================================ */
-#map-container{height:calc(100vh - 200px);border-radius:var(--r-lg);overflow:hidden;margin:-16px -16px 0;}
-.map-day-filter{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:0 16px 10px;margin:0 -16px;}
-.map-day-filter::-webkit-scrollbar{display:none;}
-.map-filter-btn{
-  flex-shrink:0;padding:6px 14px;border-radius:var(--r-pill);
-  border:1.5px solid rgba(28,16,8,.12);background:var(--white);
-  font-size:11px;font-weight:600;color:var(--earth-m);cursor:pointer;
-}
-.map-filter-btn.active{background:var(--blue);border-color:var(--blue);color:var(--white);}
+============================================================ */
+#map-el{height:calc(100vh - 200px);border-radius:var(--r-lg);overflow:hidden;margin:-16px -16px 0;}
+.map-filter{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:0 16px 10px;margin:0 -16px;}
+.map-filter::-webkit-scrollbar{display:none;}
+.map-f-btn{flex-shrink:0;padding:6px 13px;border-radius:var(--r-pill);border:1.5px solid rgba(28,16,8,.12);background:var(--white);font-size:10px;font-weight:600;color:var(--earth-m);cursor:pointer;}
+.map-f-btn.active{background:var(--blue);border-color:var(--blue);color:var(--white);}
 
 /* ============================================================
    GROUP TAB
-   ============================================================ */
-.group-header-card{
-  background:var(--blue-d);border-radius:var(--r-lg);padding:18px;
-  margin-bottom:14px;
-}
-.group-header-title{font-family:var(--ff-head);font-size:16px;color:var(--white);font-weight:700;margin-bottom:4px;}
-.group-header-sub{font-size:12px;color:rgba(174,198,240,.7);}
-.member-row{
-  display:flex;align-items:center;gap:12px;background:var(--white);
-  border-radius:var(--r-md);padding:12px 14px;margin-bottom:8px;
-  border:1px solid rgba(28,16,8,.06);
-}
-.member-avatar{
-  width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:14px;font-weight:600;flex-shrink:0;
-}
-.member-info{flex:1;}
-.member-name{font-size:14px;font-weight:600;color:var(--earth);}
-.member-role{font-size:11px;color:var(--earth-l);}
-.member-balance{text-align:right;}
-.member-bal-amount{font-family:var(--ff-head);font-size:15px;font-weight:700;}
-.member-bal-label{font-size:10px;color:var(--earth-l);}
-.share-section{background:var(--white);border-radius:var(--r-lg);padding:16px;border:1px solid rgba(28,16,8,.06);margin-bottom:14px;}
-.share-link-box{display:flex;gap:6px;margin-top:10px;}
-.share-link-input{
-  flex:1;padding:10px 12px;background:var(--cream);border:1px solid rgba(28,16,8,.1);
-  border-radius:var(--r-md);font-size:12px;font-family:var(--ff-body);color:var(--earth-m);outline:none;
-}
-.copy-btn{
-  padding:10px 16px;background:var(--blue);color:var(--white);border:none;
-  border-radius:var(--r-md);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--ff-body);
-}
+============================================================ */
+.group-hdr{background:var(--blue-d);border-radius:var(--r-lg);padding:16px;margin-bottom:12px;}
+.group-hdr-title{font-family:var(--ff-h);font-size:16px;color:var(--white);font-weight:700;margin-bottom:3px;}
+.group-hdr-sub{font-size:11px;color:rgba(174,198,240,.6);}
+.share-card{background:var(--white);border-radius:var(--r-lg);padding:14px;border:1px solid rgba(28,16,8,.06);margin-bottom:12px;}
+.share-link-box{display:flex;gap:6px;margin-top:8px;}
+.share-link-in{flex:1;padding:10px 12px;background:var(--cream);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-md);font-size:12px;font-family:var(--ff-b);color:var(--earth-m);outline:none;}
+.copy-btn{padding:10px 14px;background:var(--blue);color:var(--white);border:none;border-radius:var(--r-md);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--ff-b);}
+.member-row{display:flex;align-items:center;gap:11px;background:var(--white);border-radius:var(--r-md);padding:12px;margin-bottom:8px;border:1px solid rgba(28,16,8,.06);}
+.member-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;}
+.member-nm{font-size:13px;font-weight:600;color:var(--earth);}
+.member-role-txt{font-size:10px;color:var(--earth-l);}
+.member-bal{text-align:right;}
+.member-bal-val{font-family:var(--ff-h);font-size:14px;font-weight:700;}
+.member-bal-lbl{font-size:10px;color:var(--earth-l);}
 
 /* ============================================================
-   GENERATING SCREEN
-   ============================================================ */
-#s-generating{
-  background:var(--earth);align-items:center;justify-content:center;
-  text-align:center;padding:40px;
-}
-.gen-icon{font-size:64px;margin-bottom:20px;animation:spin 6s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.gen-title{font-family:var(--ff-display);font-size:40px;color:var(--gold);margin-bottom:6px;}
-.gen-sub{font-size:13px;color:rgba(253,246,227,.4);margin-bottom:32px;}
-.gen-step{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(253,246,227,.06);font-size:13px;color:rgba(253,246,227,.35);transition:color .3s;}
-.gen-step.done{color:var(--gold);}
-.gen-step.active{color:var(--white);}
-.gen-step-dot{width:7px;height:7px;border-radius:50%;background:rgba(253,246,227,.15);flex-shrink:0;transition:background .3s;}
-.gen-step.done .gen-step-dot{background:var(--gold);}
-.gen-step.active .gen-step-dot{background:var(--white);animation:pulse .7s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+   SHARE SHEET
+============================================================ */
+.share-opts{display:flex;gap:8px;margin-top:12px;}
+.share-opt{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer;transition:all .15s;}
+.share-opt:hover{background:rgba(255,255,255,.14);}
+.share-opt-icon{font-size:20px;display:block;margin-bottom:4px;}
+.share-opt-lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.6);}
 
 /* ============================================================
-   UTILITIES
-   ============================================================ */
+   UTILS
+============================================================ */
 .hidden{display:none!important;}
-.section-gap{height:16px;}
+.glass-divider{height:1px;background:rgba(255,255,255,.08);margin:14px 0;}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════
-     SCREEN: HOME
-═══════════════════════════════════════ -->
+<!-- ═══════════════════════ HOME ═══════════════════════ -->
 <div id="s-home" class="screen active">
-  <div class="home-hero">
-    <div class="home-sun"></div>
-    <div class="home-badge">🇵🇭 Philippine Travel Planner</div>
-    <div class="home-title">LAK<span>BAY</span><br/>PH</div>
-    <div class="home-tagline">Discover the Pearl of the Orient</div>
-    <div style="margin-bottom:10px;">
-      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(174,198,240,.5);margin-bottom:8px;">Popular destinations</div>
-      <div class="dest-chips">
-        <div class="dest-chip active">Boracay</div>
-        <div class="dest-chip">Palawan</div>
-        <div class="dest-chip">Cebu</div>
-        <div class="dest-chip">Siargao</div>
-        <div class="dest-chip">Batanes</div>
-        <div class="dest-chip">Vigan</div>
-        <div class="dest-chip">Banaue</div>
-        <div class="dest-chip">Manila</div>
+
+  <!-- Sliding hero background -->
+  <div class="hero-bg">
+    <div class="hero-slides" id="hero-slides">
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=800&q=80')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=800&q=80')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1559666126-84f389727b9a?w=800&q=80')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1573790387438-4da905039392?w=800&q=80')"></div>
+      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=800&q=80')"></div>
+    </div>
+  </div>
+  <div class="hero-dots" id="hero-dots"></div>
+
+  <div class="home-content">
+    <!-- Top bar -->
+    <div class="home-topbar">
+      <div class="home-greeting" id="home-greeting">Welcome to Lakbay PH</div>
+      <div class="auth-row" id="auth-row">
+        <button class="auth-btn" onclick="openAuthModal('signin')">Sign in</button>
+        <button class="auth-btn primary" onclick="openAuthModal('signup')">Sign up</button>
       </div>
     </div>
-    <div class="home-actions">
-      <button class="btn-primary" onclick="goTo('s-wizard');initWizard()">Plan My Trip →</button>
-      <button class="btn-ghost" onclick="loadSampleTrip()">View Sample Trip</button>
+
+    <!-- Title -->
+    <div class="home-title-wrap">
+      <div class="home-eyebrow">🇵🇭 Philippine Travel Planner</div>
+      <div class="home-title">LAK<span>BAY</span><br/>PH</div>
+      <div class="home-subtitle">Discover the Pearl of the Orient</div>
+    </div>
+
+    <!-- Hotel / destination ads (Klook affiliate placement) -->
+    <div class="hotel-section">
+      <div class="section-label">🏨 Top hotel deals · Book on Klook</div>
+      <div class="hotel-scroll">
+
+        <!-- Boracay -->
+        <div class="dest-skyline-card" onclick="openKlook('boracay-hotels')">
+          <div class="dsc-bg" style="background:linear-gradient(135deg,#006994 0%,#1a7ab5 40%,#00c4e8 100%);"></div>
+          <!-- Boracay skyline silhouette -->
+          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white">
+            <ellipse cx="100" cy="80" rx="120" ry="20"/>
+            <path d="M20,80 Q25,60 30,55 Q35,50 40,55 Q45,60 50,80Z"/>
+            <path d="M60,80 Q63,45 68,38 Q73,31 78,38 Q83,45 86,80Z"/>
+            <path d="M90,80 L92,50 L96,30 L100,50 L102,80Z"/>
+            <path d="M110,80 Q114,52 120,44 Q126,36 132,44 Q138,52 142,80Z"/>
+            <path d="M150,80 Q153,60 157,55 Q161,50 165,55 Q169,60 172,80Z"/>
+            <rect x="170" y="65" width="15" height="15"/>
+            <rect x="5" y="70" width="20" height="10"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(0,60,100,.8) 0%,rgba(0,100,148,.2) 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Trip to</div>
+              <div class="dsc-name">BORACAY</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">3–7 nights</div>
+              <div class="dsc-price">from ₱2,500</div>
+            </div>
+          </div>
+          <div class="dsc-klook-badge">Book on Klook</div>
+        </div>
+
+        <!-- Palawan -->
+        <div class="dest-skyline-card" onclick="openKlook('palawan-hotels')">
+          <div class="dsc-bg" style="background:linear-gradient(135deg,#0d5016 0%,#1a7a30 40%,#4db86e 100%);"></div>
+          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white">
+            <path d="M0,80 Q10,55 20,50 Q30,45 35,50 Q40,55 45,80Z"/>
+            <path d="M50,80 Q55,40 65,30 Q75,20 85,30 Q95,40 100,80Z"/>
+            <path d="M110,80 Q118,35 128,25 Q138,15 148,25 Q158,35 165,80Z"/>
+            <path d="M170,80 Q175,58 182,52 Q189,46 196,52 Q200,58 200,80Z"/>
+            <ellipse cx="80" cy="80" rx="100" ry="15"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(13,50,22,.85) 0%,rgba(13,80,22,.15) 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Trip to</div>
+              <div class="dsc-name">PALAWAN</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">4–10 nights</div>
+              <div class="dsc-price">from ₱3,200</div>
+            </div>
+          </div>
+          <div class="dsc-klook-badge">Book on Klook</div>
+        </div>
+
+        <!-- Cebu -->
+        <div class="dest-skyline-card" onclick="openKlook('cebu-hotels')">
+          <div class="dsc-bg" style="background:linear-gradient(135deg,#7b3f00 0%,#c0392b 50%,#e88b4a 100%);"></div>
+          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white">
+            <rect x="10" y="50" width="20" height="30"/>
+            <rect x="35" y="40" width="18" height="40"/>
+            <rect x="58" y="30" width="22" height="50"/>
+            <rect x="85" y="20" width="28" height="60"/>
+            <rect x="118" y="35" width="18" height="45"/>
+            <rect x="140" y="45" width="25" height="35"/>
+            <rect x="170" y="55" width="20" height="25"/>
+            <rect x="62" y="15" width="5" height="18"/>
+            <rect x="88" y="12" width="6" height="20"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(80,20,10,.85) 0%,rgba(120,30,10,.15) 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Trip to</div>
+              <div class="dsc-name">CEBU</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">3–6 nights</div>
+              <div class="dsc-price">from ₱1,800</div>
+            </div>
+          </div>
+          <div class="dsc-klook-badge">Book on Klook</div>
+        </div>
+
+        <!-- Siargao -->
+        <div class="dest-skyline-card" onclick="openKlook('siargao-hotels')">
+          <div class="dsc-bg" style="background:linear-gradient(135deg,#1a5276 0%,#148f77 50%,#76d7c4 100%);"></div>
+          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white">
+            <path d="M0,80 C20,70 40,60 60,55 C80,50 100,52 120,50 C140,48 160,55 200,80Z"/>
+            <path d="M30,80 Q35,60 42,50 Q49,40 56,50 Q63,60 68,80Z"/>
+            <path d="M80,80 Q84,58 90,50 Q96,42 102,50 Q108,58 112,80Z"/>
+            <circle cx="150" cy="60" r="8"/>
+            <circle cx="168" cy="58" r="6"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(10,50,60,.85) 0%,rgba(10,80,80,.15) 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Trip to</div>
+              <div class="dsc-name">SIARGAO</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">4–7 nights</div>
+              <div class="dsc-price">from ₱2,800</div>
+            </div>
+          </div>
+          <div class="dsc-klook-badge">Book on Klook</div>
+        </div>
+
+        <!-- Batanes -->
+        <div class="dest-skyline-card" onclick="openKlook('batanes-hotels')">
+          <div class="dsc-bg" style="background:linear-gradient(135deg,#2c5282 0%,#4a7fa5 50%,#9bc4d9 100%);"></div>
+          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white">
+            <path d="M0,80 Q20,55 50,45 Q80,35 110,42 Q140,49 170,44 Q185,42 200,50 L200,80Z"/>
+            <path d="M60,80 Q65,55 72,48 Q79,41 86,48 Q93,55 98,80Z"/>
+            <path d="M120,80 Q124,60 129,55 Q134,50 139,55 Q144,60 148,80Z"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(20,40,70,.85) 0%,rgba(30,60,100,.15) 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Trip to</div>
+              <div class="dsc-name">BATANES</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">4–7 nights</div>
+              <div class="dsc-price">from ₱3,500</div>
+            </div>
+          </div>
+          <div class="dsc-klook-badge">Book on Klook</div>
+        </div>
+
+        <!-- Manila -->
+        <div class="dest-skyline-card" onclick="openKlook('manila-hotels')">
+          <div class="dsc-bg" style="background:linear-gradient(135deg,#1c2833 0%,#2e4057 50%,#5d8aa8 100%);"></div>
+          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white">
+            <rect x="5" y="45" width="15" height="35"/>
+            <rect x="23" y="35" width="14" height="45"/>
+            <rect x="40" y="20" width="18" height="60"/>
+            <rect x="62" y="10" width="22" height="70"/>
+            <rect x="88" y="25" width="16" height="55"/>
+            <rect x="108" y="30" width="20" height="50"/>
+            <rect x="132" y="40" width="18" height="40"/>
+            <rect x="154" y="50" width="15" height="30"/>
+            <rect x="172" y="55" width="18" height="25"/>
+            <rect x="66" y="5" width="5" height="12"/>
+            <rect x="96" y="20" width="4" height="10"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(15,25,40,.9) 0%,rgba(20,35,55,.15) 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Trip to</div>
+              <div class="dsc-name">MANILA</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">2–4 nights</div>
+              <div class="dsc-price">from ₱1,500</div>
+            </div>
+          </div>
+          <div class="dsc-klook-badge">Book on Klook</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="home-cta">
+      <button class="btn-plan" onclick="goTo('s-wizard');initWizard()">Plan My Trip →</button>
+      <button class="btn-view-sample" onclick="loadSample()">View Sample Trip</button>
+    </div>
+
+    <!-- Auto-scroll destination strip -->
+    <div class="dest-strip" style="margin:20px 0 0;">
+      <div class="dest-strip-track" id="dest-strip">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ AUTH MODALS ═══════════════════════ -->
+<div class="auth-overlay" id="auth-modal" onclick="closeAuthOutside(event)">
+  <div class="auth-modal">
+    <button class="auth-close" onclick="closeAuth()">✕</button>
+    <div class="auth-modal-title" id="auth-title">Welcome back</div>
+    <div class="auth-modal-sub" id="auth-sub">Sign in to save and manage your trips</div>
+    <div class="auth-field" id="name-field" style="display:none;">
+      <label class="auth-label">Full name</label>
+      <input class="auth-input" type="text" id="auth-name" placeholder="e.g. Juan dela Cruz"/>
+    </div>
+    <div class="auth-field">
+      <label class="auth-label">Email</label>
+      <input class="auth-input" type="email" id="auth-email" placeholder="you@email.com"/>
+    </div>
+    <div class="auth-field">
+      <label class="auth-label">Password</label>
+      <input class="auth-input" type="password" id="auth-pass" placeholder="••••••••"/>
+    </div>
+    <button class="btn-auth-submit" id="auth-submit-btn" onclick="submitAuth()">Sign in</button>
+    <div class="auth-switch" id="auth-switch">
+      Don't have an account? <span onclick="switchAuthMode()">Sign up</span>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     SCREEN: JOIN (guest)
-═══════════════════════════════════════ -->
+<!-- ═══════════════════════ JOIN SCREEN ═══════════════════════ -->
 <div id="s-join" class="screen">
-  <div class="join-card">
-    <div class="join-trip-badge">You've been invited!</div>
+  <div class="join-glass">
+    <div class="join-badge">You've been invited!</div>
     <div class="join-title">Join the trip plan</div>
-    <div class="join-sub">Enter your name so the trip organizer knows you've joined and can include you in budget splits.</div>
+    <div class="join-sub">Enter your name so you appear in the group and budget split.</div>
     <div class="join-meta">
-      <div class="join-meta-item">📍 <strong id="join-dest-name">Boracay</strong></div>
-      <div class="join-meta-item">📅 <strong id="join-days">3 days</strong></div>
-      <div class="join-meta-item">👥 <strong id="join-group">4 people</strong></div>
+      <span>📍 <strong id="join-dest">Boracay</strong></span>
+      <span>📅 <strong id="join-days">3 days</strong></span>
+      <span>👥 <strong id="join-grp">4 people</strong></span>
     </div>
-    <label class="form-label">Your name</label>
-    <input class="form-input" type="text" id="join-name-input" placeholder="e.g. Juan dela Cruz" maxlength="40"/>
-    <button class="btn-join" onclick="joinTrip()">Join Trip →</button>
-    <div style="text-align:center;margin-top:12px;">
-      <span style="font-size:12px;color:var(--earth-l);cursor:pointer;" onclick="joinTrip(true)">Just view — don't add my name</span>
+    <div class="fld">
+      <label class="glass-label">Your name</label>
+      <input class="glass-input" type="text" id="join-name" placeholder="e.g. Maria Santos" maxlength="40"/>
     </div>
+    <button class="btn-join-glass" onclick="joinTrip()">Join Trip →</button>
+    <div class="join-skip" onclick="joinTrip(true)">Just view without joining</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     SCREEN: WIZARD
-═══════════════════════════════════════ -->
+<!-- ═══════════════════════ WIZARD ═══════════════════════ -->
 <div id="s-wizard" class="screen">
-  <div class="wiz-header">
-    <div class="wiz-progress">
-      <div class="wiz-dot active" id="wd0"></div>
-      <div class="wiz-dot" id="wd1"></div>
-      <div class="wiz-dot" id="wd2"></div>
-      <div class="wiz-dot" id="wd3"></div>
-      <div class="wiz-dot" id="wd4"></div>
+  <div class="wiz-hdr">
+    <div class="wiz-prog">
+      <div class="wdot active" id="wd0"></div><div class="wdot" id="wd1"></div>
+      <div class="wdot" id="wd2"></div><div class="wdot" id="wd3"></div><div class="wdot" id="wd4"></div>
     </div>
-    <div class="wiz-h" id="wiz-title">Where to?</div>
-    <div class="wiz-s" id="wiz-sub">Pick your Philippine destination</div>
+    <div class="wiz-h" id="wiz-h">Where to?</div>
+    <div class="wiz-s" id="wiz-s">Pick your Philippine destination</div>
   </div>
-
   <div class="wiz-body">
-    <!-- Step 0: Destination -->
+    <!-- Step 0 -->
     <div class="wiz-panel active" id="wp0">
       <div class="dest-grid">
-        <div class="dest-card sel" data-dest="Boracay" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#006994,#00A8CC,#87CEEB);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Boracay</div><div class="dest-card-region">Aklan, W. Visayas</div></div>
-        </div>
-        <div class="dest-card" data-dest="Palawan" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#0D5016,#2D9E49,#A8D5A2);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Palawan</div><div class="dest-card-region">MIMAROPA</div></div>
-        </div>
-        <div class="dest-card" data-dest="Cebu" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#7B3F00,#C0392B,#E88B4A);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Cebu</div><div class="dest-card-region">Central Visayas</div></div>
-        </div>
-        <div class="dest-card" data-dest="Siargao" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#1A5276,#148F77,#76D7C4);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Siargao</div><div class="dest-card-region">Surigao del Norte</div></div>
-        </div>
-        <div class="dest-card" data-dest="Batanes" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#2C5282,#4A7FA5,#9BC4D9);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Batanes</div><div class="dest-card-region">Cagayan Valley</div></div>
-        </div>
-        <div class="dest-card" data-dest="Vigan" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#4A235A,#7D3C98,#BB8FCE);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Vigan</div><div class="dest-card-region">Ilocos Sur</div></div>
-        </div>
-        <div class="dest-card" data-dest="Banaue" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#1B4332,#2D6A4F,#95D5B2);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Banaue</div><div class="dest-card-region">Ifugao, CAR</div></div>
-        </div>
-        <div class="dest-card" data-dest="Manila" onclick="pickDest(this)">
-          <div class="dest-card-bg" style="background:linear-gradient(135deg,#1C2833,#2E4057,#5D8AA8);"></div>
-          <div class="dest-card-overlay"></div>
-          <div class="dest-card-check">✓ Selected</div>
-          <div class="dest-card-label"><div class="dest-card-name">Manila</div><div class="dest-card-region">Metro Manila, NCR</div></div>
-        </div>
+        <div class="dc sel" data-dest="Boracay" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#006994,#00A8CC,#87CEEB);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Boracay</div><div class="dc-reg">Aklan</div></div></div>
+        <div class="dc" data-dest="Palawan" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#0D5016,#2D9E49,#A8D5A2);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Palawan</div><div class="dc-reg">MIMAROPA</div></div></div>
+        <div class="dc" data-dest="Cebu" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#7B3F00,#C0392B,#E88B4A);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Cebu</div><div class="dc-reg">Central Visayas</div></div></div>
+        <div class="dc" data-dest="Siargao" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#1A5276,#148F77,#76D7C4);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Siargao</div><div class="dc-reg">Surigao del Norte</div></div></div>
+        <div class="dc" data-dest="Batanes" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#2C5282,#4A7FA5,#9BC4D9);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Batanes</div><div class="dc-reg">Cagayan Valley</div></div></div>
+        <div class="dc" data-dest="Vigan" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#4A235A,#7D3C98,#BB8FCE);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Vigan</div><div class="dc-reg">Ilocos Sur</div></div></div>
+        <div class="dc" data-dest="Banaue" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#1B4332,#2D6A4F,#95D5B2);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Banaue</div><div class="dc-reg">Ifugao, CAR</div></div></div>
+        <div class="dc" data-dest="Manila" onclick="pickDest(this)"><div class="dc-bg" style="background:linear-gradient(135deg,#1C2833,#2E4057,#5D8AA8);"></div><div class="dc-ov"></div><div class="dc-chk">✓</div><div class="dc-lbl"><div class="dc-name">Manila</div><div class="dc-reg">Metro Manila</div></div></div>
       </div>
     </div>
-
-    <!-- Step 1: Days -->
+    <!-- Step 1 -->
     <div class="wiz-panel" id="wp1">
-      <div class="days-picker">
+      <div class="days-pick">
         <div class="days-big" id="days-num">3</div>
         <div class="days-lbl">days of adventure</div>
-        <div class="days-btns">
-          <button class="day-btn" onclick="adjDays(-1)">−</button>
-          <button class="day-btn" onclick="adjDays(1)">+</button>
-        </div>
+        <div class="days-btns"><button class="dybtn" onclick="adjDays(-1)">−</button><button class="dybtn" onclick="adjDays(1)">+</button></div>
       </div>
       <div class="presets">
         <div class="preset" onclick="setDays(2,this)">Weekend<br/><b>2D</b></div>
@@ -631,181 +926,153 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-body);background:var(
         <div class="preset" onclick="setDays(7,this)">Long<br/><b>7D</b></div>
       </div>
     </div>
-
-    <!-- Step 2: Group & Budget -->
+    <!-- Step 2 -->
     <div class="wiz-panel" id="wp2">
-      <div class="field">
-        <label class="form-label">Number of travellers</label>
-        <input class="form-input" type="number" id="inp-group" value="4" min="1" max="30"/>
+      <div class="fld"><label class="flbl">Number of travellers</label><input class="finp" type="number" id="inp-grp" value="4" min="1" max="30"/></div>
+      <div class="fld">
+        <label class="flbl">Budget type</label>
+        <div class="tog-row"><div class="tog-opt active" id="btp-tot" onclick="setBType('total')">Total budget</div><div class="tog-opt" id="btp-pp" onclick="setBType('pp')">Per person</div></div>
       </div>
-      <div class="field">
-        <label class="form-label">Budget type</label>
-        <div class="toggle-row">
-          <div class="toggle-opt active" id="btype-total" onclick="setBType('total')">Total budget</div>
-          <div class="toggle-opt" id="btype-pp" onclick="setBType('pp')">Per person</div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="form-label">Budget range (PHP)</label>
-        <div class="budget-options">
-          <div class="budget-opt-card active" onclick="pickBudget(this,'₱3k–5k','Budget')"><div class="boc-tier">Budget</div><div class="boc-amount">₱3,000–5,000</div><div class="boc-desc">Backpacker</div></div>
-          <div class="budget-opt-card" onclick="pickBudget(this,'₱5k–10k','Mid-range')"><div class="boc-tier">Mid-range</div><div class="boc-amount">₱5,000–10,000</div><div class="boc-desc">Comfortable</div></div>
-          <div class="budget-opt-card" onclick="pickBudget(this,'₱10k–20k','Premium')"><div class="boc-tier">Premium</div><div class="boc-amount">₱10,000–20,000</div><div class="boc-desc">Upscale</div></div>
-          <div class="budget-opt-card" onclick="pickBudget(this,'₱20k+','Luxury')"><div class="boc-tier">Luxury</div><div class="boc-amount">₱20,000+</div><div class="boc-desc">No limits</div></div>
+      <div class="fld">
+        <label class="flbl">Budget range (PHP)</label>
+        <div class="bud-grid">
+          <div class="bud-opt active" onclick="pickBud(this,'₱3k–5k')"><div class="boc-t">Budget</div><div class="boc-a">₱3,000–5,000</div><div class="boc-d">Backpacker</div></div>
+          <div class="bud-opt" onclick="pickBud(this,'₱5k–10k')"><div class="boc-t">Mid-range</div><div class="boc-a">₱5,000–10,000</div><div class="boc-d">Comfortable</div></div>
+          <div class="bud-opt" onclick="pickBud(this,'₱10k–20k')"><div class="boc-t">Premium</div><div class="boc-a">₱10,000–20,000</div><div class="boc-d">Upscale</div></div>
+          <div class="bud-opt" onclick="pickBud(this,'₱20k+')"><div class="boc-t">Luxury</div><div class="boc-a">₱20,000+</div><div class="boc-d">No limits</div></div>
         </div>
       </div>
     </div>
-
-    <!-- Step 3: Interests -->
+    <!-- Step 3 -->
     <div class="wiz-panel" id="wp3">
-      <div style="font-size:13px;color:var(--earth-l);margin-bottom:14px;">Select all that interest you</div>
-      <div class="filter-grid">
-        <div class="filter-chip active" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(0,134,179,.1)">🏖️</div><div class="filter-name">Beaches</div></div>
-        <div class="filter-chip active" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(232,81,42,.1)">🍜</div><div class="filter-name">Restaurants</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(26,79,160,.1)">🏛️</div><div class="filter-name">Tourist Spots</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(244,168,0,.1)">🛍️</div><div class="filter-name">Shopping</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(244,168,0,.08)">🎁</div><div class="filter-name">Souvenirs</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(61,43,31,.08)">🎉</div><div class="filter-name">Night Life</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(45,106,79,.1)">⛺</div><div class="filter-name">Camping</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(45,106,79,.1)">🌿</div><div class="filter-name">Nature & Hike</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(26,79,160,.08)">🤿</div><div class="filter-name">Water Sports</div></div>
-        <div class="filter-chip" onclick="toggleFilter(this)"><div class="filter-icon" style="background:rgba(61,43,31,.06)">⛪</div><div class="filter-name">Cultural</div></div>
+      <div style="font-size:12px;color:var(--earth-l);margin-bottom:12px;">Select all that interest you</div>
+      <div class="flt-grid">
+        <div class="flt-chip active" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(0,134,179,.1)">🏖️</div><div class="flt-name">Beaches</div></div>
+        <div class="flt-chip active" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(232,81,42,.1)">🍜</div><div class="flt-name">Restaurants</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(26,79,160,.1)">🏛️</div><div class="flt-name">Tourist Spots</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(244,168,0,.1)">🛍️</div><div class="flt-name">Shopping</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(244,168,0,.08)">🎁</div><div class="flt-name">Souvenirs</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(61,43,31,.08)">🎉</div><div class="flt-name">Night Life</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(45,106,79,.1)">⛺</div><div class="flt-name">Camping</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(45,106,79,.1)">🌿</div><div class="flt-name">Nature & Hike</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(26,79,160,.08)">🤿</div><div class="flt-name">Water Sports</div></div>
+        <div class="flt-chip" onclick="this.classList.toggle('active')"><div class="flt-icon" style="background:rgba(61,43,31,.06)">⛪</div><div class="flt-name">Cultural</div></div>
       </div>
     </div>
-
-    <!-- Step 4: Review -->
+    <!-- Step 4 Review -->
     <div class="wiz-panel" id="wp4">
-      <div class="review-card">
-        <div class="review-title" id="review-title">Boracay Trip 🌴</div>
-        <div class="review-row"><span class="review-key">Duration</span><span class="review-val" id="rv-days">3 days</span></div>
-        <div class="review-row"><span class="review-key">Group size</span><span class="review-val" id="rv-group">4 people</span></div>
-        <div class="review-row"><span class="review-key">Budget</span><span class="review-val" id="rv-budget">₱3k–5k / person</span></div>
-        <div class="review-row">
-          <span class="review-key">Interests</span>
-          <div id="rv-filters" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:60%;"></div>
-        </div>
+      <div class="rv-card">
+        <div class="rv-title" id="rv-t">Boracay Trip 🌴</div>
+        <div class="rv-row"><span class="rv-k">Duration</span><span class="rv-v" id="rv-days">3 days</span></div>
+        <div class="rv-row"><span class="rv-k">Group size</span><span class="rv-v" id="rv-grp">4 people</span></div>
+        <div class="rv-row"><span class="rv-k">Budget</span><span class="rv-v" id="rv-bud">₱3k–5k / person</span></div>
+        <div class="rv-row"><span class="rv-k">Interests</span><div id="rv-flt" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:60%;"></div></div>
       </div>
-      <div style="background:rgba(244,168,0,.08);border:1px solid rgba(244,168,0,.2);border-radius:var(--r-md);padding:12px;font-size:12px;color:var(--gold-d);line-height:1.6;">
-        🌟 You'll build your own day-by-day plan by browsing beaches, restaurants, activities and more — customized exactly how you want it.
+      <div style="background:var(--gold-l);border:1px solid rgba(244,168,0,.3);border-radius:var(--r-md);padding:12px;font-size:12px;color:var(--gold-d);line-height:1.6;">
+        🌟 You'll build your own day-by-day plan — browse places, add to days, and track your budget.
       </div>
     </div>
   </div>
-
-  <div class="wiz-footer">
-    <button class="btn-back hidden" id="wiz-back" onclick="wizPrev()">← Back</button>
-    <button class="btn-next" id="wiz-next" onclick="wizNext()">Continue →</button>
+  <div class="wiz-foot">
+    <button class="btn-wb hidden" id="wiz-back" onclick="wizPrev()">← Back</button>
+    <button class="btn-wn" id="wiz-next" onclick="wizNext()">Continue →</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     SCREEN: GENERATING
-═══════════════════════════════════════ -->
+<!-- ═══════════════════════ GENERATING ═══════════════════════ -->
 <div id="s-generating" class="screen">
   <div class="gen-icon">☀️</div>
-  <div class="gen-title">Setting up your trip</div>
-  <div class="gen-sub" id="gen-label">Boracay · 3 days · 4 people</div>
+  <div class="gen-t">Setting up your trip</div>
+  <div class="gen-s" id="gen-lbl">Boracay · 3 days · 4 people</div>
   <div style="width:100%;max-width:280px;">
-    <div class="gen-step active" id="gs0"><div class="gen-step-dot"></div>Loading destination data</div>
-    <div class="gen-step" id="gs1"><div class="gen-step-dot"></div>Creating day tabs</div>
-    <div class="gen-step" id="gs2"><div class="gen-step-dot"></div>Setting up budget tracker</div>
-    <div class="gen-step" id="gs3"><div class="gen-step-dot"></div>Preparing place suggestions</div>
-    <div class="gen-step" id="gs4"><div class="gen-step-dot"></div>Almost ready</div>
+    <div class="gen-step active" id="gs0"><div class="gen-dot"></div>Loading destination data</div>
+    <div class="gen-step" id="gs1"><div class="gen-dot"></div>Creating day tabs</div>
+    <div class="gen-step" id="gs2"><div class="gen-dot"></div>Setting up budget tracker</div>
+    <div class="gen-step" id="gs3"><div class="gen-dot"></div>Preparing place suggestions</div>
+    <div class="gen-step" id="gs4"><div class="gen-dot"></div>Almost ready</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     SCREEN: MAIN APP
-═══════════════════════════════════════ -->
+<!-- ═══════════════════════ MAIN APP ═══════════════════════ -->
 <div id="s-app" class="screen">
-  <div class="app-header">
-    <div class="app-header-top">
+  <div class="app-hdr">
+    <div class="app-hdr-row">
       <div>
-        <div class="app-dest-label">trip to</div>
-        <div class="app-trip-name" id="app-dest-name">BORACAY</div>
-        <div class="app-trip-meta">
-          <span class="app-tag" id="app-days-tag">3 days</span>
-          <span class="app-tag" id="app-group-tag">4 people</span>
-          <span class="app-tag gold" id="app-budget-tag">₱3k–5k/person</span>
+        <div class="app-dest-lbl">trip to</div>
+        <div class="app-name" id="app-dest">BORACAY</div>
+        <div class="app-meta">
+          <span class="app-tag" id="app-dtag">3 days</span>
+          <span class="app-tag" id="app-gtag">4 people</span>
+          <span class="app-tag gold" id="app-btag">₱3k–5k</span>
         </div>
       </div>
-      <button class="share-btn" onclick="openSheet('sheet-share')">⇪ Share</button>
+      <button class="share-btn" onclick="openSheet('sh-share')">⇪ Share</button>
     </div>
     <div class="tab-bar">
-      <button class="tab-item active" onclick="switchTab('tour',this)">Tour</button>
-      <button class="tab-item" onclick="switchTab('budget',this)">Budget</button>
-      <button class="tab-item" onclick="switchTab('map',this);initMap()">Map</button>
-      <button class="tab-item" onclick="switchTab('group',this)">Group</button>
+      <button class="tab-btn active" onclick="switchTab('tour',this)">Tour</button>
+      <button class="tab-btn" onclick="switchTab('budget',this)">Budget</button>
+      <button class="tab-btn" onclick="switchTab('map',this);initMap()">Map</button>
+      <button class="tab-btn" onclick="switchTab('group',this)">Group</button>
     </div>
   </div>
 
   <div class="app-body">
-    <!-- TOUR TAB -->
-    <div class="tab-content active" id="tab-tour">
-      <div class="day-tabs-scroll" id="day-tabs-row"></div>
-      <div id="day-panels-container"></div>
+    <!-- TOUR -->
+    <div class="tab-pane active" id="tab-tour">
+      <div class="day-tabs-row" id="day-tabs-row"></div>
+      <div id="day-panels"></div>
     </div>
-
-    <!-- BUDGET TAB -->
-    <div class="tab-content" id="tab-budget">
-      <div class="budget-summary">
-        <div class="budget-total-label">Total budget</div>
-        <div class="budget-total-amount" id="bud-total">₱20,000</div>
-        <div class="budget-bar-wrap"><div class="budget-bar-fill" id="bud-bar" style="width:42%"></div></div>
-        <div class="budget-bar-labels">
-          <span class="budget-bar-label" id="bud-pct">42% spent</span>
-          <span class="budget-bar-label" id="bud-remain">₱11,580 left</span>
-        </div>
+    <!-- BUDGET -->
+    <div class="tab-pane" id="tab-budget">
+      <div class="bud-summary">
+        <div class="bud-total-lbl">Total budget</div>
+        <div class="bud-total-val" id="bud-total">₱20,000</div>
+        <div class="bud-bar-wrap"><div class="bud-bar-fill" id="bud-bar" style="width:42%"></div></div>
+        <div class="bud-bar-lbls"><span class="bud-bar-lbl" id="bud-pct">42% spent</span><span class="bud-bar-lbl" id="bud-left">₱11,580 left</span></div>
       </div>
-      <div class="budget-cards">
-        <div class="bud-stat"><div class="bud-stat-label">Per person</div><div class="bud-stat-val" id="bud-pp">₱5,000</div></div>
-        <div class="bud-stat"><div class="bud-stat-label">Spent</div><div class="bud-stat-val">₱8,420</div></div>
-        <div class="bud-stat highlight"><div class="bud-stat-label">Left</div><div class="bud-stat-val">₱11,580</div></div>
+      <div class="bud-stats">
+        <div class="bud-stat"><div class="bud-stat-lbl">Per person</div><div class="bud-stat-val" id="bud-pp">₱5,000</div></div>
+        <div class="bud-stat"><div class="bud-stat-lbl">Spent</div><div class="bud-stat-val" id="bud-spent">₱8,420</div></div>
+        <div class="bud-stat hi"><div class="bud-stat-lbl">Remaining</div><div class="bud-stat-val" id="bud-rem">₱11,580</div></div>
       </div>
-      <div class="expense-section-title">Expenses</div>
-      <div id="expenses-list"></div>
-      <button class="add-expense-btn" onclick="openSheet('sheet-expense')">+ Log Expense</button>
+      <div class="exp-sec-title">All expenses</div>
+      <div id="exp-list"></div>
+      <button class="add-exp-btn" onclick="openExpSheet(null)">+ Log Expense</button>
     </div>
-
-    <!-- MAP TAB -->
-    <div class="tab-content" id="tab-map">
-      <div class="map-day-filter" id="map-filter-row">
-        <button class="map-filter-btn active" onclick="filterMap('all',this)">All days</button>
+    <!-- MAP -->
+    <div class="tab-pane" id="tab-map">
+      <div class="map-filter" id="map-filter-row">
+        <button class="map-f-btn active" onclick="filterMap('all',this)">All days</button>
       </div>
-      <div id="map-container"></div>
+      <div id="map-el"></div>
     </div>
-
-    <!-- GROUP TAB -->
-    <div class="tab-content" id="tab-group">
-      <div class="share-section">
-        <div style="font-size:14px;font-weight:600;color:var(--earth);margin-bottom:3px;">Share this trip</div>
-        <div style="font-size:12px;color:var(--earth-l);margin-bottom:10px;">Anyone with the link can view your tour plan and budget. They'll be asked to enter their name first.</div>
+    <!-- GROUP -->
+    <div class="tab-pane" id="tab-group">
+      <div class="share-card">
+        <div style="font-size:13px;font-weight:600;color:var(--earth);margin-bottom:3px;">Share this trip</div>
+        <div style="font-size:11px;color:var(--earth-l);">Anyone with the link can view your plan. They'll enter their name first.</div>
         <div class="share-link-box">
-          <input class="share-link-input" readonly value="lakbay.ph/trip/brc-3d-x9k2" id="share-link-val"/>
+          <input class="share-link-in" readonly value="lakbay.ph/trip/brc-3d-x9k2" id="share-link-in"/>
           <button class="copy-btn" onclick="copyLink()">Copy</button>
         </div>
       </div>
-      <div class="group-header-card">
-        <div class="group-header-title" id="group-trip-title">Boracay Trip 🌴</div>
-        <div class="group-header-sub" id="group-trip-sub">3 days · 4 people · ₱5k/person budget</div>
+      <div class="group-hdr">
+        <div class="group-hdr-title" id="grp-trip-title">Boracay Trip 🌴</div>
+        <div class="group-hdr-sub" id="grp-trip-sub">3 days · 4 people · ₱5k/person</div>
       </div>
-      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:10px;">Members (4)</div>
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:9px;">Members</div>
       <div id="members-list"></div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     BOTTOM SHEETS
-═══════════════════════════════════════ -->
+<!-- ═══════════════════════ GLASS SHEETS ═══════════════════════ -->
 
-<!-- Category picker sheet -->
-<div class="overlay" id="sheet-category" onclick="closeSheetOutside(event,'sheet-category')">
+<!-- Category picker -->
+<div class="overlay" id="sh-cat" onclick="closeSheetOut(event,'sh-cat')">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div class="sheet-title">What activity?</div>
-      <button class="sheet-close" onclick="closeSheet('sheet-category')">✕</button>
-    </div>
+    <div class="sheet-hdr"><div class="sheet-title">What activity?</div><button class="sheet-close" onclick="closeSheet('sh-cat')">✕</button></div>
     <div class="sheet-body">
       <div class="cat-grid">
         <div class="cat-chip" onclick="openPlaces('beach')"><div class="cat-chip-icon">🏖️</div><div class="cat-chip-label">Beaches</div></div>
@@ -822,111 +1089,99 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-body);background:var(
   </div>
 </div>
 
-<!-- Places list sheet -->
-<div class="overlay" id="sheet-places" onclick="closeSheetOutside(event,'sheet-places')">
+<!-- Places list -->
+<div class="overlay" id="sh-places" onclick="closeSheetOut(event,'sh-places')">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div class="sheet-title" id="places-sheet-title">Beaches in Boracay</div>
-      <button class="sheet-close" onclick="closeSheet('sheet-places');openSheet('sheet-category')">← Back</button>
+    <div class="sheet-hdr">
+      <div class="sheet-title" id="places-title">Beaches in Boracay</div>
+      <button class="sheet-close" onclick="closeSheet('sh-places');openSheet('sh-cat')">← Back</button>
     </div>
-    <div class="sheet-body" id="places-list-body"></div>
+    <div class="sheet-body" id="places-body"></div>
   </div>
 </div>
 
-<!-- Expense type sheet -->
-<div class="overlay" id="sheet-expense" onclick="closeSheetOutside(event,'sheet-expense')">
+<!-- Expense sheet (add/edit) -->
+<div class="overlay" id="sh-exp" onclick="closeSheetOut(event,'sh-exp')">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div class="sheet-title">Log an expense</div>
-      <button class="sheet-close" onclick="closeSheet('sheet-expense')">✕</button>
+    <div class="sheet-hdr">
+      <div class="sheet-title" id="exp-sheet-title">Log an expense</div>
+      <button class="sheet-close" onclick="closeSheet('sh-exp')">✕</button>
     </div>
     <div class="sheet-body">
-      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--earth-l);margin-bottom:8px;">Expense type</div>
-      <div class="exp-type-grid">
-        <div class="exp-type-chip" onclick="pickExpType(this,'✈️','Flight','Transport')"><div class="exp-type-icon">✈️</div><div class="exp-type-label">Flight</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'⛴️','Ferry/Boat','Transport')"><div class="exp-type-icon">⛴️</div><div class="exp-type-label">Ferry/Boat</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🚌','Bus','Transport')"><div class="exp-type-icon">🚌</div><div class="exp-type-label">Bus</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🚐','Van/FX','Transport')"><div class="exp-type-icon">🚐</div><div class="exp-type-label">Van / FX</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🛺','Tricycle','Transport')"><div class="exp-type-icon">🛺</div><div class="exp-type-label">Tricycle</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🏍️','Habal-habal','Transport')"><div class="exp-type-icon">🏍️</div><div class="exp-type-label">Habal-habal</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🚕','Grab Car','Transport')"><div class="exp-type-icon">🚕</div><div class="exp-type-label">Grab Car</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🏎️','Car Rental','Transport')"><div class="exp-type-icon">🏎️</div><div class="exp-type-label">Car Rental</div><div class="exp-type-cat">Transport</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🏨','Hotel/Resort','Lodging')"><div class="exp-type-icon">🏨</div><div class="exp-type-label">Hotel/Resort</div><div class="exp-type-cat">Lodging</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🏕️','Campsite','Lodging')"><div class="exp-type-icon">🏕️</div><div class="exp-type-label">Campsite</div><div class="exp-type-cat">Lodging</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🏠','Airbnb','Lodging')"><div class="exp-type-icon">🏠</div><div class="exp-type-label">Airbnb</div><div class="exp-type-cat">Lodging</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🍽️','Restaurant','Food')"><div class="exp-type-icon">🍽️</div><div class="exp-type-label">Restaurant</div><div class="exp-type-cat">Food</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🍜','Carinderia','Food')"><div class="exp-type-icon">🍜</div><div class="exp-type-label">Carinderia</div><div class="exp-type-cat">Food</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🛵','Grab Food','Food')"><div class="exp-type-icon">🛵</div><div class="exp-type-label">Grab Food</div><div class="exp-type-cat">Food</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🧃','Snacks/Drinks','Food')"><div class="exp-type-icon">🧃</div><div class="exp-type-label">Snacks</div><div class="exp-type-cat">Food</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🤿','Tour/Activity','Activity')"><div class="exp-type-icon">🤿</div><div class="exp-type-label">Tour</div><div class="exp-type-cat">Activity</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🎟️','Entrance Fee','Activity')"><div class="exp-type-icon">🎟️</div><div class="exp-type-label">Entrance Fee</div><div class="exp-type-cat">Activity</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🏄','Water Sports','Activity')"><div class="exp-type-icon">🏄</div><div class="exp-type-label">Water Sports</div><div class="exp-type-cat">Activity</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🛍️','Shopping','Shopping')"><div class="exp-type-icon">🛍️</div><div class="exp-type-label">Shopping</div><div class="exp-type-cat">Shopping</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🎁','Pasalubong','Shopping')"><div class="exp-type-icon">🎁</div><div class="exp-type-label">Pasalubong</div><div class="exp-type-cat">Shopping</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'💊','Medicine','Health')"><div class="exp-type-icon">💊</div><div class="exp-type-label">Medicine</div><div class="exp-type-cat">Health</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'📶','Load/WiFi','Utilities')"><div class="exp-type-icon">📶</div><div class="exp-type-label">Load / WiFi</div><div class="exp-type-cat">Utilities</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'🧴','Personal Care','Personal')"><div class="exp-type-icon">🧴</div><div class="exp-type-label">Personal Care</div><div class="exp-type-cat">Personal</div></div>
-        <div class="exp-type-chip" onclick="pickExpType(this,'📦','Misc','Other')"><div class="exp-type-icon">📦</div><div class="exp-type-label">Misc</div><div class="exp-type-cat">Other</div></div>
+      <div style="margin-bottom:12px;">
+        <div class="glass-label">Expense type</div>
+        <div class="exp-type-grid">
+          <div class="exp-type-chip" onclick="pickET(this,'✈️','Flight','Transport')"><div class="exp-type-icon">✈️</div><div class="exp-type-lbl">Flight</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'⛴️','Ferry/Boat','Transport')"><div class="exp-type-icon">⛴️</div><div class="exp-type-lbl">Ferry</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🚌','Bus','Transport')"><div class="exp-type-icon">🚌</div><div class="exp-type-lbl">Bus</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🚐','Van/FX','Transport')"><div class="exp-type-icon">🚐</div><div class="exp-type-lbl">Van/FX</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🛺','Tricycle','Transport')"><div class="exp-type-icon">🛺</div><div class="exp-type-lbl">Tricycle</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🏍️','Habal-habal','Transport')"><div class="exp-type-icon">🏍️</div><div class="exp-type-lbl">Habal-habal</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🚕','Grab Car','Transport')"><div class="exp-type-icon">🚕</div><div class="exp-type-lbl">Grab Car</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🏎️','Car Rental','Transport')"><div class="exp-type-icon">🏎️</div><div class="exp-type-lbl">Car Rental</div><div class="exp-type-cat">Transport</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🏨','Hotel/Resort','Lodging')"><div class="exp-type-icon">🏨</div><div class="exp-type-lbl">Hotel</div><div class="exp-type-cat">Lodging</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🏕️','Campsite','Lodging')"><div class="exp-type-icon">🏕️</div><div class="exp-type-lbl">Campsite</div><div class="exp-type-cat">Lodging</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🏠','Airbnb','Lodging')"><div class="exp-type-icon">🏠</div><div class="exp-type-lbl">Airbnb</div><div class="exp-type-cat">Lodging</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🍽️','Restaurant','Food')"><div class="exp-type-icon">🍽️</div><div class="exp-type-lbl">Restaurant</div><div class="exp-type-cat">Food</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🍜','Carinderia','Food')"><div class="exp-type-icon">🍜</div><div class="exp-type-lbl">Carinderia</div><div class="exp-type-cat">Food</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🛵','Grab Food','Food')"><div class="exp-type-icon">🛵</div><div class="exp-type-lbl">Grab Food</div><div class="exp-type-cat">Food</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🧃','Snacks','Food')"><div class="exp-type-icon">🧃</div><div class="exp-type-lbl">Snacks</div><div class="exp-type-cat">Food</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🤿','Tour','Activity')"><div class="exp-type-icon">🤿</div><div class="exp-type-lbl">Tour</div><div class="exp-type-cat">Activity</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🎟️','Entrance Fee','Activity')"><div class="exp-type-icon">🎟️</div><div class="exp-type-lbl">Entrance Fee</div><div class="exp-type-cat">Activity</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🏄','Water Sports','Activity')"><div class="exp-type-icon">🏄</div><div class="exp-type-lbl">Water Sports</div><div class="exp-type-cat">Activity</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🛍️','Shopping','Shopping')"><div class="exp-type-icon">🛍️</div><div class="exp-type-lbl">Shopping</div><div class="exp-type-cat">Shopping</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🎁','Pasalubong','Shopping')"><div class="exp-type-icon">🎁</div><div class="exp-type-lbl">Pasalubong</div><div class="exp-type-cat">Shopping</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'💊','Medicine','Health')"><div class="exp-type-icon">💊</div><div class="exp-type-lbl">Medicine</div><div class="exp-type-cat">Health</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'📶','Load/WiFi','Utilities')"><div class="exp-type-icon">📶</div><div class="exp-type-lbl">Load/WiFi</div><div class="exp-type-cat">Utilities</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'🧴','Personal Care','Personal')"><div class="exp-type-icon">🧴</div><div class="exp-type-lbl">Personal</div><div class="exp-type-cat">Personal</div></div>
+          <div class="exp-type-chip" onclick="pickET(this,'📦','Misc','Other')"><div class="exp-type-icon">📦</div><div class="exp-type-lbl">Misc</div><div class="exp-type-cat">Other</div></div>
+        </div>
       </div>
-      <div class="expense-form" id="expense-form" style="display:none;">
-        <div class="field" style="margin-top:14px;">
-          <label class="form-label">Description</label>
-          <input class="form-input" type="text" id="exp-title-input" placeholder="e.g. Lunch at Smoke BBQ"/>
+      <div class="exp-form" id="exp-form" style="display:none;">
+        <div class="glass-divider"></div>
+        <div class="fld">
+          <label class="glass-label">Description</label>
+          <input class="glass-input" type="text" id="exp-title-in" placeholder="e.g. Lunch at Smoke BBQ"/>
         </div>
-        <div class="field">
-          <label class="form-label">Total amount (₱)</label>
-          <input class="form-input" type="number" id="exp-amount-input" placeholder="0.00" oninput="calcSplit()"/>
+        <div class="fld">
+          <label class="glass-label">Total amount (₱)</label>
+          <input class="glass-input" type="number" id="exp-amt-in" placeholder="0.00" oninput="calcSplit()"/>
         </div>
-        <div class="field">
-          <label class="form-label">Split among</label>
-          <div class="member-check-grid" id="exp-member-checks"></div>
+        <div class="fld">
+          <label class="glass-label">Split among</label>
+          <div class="member-checks" id="exp-mem-checks"></div>
         </div>
-        <div class="split-preview" id="split-preview" style="display:none;">
-          <span class="split-label">Per person</span>
-          <span class="split-amount" id="split-amount-val">₱0</span>
+        <div class="split-preview" id="split-prev" style="display:none;">
+          <span class="split-lbl">Per person</span>
+          <span class="split-val" id="split-val">₱0</span>
         </div>
-        <button class="btn-join" style="margin-top:12px;" onclick="saveExpense()">Save Expense</button>
+        <button class="btn-save-exp" onclick="saveExpense()">Save Expense</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- Share sheet -->
-<div class="overlay" id="sheet-share" onclick="closeSheetOutside(event,'sheet-share')">
+<div class="overlay" id="sh-share" onclick="closeSheetOut(event,'sh-share')">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div class="sheet-title">Share trip</div>
-      <button class="sheet-close" onclick="closeSheet('sheet-share')">✕</button>
-    </div>
+    <div class="sheet-hdr"><div class="sheet-title">Share trip</div><button class="sheet-close" onclick="closeSheet('sh-share')">✕</button></div>
     <div class="sheet-body">
-      <div style="font-size:13px;color:var(--earth-l);line-height:1.6;margin-bottom:16px;">Anyone with this link can view your tour plan and budget. They'll enter their name first, then you'll see them listed in the Group tab.</div>
-      <label class="form-label">Share link (view only)</label>
-      <div class="share-link-box">
-        <input class="share-link-input" readonly value="lakbay.ph/trip/brc-3d-x9k2" id="share-link-val2"/>
+      <div style="font-size:12px;color:rgba(255,255,255,.45);line-height:1.6;margin-bottom:14px;">Anyone with this link can view your tour and budget. They'll enter their name to be included in budget splits.</div>
+      <div class="glass-label">Share link (view only)</div>
+      <div class="share-link-box" style="margin-top:6px;">
+        <input class="glass-input" readonly value="lakbay.ph/trip/brc-3d-x9k2" id="sh-link-val"/>
         <button class="copy-btn" onclick="copyLink2()">Copy</button>
       </div>
-      <div style="height:16px;"></div>
-      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--earth-l);margin-bottom:10px;">Share via</div>
-      <div style="display:flex;gap:8px;">
-        <div style="flex:1;background:var(--white);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer;">
-          <div style="font-size:22px;margin-bottom:4px;">💬</div>
-          <div style="font-size:11px;font-weight:600;color:var(--earth-m);">Messenger</div>
-        </div>
-        <div style="flex:1;background:var(--white);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer;">
-          <div style="font-size:22px;margin-bottom:4px;">📱</div>
-          <div style="font-size:11px;font-weight:600;color:var(--earth-m);">Viber</div>
-        </div>
-        <div style="flex:1;background:var(--white);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer;">
-          <div style="font-size:22px;margin-bottom:4px;">📲</div>
-          <div style="font-size:11px;font-weight:600;color:var(--earth-m);">WhatsApp</div>
-        </div>
-        <div style="flex:1;background:var(--white);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-md);padding:12px;text-align:center;cursor:pointer;">
-          <div style="font-size:22px;margin-bottom:4px;">✉️</div>
-          <div style="font-size:11px;font-weight:600;color:var(--earth-m);">Email</div>
-        </div>
+      <div class="glass-divider"></div>
+      <div class="glass-label">Share via</div>
+      <div class="share-opts">
+        <div class="share-opt"><span class="share-opt-icon">💬</span><span class="share-opt-lbl">Messenger</span></div>
+        <div class="share-opt"><span class="share-opt-icon">📱</span><span class="share-opt-lbl">Viber</span></div>
+        <div class="share-opt"><span class="share-opt-icon">📲</span><span class="share-opt-lbl">WhatsApp</span></div>
+        <div class="share-opt"><span class="share-opt-icon">✉️</span><span class="share-opt-lbl">Email</span></div>
       </div>
     </div>
   </div>
@@ -934,526 +1189,612 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-body);background:var(
 
 <script>
 /* ============================================================
-   TODO: REPLACE WITH NEON DB CALLS
-   All DATA_ objects below are placeholders.
-   When connecting to Neon:
-   - Replace DATA_PLACES with: fetch('/api/places?destination_id=X&category=Y')
-   - Replace DATA_EXPENSES with: fetch('/api/expenses?trip_id=X')
-   - Replace DATA_MEMBERS with: fetch('/api/members?trip_id=X')
-   - Replace DATA_DAYS with: fetch('/api/days?trip_id=X')
-   ============================================================ */
-
-const DATA_PLACES = {
-  boracay: {
-    beach: [
-      {id:'b1',name:'White Beach Station 1',area:'Station 1, Boracay',distance:'0.5 km from D\'Mall',cost:'Free (chair ₱150)',desc:'World-famous 4km powdery white sand beach.',lat:11.9674,lng:121.9213,hours:'Open 24hrs',tips:'Best at sunrise before the crowds.'},
-      {id:'b2',name:'Puka Beach',area:'North Boracay',distance:'8.2 km from D\'Mall',cost:'Free',desc:'Quieter, shell-covered beach away from tourists.',lat:11.9940,lng:121.9327,hours:'Open 24hrs',tips:'Bring your own food — few vendors here.'},
-      {id:'b3',name:'Diniwid Beach',area:'North of Station 1',distance:'1.4 km from D\'Mall',cost:'Free',desc:'Small, secluded cove perfect for snorkeling.',lat:11.9720,lng:121.9178,hours:'Open 24hrs',tips:'Rocky entry — wear water shoes.'},
-      {id:'b4',name:'Ilig-Iligan Beach',area:'North Boracay',distance:'7.0 km from D\'Mall',cost:'Free',desc:'Pristine beach with dramatic rock formations.',lat:11.9910,lng:121.9295,hours:'Open 24hrs',tips:'Best visited at low tide.'},
+   PLACEHOLDER DATA
+   TODO: Replace with Neon API calls
+============================================================ */
+const PLACES = {
+  boracay:{
+    beach:[
+      {id:'b1',name:'White Beach Station 1',area:'Station 1, Boracay',distance:'0.5 km from D\'Mall',cost:'Free (chair ₱150)',desc:'World-famous 4km powdery white sand beach.',lat:11.9674,lng:121.9213,hours:'Open 24hrs',tips:'Best at sunrise before the crowds.',img:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=140&q=60'},
+      {id:'b2',name:'Puka Beach',area:'North Boracay',distance:'8.2 km from D\'Mall',cost:'Free',desc:'Quieter, shell-covered beach away from the crowds.',lat:11.9940,lng:121.9327,hours:'Open 24hrs',tips:'Bring your own food — few vendors here.',img:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=140&q=60'},
+      {id:'b3',name:'Diniwid Beach',area:'North of Station 1',distance:'1.4 km from D\'Mall',cost:'Free',desc:'Small, secluded cove perfect for snorkeling.',lat:11.9720,lng:121.9178,hours:'Open 24hrs',tips:'Rocky entry — wear water shoes.',img:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=140&q=60'},
+      {id:'b4',name:'Ilig-Iligan Beach',area:'North Boracay',distance:'7.0 km from D\'Mall',cost:'Free',desc:'Pristine beach with dramatic rock formations.',lat:11.9910,lng:121.9295,hours:'Open 24hrs',tips:'Best visited at low tide.',img:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=140&q=60'},
     ],
-    restaurant: [
-      {id:'r1',name:'Real Coffee & Tea Café',area:'Station 2, Boracay',distance:'0.2 km from D\'Mall',cost:'₱200–400/person',desc:'Famous for bulalo and fresh buko shakes. Local favorite.',lat:11.9645,lng:121.9241,hours:'7AM–10PM',tips:'Order the buko pie — it sells out fast.'},
-      {id:'r2',name:'Smoke BBQ',area:'Station 2 beachfront',distance:'0.3 km from D\'Mall',cost:'₱450–700/person',desc:'Best BBQ ribs and seafood on the island.',lat:11.9638,lng:121.9248,hours:'11AM–11PM',tips:'Reserve a beachfront table before 6PM.'},
-      {id:'r3',name:'Jonah\'s Fruit Shake',area:'Station 2',distance:'0.1 km from D\'Mall',cost:'₱80–150/person',desc:'Iconic Boracay shake bar. Try mango-avocado.',lat:11.9642,lng:121.9244,hours:'8AM–11PM',tips:'Queue can be long at sunset.'},
-      {id:'r4',name:'Lemoni Café',area:'Station 1',distance:'0.8 km from D\'Mall',cost:'₱350–600/person',desc:'Open-air dining with fresh seafood and local craft cocktails.',lat:11.9668,lng:121.9222,hours:'11AM–11PM',tips:'Try the sizzling sisig with cold buko juice.'},
+    restaurant:[
+      {id:'r1',name:'Real Coffee & Tea Café',area:'Station 2',distance:'0.2 km from D\'Mall',cost:'₱200–400/person',desc:'Famous for bulalo and fresh buko shakes.',lat:11.9645,lng:121.9241,hours:'7AM–10PM',tips:'Order the buko pie — it sells out fast.',img:'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=140&q=60'},
+      {id:'r2',name:'Smoke BBQ',area:'Station 2 beachfront',distance:'0.3 km from D\'Mall',cost:'₱450–700/person',desc:'Best BBQ ribs and seafood on the island.',lat:11.9638,lng:121.9248,hours:'11AM–11PM',tips:'Reserve a beachfront table before 6PM.',img:'https://images.unsplash.com/photo-1529516548873-9ce57c8f155e?w=140&q=60'},
+      {id:'r3',name:'Jonah\'s Fruit Shake',area:'Station 2',distance:'0.1 km from D\'Mall',cost:'₱80–150/person',desc:'Iconic shake bar. Try mango-avocado.',lat:11.9642,lng:121.9244,hours:'8AM–11PM',tips:'Queue can be long at sunset.',img:'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=140&q=60'},
     ],
-    tourist_spot: [
-      {id:'t1',name:'Mt. Luho View Deck',area:'North Boracay',distance:'5.5 km from D\'Mall',cost:'₱50 entrance',desc:'Highest peak on Boracay. 360° panoramic views.',lat:11.9856,lng:121.9312,hours:'7AM–5PM',tips:'Go at 5AM for sunrise — completely worth it.'},
-      {id:'t2',name:'Crocodile Island',area:'offshore',distance:'30 min by boat',cost:'₱900 island hopping',desc:'Pristine snorkeling spot shaped like a crocodile.',lat:11.9450,lng:121.9180,hours:'7AM–4PM',tips:'Book island hopping at Talipapa wet market.'},
+    tourist_spot:[
+      {id:'t1',name:'Mt. Luho View Deck',area:'North Boracay',distance:'5.5 km from D\'Mall',cost:'₱50 entrance',desc:'Highest peak on Boracay with 360° views.',lat:11.9856,lng:121.9312,hours:'7AM–5PM',tips:'Go at 5AM for sunrise.',img:'https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=140&q=60'},
+      {id:'t2',name:'Crocodile Island',area:'Offshore',distance:'30 min by boat',cost:'₱900 island hopping',desc:'Pristine snorkeling spot shaped like a crocodile.',lat:11.9450,lng:121.9180,hours:'7AM–4PM',tips:'Book island hopping at Talipapa.',img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=140&q=60'},
     ],
-    shopping: [
-      {id:'s1',name:'D\'Mall Boracay',area:'Station 2',distance:'0 km (reference point)',cost:'Varies',desc:'Main shopping hub with 100+ shops, ATMs, restaurants.',lat:11.9640,lng:121.9243,hours:'9AM–11PM',tips:'Best prices in the shops on the second level.'},
-      {id:'s2',name:'Talipapa Wet Market',area:'Station 2',distance:'0.4 km from D\'Mall',cost:'Varies',desc:'Local market for fresh seafood — buy and have restaurants cook it.',lat:11.9648,lng:121.9250,hours:'5AM–8PM',tips:'Haggle! Prices are negotiable.'},
+    shopping:[
+      {id:'s1',name:'D\'Mall Boracay',area:'Station 2',distance:'0 km (reference)',cost:'Varies',desc:'Main shopping hub with 100+ shops and ATMs.',lat:11.9640,lng:121.9243,hours:'9AM–11PM',tips:'Best prices on the second level.',img:'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=140&q=60'},
+      {id:'s2',name:'Talipapa Wet Market',area:'Station 2',distance:'0.4 km from D\'Mall',cost:'Varies',desc:'Local market for fresh seafood — buy and cook.',lat:11.9648,lng:121.9250,hours:'5AM–8PM',tips:'Haggle! Prices are negotiable.',img:'https://images.unsplash.com/photo-1534237710431-e2fc698436d0?w=140&q=60'},
     ],
-    nightlife: [
-      {id:'n1',name:'Epic Bar',area:'Station 2 beachfront',distance:'0.2 km from D\'Mall',cost:'₱300 min spend',desc:'Top nightlife spot with live DJs and beach dancing.',lat:11.9639,lng:121.9246,hours:'10PM–4AM',tips:'Best nights are Thursday and Saturday.'},
-      {id:'n2',name:'Bom Bom Bar',area:'Station 2',distance:'0.3 km from D\'Mall',cost:'₱200 min spend',desc:'Laid-back beach bar with live acoustic music.',lat:11.9641,lng:121.9247,hours:'5PM–2AM',tips:'Fire dancing show every Friday at 9PM.'},
+    nightlife:[
+      {id:'n1',name:'Epic Bar',area:'Station 2 beachfront',distance:'0.2 km from D\'Mall',cost:'₱300 min spend',desc:'Top nightlife with live DJs and beach dancing.',lat:11.9639,lng:121.9246,hours:'10PM–4AM',tips:'Best nights are Thursday and Saturday.',img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=140&q=60'},
     ],
-    water_sports: [
-      {id:'w1',name:'Ariel\'s Point Cliff Diving',area:'Buruanga (boat from town)',distance:'45 min by boat',cost:'₱1,800/person (all incl.)',desc:'Cliff diving, kayaking, snorkeling. Most fun activity on the island.',lat:11.9290,lng:121.8950,hours:'7AM–4PM (departs 9AM)',tips:'Bring sunscreen — you\'ll be outdoors for 6+ hours.'},
-      {id:'w2',name:'Parasailing Station 2',area:'Station 2 beach',distance:'0.3 km from D\'Mall',cost:'₱1,200/person',desc:'Parasailing over the famous white beach.',lat:11.9635,lng:121.9245,hours:'8AM–5PM',tips:'Morning flights have calmer winds.'},
+    water_sports:[
+      {id:'w1',name:'Ariel\'s Point Cliff Diving',area:'Buruanga (boat trip)',distance:'45 min by boat',cost:'₱1,800/person all incl.',desc:'Cliff diving, kayaking, snorkeling.',lat:11.9290,lng:121.8950,hours:'Departs 9AM daily',tips:'Bring sunscreen — 6+ hours outdoors.',img:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=140&q=60'},
     ],
-    souvenirs:[
-      {id:'sov1',name:'Pasalubong Shops',area:'D\'Mall area',distance:'0.1 km from D\'Mall',cost:'₱50–500',desc:'Dried mangoes, shell jewelry, ref magnets, shirts.',lat:11.9641,lng:121.9243,hours:'9AM–10PM',tips:'Buy dried mangoes in bulk — cheaper per pack.'},
-    ],
-    nature_hike:[
-      {id:'nh1',name:'Bat Cave & Forest Trail',area:'North Boracay',distance:'6.0 km from D\'Mall',cost:'₱100 guide fee',desc:'Short trek through forest to a bat cave at dusk.',lat:11.9870,lng:121.9320,hours:'4PM–7PM',tips:'Best visited at 5:30PM when bats emerge.'},
-    ],
-    camping:[
-      {id:'c1',name:'Puka Beach Campsite',area:'North Boracay',distance:'8.2 km from D\'Mall',cost:'₱500/tent/night',desc:'Camp right on the beach under the stars.',lat:11.9940,lng:121.9330,hours:'Check-in 3PM',tips:'Book ahead — only 10 tent slots available.'},
-    ],
+    souvenirs:[{id:'sov1',name:'Pasalubong Shops D\'Mall',area:'Station 2',distance:'0.1 km from D\'Mall',cost:'₱50–500',desc:'Dried mangoes, shell jewelry, shirts.',lat:11.9641,lng:121.9243,hours:'9AM–10PM',tips:'Buy dried mangoes in bulk — cheaper per pack.',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=140&q=60'}],
+    nature_hike:[{id:'nh1',name:'Bat Cave & Forest Trail',area:'North Boracay',distance:'6.0 km from D\'Mall',cost:'₱100 guide fee',desc:'Short trek through forest to a bat cave.',lat:11.9870,lng:121.9320,hours:'4PM–7PM',tips:'Visit at 5:30PM when bats emerge.',img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=140&q=60'}],
+    camping:[{id:'c1',name:'Puka Beach Campsite',area:'North Boracay',distance:'8.2 km from D\'Mall',cost:'₱500/tent/night',desc:'Camp right on the beach under the stars.',lat:11.9940,lng:121.9330,hours:'Check-in 3PM',tips:'Only 10 tent slots — book ahead.',img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=140&q=60'}],
   }
 };
 
-/* TODO: Replace with fetch('/api/members?trip_id=X') */
-const DATA_MEMBERS = [
-  {id:'m1',name:'You (Owner)',role:'owner',avatar_bg:'#1A4FA0',avatar_color:'#E6EFFC',balance:0},
-  {id:'m2',name:'Juan Santos',role:'guest',avatar_bg:'#2D6A4F',avatar_color:'#E8F5EE',balance:-420},
-  {id:'m3',name:'Maria Reyes',role:'guest',avatar_bg:'#C0392B',avatar_color:'#FDEAEA',balance:120},
-  {id:'m4',name:'Carlo Tan',role:'guest',avatar_bg:'#F4A800',avatar_color:'#FEF3D0',balance:-300},
+/* Placeholder expenses — TODO: Replace with Neon fetch */
+let EXPENSES = [
+  {id:'e1',icon:'✈️',type:'Flight',title:'Cebu Pacific MNL-BOR',total:12000,members:['You','Juan','Maria','Carlo'],paidBy:'You',day:0},
+  {id:'e2',icon:'🏨',type:'Hotel',title:'Sand Bar Resort (2 nights)',total:4800,members:['You','Juan','Maria','Carlo'],paidBy:'Juan',day:0},
+  {id:'e3',icon:'🍽️',type:'Restaurant',title:'Lunch at Real Coffee',total:1200,members:['You','Juan','Maria','Carlo'],paidBy:'Maria',day:1},
+  {id:'e4',icon:'🤿',type:'Tour',title:"Ariel's Point Island Hopping",total:3600,members:['You','Juan','Maria','Carlo'],paidBy:'Carlo',day:1},
 ];
 
-/* TODO: Replace with fetch('/api/expenses?trip_id=X') */
-const DATA_EXPENSES = [
-  {id:'e1',icon:'✈️',type:'Flight',title:'Cebu Pacific MNL-BOR',total:12000,pp:3000,day:0,members:['Juan Santos','Maria Reyes','Carlo Tan','You (Owner)'],paid_by:'You (Owner)'},
-  {id:'e2',icon:'🏨',type:'Hotel/Resort',title:'Sand Bar Resort (2 nights)',total:4800,pp:1200,day:0,members:['Juan Santos','Maria Reyes','Carlo Tan','You (Owner)'],paid_by:'Juan Santos'},
-  {id:'e3',icon:'🍽️',type:'Restaurant',title:'Lunch at Real Coffee',total:1200,pp:300,day:1,members:['Juan Santos','Maria Reyes','Carlo Tan','You (Owner)'],paid_by:'Maria Reyes'},
-  {id:'e4',icon:'🤿',type:'Tour',title:'Ariel\'s Point Island Hopping',total:3600,pp:900,day:1,members:['Juan Santos','Maria Reyes','Carlo Tan','You (Owner)'],paid_by:'Carlo Tan'},
+/* Placeholder members — TODO: Replace with Neon fetch */
+let MEMBERS = [
+  {id:'m1',name:'You',role:'owner',bg:'#1A4FA0',fg:'#E6EFFC'},
+  {id:'m2',name:'Juan Santos',role:'guest',bg:'#2D6A4F',fg:'#E8F5EE'},
+  {id:'m3',name:'Maria Reyes',role:'guest',bg:'#C0392B',fg:'#FDEAEA'},
+  {id:'m4',name:'Carlo Tan',role:'guest',bg:'#F4A800',fg:'#FEF3D0'},
 ];
 
 /* ============================================================
-   APP STATE
-   ============================================================ */
-const state = {
-  dest:'Boracay', destKey:'boracay', days:3, group:4,
-  budgetRange:'₱3k–5k', budgetType:'total',
-  filters:['Beaches','Restaurants'],
-  wizStep:0, currentDay:0, isOwner:true,
-  tripDays:[], /* TODO: load from Neon */
-  members: DATA_MEMBERS,
-  expenses: DATA_EXPENSES,
-  selectedExpType: null,
-  mapInitialized: false, leafletMap: null,
+   STATE
+============================================================ */
+const S = {
+  dest:'Boracay',destKey:'boracay',days:3,group:4,
+  budgetRange:'₱3k–5k',wizStep:0,isOwner:true,
+  tripDays:[],currentDay:0,
+  user:null,/* TODO: store auth user */
+  selectedET:null,editingExpId:null,
+  mapInit:false,leafMap:null,
 };
 
 /* ============================================================
+   HERO SLIDER
+============================================================ */
+let heroIdx=0;
+const SLIDE_COUNT=5;
+function initHero(){
+  const dots=document.getElementById('hero-dots');
+  dots.innerHTML='';
+  for(let i=0;i<SLIDE_COUNT;i++){
+    const d=document.createElement('div');
+    d.className='hero-dot'+(i===0?' active':'');
+    dots.appendChild(d);
+  }
+  setInterval(()=>{
+    heroIdx=(heroIdx+1)%SLIDE_COUNT;
+    document.getElementById('hero-slides').style.transform=`translateX(-${heroIdx*100}%)`;
+    document.querySelectorAll('.hero-dot').forEach((d,i)=>d.classList.toggle('active',i===heroIdx));
+  },4000);
+}
+
+/* Destination strip */
+function initDestStrip(){
+  const STRIP_ITEMS=[
+    {name:'Boracay',img:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=280&q=60'},
+    {name:'Palawan',img:'https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=280&q=60'},
+    {name:'Cebu',img:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=280&q=60'},
+    {name:'Siargao',img:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=280&q=60'},
+    {name:'Batanes',img:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=280&q=60'},
+    {name:'Vigan',img:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=280&q=60'},
+    {name:'Banaue',img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=280&q=60'},
+    {name:'Manila',img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=280&q=60'},
+  ];
+  const track=document.getElementById('dest-strip');
+  const doubled=[...STRIP_ITEMS,...STRIP_ITEMS];
+  track.innerHTML=doubled.map(d=>`
+    <div class="dest-strip-card" onclick="goTo('s-wizard');state_dest='${d.name}';initWizard()">
+      <img src="${d.img}" alt="${d.name}" loading="lazy"/>
+      <div class="dest-strip-overlay"></div>
+      <div class="dest-strip-label">${d.name.toUpperCase()}</div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   AUTH
+============================================================ */
+let authMode='signin';
+function openAuthModal(mode){
+  authMode=mode;
+  document.getElementById('auth-modal').classList.add('open');
+  document.getElementById('auth-title').textContent=mode==='signin'?'Welcome back':'Create account';
+  document.getElementById('auth-sub').textContent=mode==='signin'?'Sign in to save and manage your trips':'Join Lakbay PH — it\'s free';
+  document.getElementById('name-field').style.display=mode==='signup'?'block':'none';
+  document.getElementById('auth-submit-btn').textContent=mode==='signin'?'Sign in':'Create account';
+  document.getElementById('auth-switch').innerHTML=mode==='signin'
+    ?'Don\'t have an account? <span onclick="switchAuthMode()">Sign up</span>'
+    :'Already have an account? <span onclick="switchAuthMode()">Sign in</span>';
+}
+function switchAuthMode(){openAuthModal(authMode==='signin'?'signup':'signin');}
+function closeAuth(){document.getElementById('auth-modal').classList.remove('open');}
+function closeAuthOutside(e){if(e.target.id==='auth-modal')closeAuth();}
+
+function submitAuth(){
+  /* TODO: POST /api/auth/signin or /api/auth/signup */
+  const email=document.getElementById('auth-email').value.trim();
+  const name=document.getElementById('auth-name').value.trim()||email.split('@')[0];
+  if(!email){document.getElementById('auth-email').focus();return;}
+  S.user={name:authMode==='signup'?name:name,email};
+  updateGreeting();
+  closeAuth();
+}
+
+function updateGreeting(){
+  const el=document.getElementById('home-greeting');
+  const ar=document.getElementById('auth-row');
+  if(S.user){
+    el.innerHTML=`Hello, <strong>${S.user.name}</strong>! 👋`;
+    ar.innerHTML=`<button class="auth-btn logout" onclick="logout()">Sign out</button>`;
+  } else {
+    el.textContent='Welcome to Lakbay PH';
+    ar.innerHTML=`<button class="auth-btn" onclick="openAuthModal('signin')">Sign in</button><button class="auth-btn primary" onclick="openAuthModal('signup')">Sign up</button>`;
+  }
+}
+
+function logout(){
+  S.user=null;
+  updateGreeting();
+}
+
+/* ============================================================
+   KLOOK AFFILIATE LINKS
+   TODO: Replace placeholder URLs with real Klook affiliate URLs
+============================================================ */
+const KLOOK_LINKS={
+  'boracay-hotels':'https://www.klook.com/en-PH/city/33-boracay-things-to-do/?utm_source=lakbayph',
+  'palawan-hotels':'https://www.klook.com/en-PH/city/159-el-nido-things-to-do/?utm_source=lakbayph',
+  'cebu-hotels':'https://www.klook.com/en-PH/city/6-cebu-things-to-do/?utm_source=lakbayph',
+  'siargao-hotels':'https://www.klook.com/en-PH/city/291-siargao-things-to-do/?utm_source=lakbayph',
+  'batanes-hotels':'https://www.klook.com/en-PH/search/?query=batanes&utm_source=lakbayph',
+  'manila-hotels':'https://www.klook.com/en-PH/city/3-manila-things-to-do/?utm_source=lakbayph',
+};
+function openKlook(key){
+  const url=KLOOK_LINKS[key]||'https://www.klook.com/en-PH/?utm_source=lakbayph';
+  window.open(url,'_blank');
+}
+
+/* ============================================================
    NAVIGATION
-   ============================================================ */
+============================================================ */
 function goTo(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
-
-function loadSampleTrip(){
-  state.isOwner=true;
+function loadSample(){
+  S.isOwner=true;
   buildTripUI();
   goTo('s-app');
 }
 
 /* ============================================================
    WIZARD
-   ============================================================ */
-const WIZ_STEPS=[
+============================================================ */
+const WIZ=[
   ['Where to?','Pick your Philippine destination'],
   ['How long?','How many days is your vacation?'],
-  ['Your group','Group size and budget range'],
-  ['What\'s your vibe?','Pick experiences you want'],
-  ['All set!','Review your trip before starting'],
+  ['Your group','Group size and budget'],
+  ['What\'s your vibe?','Pick the experiences you want'],
+  ['All set!','Review before starting'],
 ];
-
-function initWizard(){state.wizStep=0;renderWizStep();}
-
-function renderWizStep(){
-  const s=state.wizStep;
+function initWizard(){S.wizStep=0;renderWiz();}
+function renderWiz(){
+  const s=S.wizStep;
   document.querySelectorAll('.wiz-panel').forEach((p,i)=>p.classList.toggle('active',i===s));
-  document.querySelectorAll('.wiz-dot').forEach((d,i)=>{
-    d.classList.toggle('done',i<s);d.classList.toggle('active',i===s);
-  });
-  document.getElementById('wiz-title').textContent=WIZ_STEPS[s][0];
-  document.getElementById('wiz-sub').textContent=WIZ_STEPS[s][1];
+  document.querySelectorAll('.wdot').forEach((d,i)=>{d.classList.toggle('done',i<s);d.classList.toggle('active',i===s);});
+  document.getElementById('wiz-h').textContent=WIZ[s][0];
+  document.getElementById('wiz-s').textContent=WIZ[s][1];
   document.getElementById('wiz-back').classList.toggle('hidden',s===0);
   document.getElementById('wiz-next').textContent=s===4?'🚀 Start Planning':'Continue →';
   if(s===4)buildReview();
 }
-
-function wizNext(){
-  if(state.wizStep<4){state.wizStep++;renderWizStep();}
-  else startGenerating();
-}
-function wizPrev(){if(state.wizStep>0){state.wizStep--;renderWizStep();}}
-
-function pickDest(el){
-  document.querySelectorAll('.dest-card').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  state.dest=el.dataset.dest;
-  state.destKey=state.dest.toLowerCase().replace(/\s/g,'');
-}
-function adjDays(d){
-  state.days=Math.max(1,Math.min(14,state.days+d));
-  document.getElementById('days-num').textContent=state.days;
-  document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));
-}
-function setDays(n,el){
-  state.days=n;document.getElementById('days-num').textContent=n;
-  document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-}
-function setBType(t){
-  state.budgetType=t;
-  document.getElementById('btype-total').classList.toggle('active',t==='total');
-  document.getElementById('btype-pp').classList.toggle('active',t==='pp');
-}
-function pickBudget(el,range){
-  document.querySelectorAll('.budget-opt-card').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');state.budgetRange=range;
-}
-function toggleFilter(el){el.classList.toggle('active');}
-
+function wizNext(){if(S.wizStep<4){S.wizStep++;renderWiz();}else startGen();}
+function wizPrev(){if(S.wizStep>0){S.wizStep--;renderWiz();}}
+function pickDest(el){document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');S.dest=el.dataset.dest;S.destKey=S.dest.toLowerCase().replace(/\s/g,'');}
+function adjDays(d){S.days=Math.max(1,Math.min(14,S.days+d));document.getElementById('days-num').textContent=S.days;document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));}
+function setDays(n,el){S.days=n;document.getElementById('days-num').textContent=n;document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
+function setBType(t){document.getElementById('btp-tot').classList.toggle('active',t==='total');document.getElementById('btp-pp').classList.toggle('active',t==='pp');}
+function pickBud(el,r){document.querySelectorAll('.bud-opt').forEach(c=>c.classList.remove('active'));el.classList.add('active');S.budgetRange=r;}
 function buildReview(){
-  document.getElementById('review-title').textContent=state.dest+' Trip 🌴';
-  document.getElementById('rv-days').textContent=state.days+' day'+(state.days>1?'s':'');
-  document.getElementById('rv-group').textContent=(document.getElementById('inp-group').value||4)+' people';
-  document.getElementById('rv-budget').textContent=state.budgetRange+' / person';
-  const fc=document.getElementById('rv-filters');fc.innerHTML='';
-  document.querySelectorAll('#wp3 .filter-chip.active').forEach(f=>{
+  document.getElementById('rv-t').textContent=S.dest+' Trip 🌴';
+  document.getElementById('rv-days').textContent=S.days+' day'+(S.days>1?'s':'');
+  document.getElementById('rv-grp').textContent=(document.getElementById('inp-grp').value||4)+' people';
+  document.getElementById('rv-bud').textContent=S.budgetRange+' / person';
+  const fc=document.getElementById('rv-flt');fc.innerHTML='';
+  document.querySelectorAll('#wp3 .flt-chip.active').forEach(f=>{
     const b=document.createElement('span');
     b.style.cssText='display:inline-block;background:rgba(244,168,0,.15);color:#B8860B;font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;margin:2px;';
-    b.textContent=f.querySelector('.filter-name').textContent;fc.appendChild(b);
+    b.textContent=f.querySelector('.flt-name').textContent;fc.appendChild(b);
   });
 }
 
 /* ============================================================
    GENERATING
-   ============================================================ */
-function startGenerating(){
-  state.group=parseInt(document.getElementById('inp-group').value)||4;
+============================================================ */
+function startGen(){
+  S.group=parseInt(document.getElementById('inp-grp').value)||4;
   goTo('s-generating');
-  document.getElementById('gen-label').textContent=`${state.dest} · ${state.days} days · ${state.group} people`;
-  document.querySelectorAll('[id^="gs"]').forEach(el=>{el.classList.remove('done','active');});
+  document.getElementById('gen-lbl').textContent=`${S.dest} · ${S.days} days · ${S.group} people`;
+  document.querySelectorAll('[id^="gs"]').forEach(el=>el.classList.remove('done','active'));
   let i=0;
   const iv=setInterval(()=>{
-    if(i>0){const p=document.getElementById('gs'+(i-1));p&&(p.classList.remove('active'),p.classList.add('done'));}
-    if(i<5){const c=document.getElementById('gs'+i);c&&c.classList.add('active');i++;}
-    else{clearInterval(iv);setTimeout(()=>{state.isOwner=true;buildTripUI();goTo('s-app');},500);}
-  },600);
+    if(i>0){const p=document.getElementById('gs'+(i-1));if(p){p.classList.remove('active');p.classList.add('done');}}
+    if(i<5){const c=document.getElementById('gs'+i);if(c)c.classList.add('active');i++;}
+    else{clearInterval(iv);setTimeout(()=>{S.isOwner=true;buildTripUI();goTo('s-app');},500);}
+  },650);
 }
 
 /* ============================================================
-   BUILD TRIP UI
-   ============================================================ */
+   TRIP UI
+============================================================ */
 function buildTripUI(){
-  document.getElementById('app-dest-name').textContent=state.dest.toUpperCase();
-  document.getElementById('app-days-tag').textContent=state.days+' days';
-  document.getElementById('app-group-tag').textContent=state.group+' people';
-  document.getElementById('app-budget-tag').textContent=state.budgetRange+'/person';
-  document.getElementById('group-trip-title').textContent=state.dest+' Trip 🌴';
-  document.getElementById('group-trip-sub').textContent=`${state.days} days · ${state.group} people · ${state.budgetRange}/person`;
+  // Greeting update if user is set
+  if(S.user){
+    // Could show a personalized trip header — future enhancement
+  }
+  document.getElementById('app-dest').textContent=S.dest.toUpperCase();
+  document.getElementById('app-dtag').textContent=S.days+' days';
+  document.getElementById('app-gtag').textContent=S.group+' people';
+  document.getElementById('app-btag').textContent=S.budgetRange;
+  document.getElementById('grp-trip-title').textContent=S.dest+' Trip 🌴';
+  document.getElementById('grp-trip-sub').textContent=`${S.days} days · ${S.group} people · ${S.budgetRange}/person`;
 
-  /* Build day tabs */
-  state.tripDays=Array.from({length:state.days},(_,i)=>({
-    id:'day'+(i+1),num:i+1,label:'Day '+(i+1),stops:[]
-  }));
+  S.tripDays=Array.from({length:S.days},(_,i)=>({id:'d'+(i+1),num:i+1,label:'Day '+(i+1),stops:[]}));
   renderDayTabs();
   renderExpenses();
   renderMembers();
+  renderBudgetStats();
 }
 
 function renderDayTabs(){
-  const tabRow=document.getElementById('day-tabs-row');
-  const panelCon=document.getElementById('day-panels-container');
-  tabRow.innerHTML='';panelCon.innerHTML='';
-  state.tripDays.forEach((day,i)=>{
+  const tr=document.getElementById('day-tabs-row');
+  const pc=document.getElementById('day-panels');
+  tr.innerHTML='';pc.innerHTML='';
+  S.tripDays.forEach((day,i)=>{
     const tb=document.createElement('button');
     tb.className='day-tab-btn'+(i===0?' active':'');
     tb.textContent=day.label;
     tb.onclick=()=>switchDay(i);
-    tabRow.appendChild(tb);
+    tr.appendChild(tb);
     const panel=document.createElement('div');
     panel.className='day-panel'+(i===0?' active':'');
-    panel.id='panel-day-'+i;
+    panel.id='dp'+i;
     renderDayPanel(panel,day,i);
-    panelCon.appendChild(panel);
+    pc.appendChild(panel);
   });
 }
 
 function renderDayPanel(panel,day,idx){
   panel.innerHTML='';
   if(day.stops.length===0){
-    panel.innerHTML=`
-      <div class="day-empty">
-        <div class="day-empty-icon">🗺️</div>
-        <div class="day-empty-title">Day ${day.num} is empty</div>
-        <div class="day-empty-sub">Add beaches, restaurants, activities and more to build your day plan.</div>
-        ${state.isOwner?`<button class="add-activity-btn" onclick="addActivityFor(${idx})">+ Add activity</button>`:''}
-      </div>`;
+    panel.innerHTML=`<div class="day-empty"><div class="day-empty-icon">🗺️</div><div class="day-empty-title">Day ${day.num} is empty</div><div class="day-empty-sub">Add beaches, restaurants, activities and more.</div>${S.isOwner?`<button class="add-act-btn" onclick="addActFor(${idx})">+ Add activity</button>`:''}</div>`;
   } else {
-    const stopsHtml=day.stops.map((stop,si)=>`
+    let html=day.stops.map((stop,si)=>`
       <div class="stop-card">
         <div class="stop-top">
           <span class="stop-time">${stop.time||'—'}</span>
-          <span class="stop-cat" style="background:${catBg(stop.category)};color:${catColor(stop.category)}">${catLabel(stop.category)}</span>
+          <span class="stop-cat" style="background:${catBg(stop.category)};color:${catColor(stop.category)}">${catLbl(stop.category)}</span>
         </div>
         <div class="stop-body">
           <div class="stop-bar" style="background:${catAccent(stop.category)};"></div>
           <div class="stop-info">
             <div class="stop-name">${stop.name}</div>
             <div class="stop-area">📍 ${stop.area} · ${stop.distance}</div>
-            <div class="stop-pills">
-              <span class="stop-pill">💰 ${stop.cost}</span>
-              <span class="stop-pill">🕐 ${stop.hours}</span>
-            </div>
+            <div class="stop-pills"><span class="stop-pill">💰 ${stop.cost}</span><span class="stop-pill">⏱ ${stop.hours}</span></div>
           </div>
-          ${state.isOwner?`<div class="stop-actions"><button class="stop-btn del" onclick="removeStop(${idx},${si})">✕</button></div>`:''}
+          ${S.isOwner?`<button class="stop-del" onclick="removeStop(${idx},${si})">✕</button>`:''}
         </div>
       </div>`).join('');
-    panel.innerHTML=stopsHtml+(state.isOwner?`<button class="add-activity-btn" onclick="addActivityFor(${idx})">+ Add activity</button>`:'');
+    if(S.isOwner) html+=`<button class="add-act-btn" onclick="addActFor(${idx})">+ Add activity</button>`;
+    panel.innerHTML=html;
   }
 }
 
 function switchDay(i){
-  state.currentDay=i;
+  S.currentDay=i;
   document.querySelectorAll('.day-tab-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
   document.querySelectorAll('.day-panel').forEach((p,j)=>p.classList.toggle('active',j===i));
 }
 
-function removeStop(dayIdx,stopIdx){
-  state.tripDays[dayIdx].stops.splice(stopIdx,1);
-  const panel=document.getElementById('panel-day-'+dayIdx);
-  renderDayPanel(panel,state.tripDays[dayIdx],dayIdx);
+function removeStop(dIdx,sIdx){
+  S.tripDays[dIdx].stops.splice(sIdx,1);
+  renderDayPanel(document.getElementById('dp'+dIdx),S.tripDays[dIdx],dIdx);
   updateMapPins();
 }
 
 /* ============================================================
-   CATEGORY / PLACES POPUP CHAIN
-   ============================================================ */
-let _addingToDay=0;
-function addActivityFor(dayIdx){_addingToDay=dayIdx;openSheet('sheet-category');}
+   PLACES FLOW
+============================================================ */
+let _addDay=0;
+function addActFor(idx){_addDay=idx;openSheet('sh-cat');}
 
-function openPlaces(category){
-  closeSheet('sheet-category');
-  const catData=(DATA_PLACES[state.destKey]||DATA_PLACES.boracay)[category]||[];
-  const catName=catLabel(category);
-  document.getElementById('places-sheet-title').textContent=catName+' in '+state.dest;
-  const body=document.getElementById('places-list-body');
-  if(catData.length===0){
-    body.innerHTML='<div style="text-align:center;padding:40px;color:var(--earth-l);font-size:13px;">No '+catName.toLowerCase()+' data yet for '+state.dest+'.<br/>More coming soon!</div>';
-  } else {
-    body.innerHTML=catData.map(p=>`
+function openPlaces(cat){
+  closeSheet('sh-cat');
+  const data=(PLACES[S.destKey]||PLACES.boracay)[cat]||[];
+  document.getElementById('places-title').textContent=catLbl(cat)+' in '+S.dest;
+  const body=document.getElementById('places-body');
+  body.innerHTML=data.length===0
+    ?`<div style="text-align:center;padding:40px;color:rgba(255,255,255,.35);font-size:13px;">No ${catLbl(cat).toLowerCase()} data yet for ${S.dest}.<br/>More coming soon!</div>`
+    :data.map(p=>`
       <div class="place-card">
-        <div class="place-thumb"><img src="https://placehold.co/140x140/e8e0d0/7a5c4a?text=${encodeURIComponent(p.name.split(' ')[0])}" alt="${p.name}"/></div>
+        <div class="place-thumb">
+          <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+          <div class="place-thumb-overlay"></div>
+        </div>
         <div class="place-info">
           <div class="place-name">${p.name}</div>
           <div class="place-area">📍 ${p.area}</div>
-          <div class="place-meta-row">
-            <span class="place-meta-pill">🚶 ${p.distance}</span>
-            <span class="place-meta-pill">💰 ${p.cost}</span>
+          <div class="place-pills">
+            <span class="place-pill">🚶 ${p.distance}</span>
+            <span class="place-pill">💰 ${p.cost}</span>
+            <span class="place-pill">🕐 ${p.hours}</span>
           </div>
-          <div style="font-size:11px;color:var(--earth-l);margin-top:5px;line-height:1.4;">${p.desc}</div>
-          <div style="font-size:10px;color:rgba(122,92,74,.5);margin-top:3px;">💡 ${p.tips}</div>
+          <div class="place-tip">💡 ${p.tips}</div>
         </div>
-        <button class="place-add-btn" onclick="addStopToDay(${JSON.stringify(p).replace(/"/g,'&quot;')},'${category}')">+ Add</button>
+        <button class="place-add-btn" onclick="addStop(${JSON.stringify(p).replace(/"/g,'&quot;')},'${cat}')">+ Add</button>
       </div>`).join('');
-  }
-  openSheet('sheet-places');
+  openSheet('sh-places');
 }
 
-function addStopToDay(place,category){
-  const day=state.tripDays[_addingToDay];
+function addStop(place,cat){
+  const day=S.tripDays[_addDay];
   const times=['8:00 AM','9:30 AM','11:00 AM','1:00 PM','2:30 PM','4:00 PM','6:00 PM','8:00 PM'];
-  day.stops.push({...place,category,time:times[day.stops.length]||'—'});
-  closeSheet('sheet-places');
-  const panel=document.getElementById('panel-day-'+_addingToDay);
-  renderDayPanel(panel,day,_addingToDay);
+  day.stops.push({...place,category:cat,time:times[day.stops.length]||'—'});
+  closeSheet('sh-places');
+  renderDayPanel(document.getElementById('dp'+_addDay),day,_addDay);
   updateMapPins();
 }
 
 /* ============================================================
-   EXPENSES
-   ============================================================ */
+   EXPENSES — with edit & delete
+============================================================ */
 function renderExpenses(){
-  const list=document.getElementById('expenses-list');
-  list.innerHTML=DATA_EXPENSES.map(e=>`
-    <div class="expense-item">
-      <div class="exp-icon-wrap" style="background:rgba(28,16,8,.05)">${e.icon}</div>
-      <div class="exp-info">
-        <div class="exp-title">${e.title}</div>
-        <div class="exp-meta">${e.type} · Paid by ${e.paid_by} · ${e.members.length} people</div>
+  const list=document.getElementById('exp-list');
+  list.innerHTML=EXPENSES.map(e=>{
+    const pp=Math.round(e.total/e.members.length);
+    return `
+    <div class="exp-item" id="eitem-${e.id}">
+      <div class="exp-item-main">
+        <div class="exp-icon-wrap">${e.icon}</div>
+        <div class="exp-info">
+          <div class="exp-title-txt">${e.title}</div>
+          <div class="exp-meta-txt">${e.type} · Paid by ${e.paidBy} · ${e.members.length} people</div>
+        </div>
+        <div class="exp-amounts">
+          <div class="exp-total-val">₱${e.total.toLocaleString()}</div>
+          <div class="exp-pp-val">₱${pp.toLocaleString()}/person</div>
+        </div>
       </div>
-      <div class="exp-amounts">
-        <div class="exp-total">₱${e.total.toLocaleString()}</div>
-        <div class="exp-pp">₱${e.pp.toLocaleString()}/person</div>
+      <div class="exp-actions">
+        <button class="exp-act-btn edit" onclick="editExpense('${e.id}')">✏️ Edit</button>
+        <button class="exp-act-btn delete" onclick="deleteExpense('${e.id}')">🗑 Delete</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  renderBudgetStats();
+  renderMembers(); /* reflect changes in group tab */
 }
 
-function pickExpType(el,icon,label,cat){
+function renderBudgetStats(){
+  const total=EXPENSES.reduce((s,e)=>s+e.total,0);
+  const budget=S.group*(S.budgetRange==='₱3k–5k'?5000:S.budgetRange==='₱5k–10k'?10000:S.budgetRange==='₱10k–20k'?20000:30000);
+  const pct=Math.min(100,Math.round(total/budget*100));
+  const left=budget-total;
+  document.getElementById('bud-total').textContent='₱'+budget.toLocaleString();
+  document.getElementById('bud-bar').style.width=pct+'%';
+  document.getElementById('bud-pct').textContent=pct+'% spent';
+  document.getElementById('bud-left').textContent='₱'+Math.max(0,left).toLocaleString()+' left';
+  document.getElementById('bud-spent').textContent='₱'+total.toLocaleString();
+  document.getElementById('bud-rem').textContent='₱'+Math.max(0,left).toLocaleString();
+  document.getElementById('bud-pp').textContent='₱'+(Math.round(budget/S.group)).toLocaleString();
+}
+
+function deleteExpense(id){
+  /* TODO: DELETE /api/expenses/:id */
+  EXPENSES=EXPENSES.filter(e=>e.id!==id);
+  renderExpenses();
+}
+
+function editExpense(id){
+  const e=EXPENSES.find(x=>x.id===id);
+  if(!e)return;
+  S.editingExpId=id;
+  S.selectedET={icon:e.icon,label:e.type,cat:''};
+  /* Pre-fill the form */
+  openExpSheet(e);
+}
+
+function openExpSheet(prefill){
+  S.editingExpId=prefill?prefill.id:null;
+  document.getElementById('exp-sheet-title').textContent=prefill?'Edit expense':'Log an expense';
+  document.querySelectorAll('.exp-type-chip').forEach(c=>c.classList.remove('active'));
+  document.getElementById('exp-form').style.display='none';
+  document.getElementById('exp-title-in').value='';
+  document.getElementById('exp-amt-in').value='';
+  document.getElementById('split-prev').style.display='none';
+  S.selectedET=null;
+  openSheet('sh-exp');
+  if(prefill){
+    /* Pre-select type */
+    document.querySelectorAll('.exp-type-chip').forEach(c=>{
+      if(c.querySelector('.exp-type-lbl')&&c.querySelector('.exp-type-lbl').textContent.trim()===prefill.type.split('/')[0].trim()){
+        c.classList.add('active');
+      }
+    });
+    S.selectedET={icon:prefill.icon,label:prefill.type,cat:''};
+    document.getElementById('exp-form').style.display='block';
+    document.getElementById('exp-title-in').value=prefill.title;
+    document.getElementById('exp-amt-in').value=prefill.total;
+    renderMemberChecks(prefill.members);
+    calcSplit();
+  }
+}
+
+function pickET(el,icon,label,cat){
   document.querySelectorAll('.exp-type-chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
-  state.selectedExpType={icon,label,cat};
-  document.getElementById('expense-form').style.display='block';
-  renderMemberChecks();
+  S.selectedET={icon,label,cat};
+  document.getElementById('exp-form').style.display='block';
+  renderMemberChecks([]);
 }
 
-function renderMemberChecks(){
-  const con=document.getElementById('exp-member-checks');
-  con.innerHTML=state.members.map(m=>`
-    <div class="member-check active" onclick="this.classList.toggle('active');calcSplit()">${m.name}</div>`
+function renderMemberChecks(presel){
+  const con=document.getElementById('exp-mem-checks');
+  con.innerHTML=MEMBERS.map(m=>`
+    <div class="member-chk${(!presel||presel.length===0||presel.includes(m.name))?' active':''}" onclick="this.classList.toggle('active');calcSplit()">${m.name}</div>`
   ).join('');
 }
 
 function calcSplit(){
-  const amt=parseFloat(document.getElementById('exp-amount-input').value)||0;
-  const sel=document.querySelectorAll('#exp-member-checks .member-check.active').length||1;
-  const pp=Math.round(amt/sel);
-  const preview=document.getElementById('split-preview');
-  preview.style.display=amt>0?'flex':'none';
-  document.getElementById('split-amount-val').textContent='₱'+pp.toLocaleString();
+  const amt=parseFloat(document.getElementById('exp-amt-in').value)||0;
+  const sel=document.querySelectorAll('#exp-mem-checks .member-chk.active').length||1;
+  document.getElementById('split-prev').style.display=amt>0?'flex':'none';
+  document.getElementById('split-val').textContent='₱'+Math.round(amt/sel).toLocaleString();
 }
 
 function saveExpense(){
-  const title=document.getElementById('exp-title-input').value;
-  const amt=parseFloat(document.getElementById('exp-amount-input').value)||0;
-  const selMembers=[...document.querySelectorAll('#exp-member-checks .member-check.active')].map(el=>el.textContent);
-  if(!title||!amt||!state.selectedExpType){alert('Please fill in all fields');return;}
-  /* TODO: POST /api/expenses with {trip_id, type, icon, title, total, paid_by, members} */
-  DATA_EXPENSES.push({
-    id:'e'+Date.now(),
-    icon:state.selectedExpType.icon,
-    type:state.selectedExpType.label,
-    title,total:amt,pp:Math.round(amt/selMembers.length),
-    day:1,members:selMembers,paid_by:'You (Owner)'
-  });
+  const title=document.getElementById('exp-title-in').value.trim();
+  const amt=parseFloat(document.getElementById('exp-amt-in').value)||0;
+  const selMem=[...document.querySelectorAll('#exp-mem-checks .member-chk.active')].map(el=>el.textContent);
+  if(!title||!amt||!S.selectedET){alert('Please fill in all fields.');return;}
+  /* TODO: POST or PUT /api/expenses */
+  if(S.editingExpId){
+    const idx=EXPENSES.findIndex(e=>e.id===S.editingExpId);
+    if(idx>-1){EXPENSES[idx]={...EXPENSES[idx],icon:S.selectedET.icon,type:S.selectedET.label,title,total:amt,members:selMem};}
+  } else {
+    EXPENSES.push({id:'e'+Date.now(),icon:S.selectedET.icon,type:S.selectedET.label,title,total:amt,members:selMem,paidBy:'You',day:S.currentDay});
+  }
+  closeSheet('sh-exp');
   renderExpenses();
-  closeSheet('sheet-expense');
-  document.getElementById('exp-title-input').value='';
-  document.getElementById('exp-amount-input').value='';
-  document.getElementById('expense-form').style.display='none';
-  document.querySelectorAll('.exp-type-chip').forEach(c=>c.classList.remove('active'));
-  state.selectedExpType=null;
+  S.editingExpId=null;
+  S.selectedET=null;
 }
 
 /* ============================================================
    MEMBERS
-   ============================================================ */
+============================================================ */
 function renderMembers(){
   const list=document.getElementById('members-list');
-  list.innerHTML=state.members.map(m=>`
-    <div class="member-row">
-      <div class="member-avatar" style="background:${m.avatar_bg};color:${m.avatar_color}">
-        ${m.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}
+  const totalExp=EXPENSES.reduce((s,e)=>s+e.total,0);
+  const balances={};
+  MEMBERS.forEach(m=>{balances[m.name]=0;});
+  EXPENSES.forEach(e=>{
+    const pp=Math.round(e.total/e.members.length);
+    e.members.forEach(name=>{if(balances[name]!==undefined)balances[name]-=pp;});
+    if(balances[e.paidBy]!==undefined)balances[e.paidBy]+=e.total;
+  });
+  list.innerHTML=MEMBERS.map(m=>{
+    const bal=balances[m.name]||0;
+    const initials=m.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="member-row">
+      <div class="member-av" style="background:${m.bg};color:${m.fg}">${initials}</div>
+      <div style="flex:1;"><div class="member-nm">${m.name}</div><div class="member-role-txt">${m.role==='owner'?'Trip organizer':'Guest member'}</div></div>
+      <div class="member-bal">
+        <div class="member-bal-val" style="color:${bal>=0?'var(--green)':'var(--red)'}">${bal>=0?'+':''}₱${Math.abs(bal).toLocaleString()}</div>
+        <div class="member-bal-lbl">${bal>=0?'gets back':'owes'}</div>
       </div>
-      <div class="member-info">
-        <div class="member-name">${m.name}</div>
-        <div class="member-role">${m.role==='owner'?'Trip organizer':'Guest member'}</div>
-      </div>
-      <div class="member-balance">
-        <div class="member-bal-amount" style="color:${m.balance>=0?'var(--green)':'var(--red)'}">${m.balance>=0?'+':''}₱${Math.abs(m.balance).toLocaleString()}</div>
-        <div class="member-bal-label">${m.balance>=0?'gets back':'owes'}</div>
-      </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 /* ============================================================
-   MAP — Leaflet + OpenFreeMap (completely free, no API key)
-   ============================================================ */
+   MAP
+============================================================ */
 function initMap(){
-  if(state.mapInitialized)return;
-  state.mapInitialized=true;
-  /* TODO: Determine center from destination's ref_lat/ref_lng in Neon */
-  const CENTER = {boracay:[11.9674,121.9213],palawan:[10.1683,118.4107],cebu:[10.3157,123.8854],siargao:[9.8482,126.0458],batanes:[20.4480,121.9700],vigan:[17.5747,120.3869],banaue:[16.9113,121.0587],manila:[14.5995,120.9842]};
-  const center=CENTER[state.destKey]||CENTER.boracay;
-  const mapEl=document.getElementById('map-container');
-  mapEl.style.height=(window.innerHeight-200)+'px';
-  const map=L.map('map-container').setView(center,14);
-  /* OpenFreeMap — unlimited free tiles, no key needed */
-  L.tileLayer('https://tiles.openfreemap.org/styles/liberty/{z}/{x}/{y}.png',{
-    attribution:'© <a href="https://openfreemap.org">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    maxZoom:19
+  if(S.mapInit)return;
+  S.mapInit=true;
+  const CENTERS={boracay:[11.9674,121.9213],palawan:[10.1683,118.4107],cebu:[10.3157,123.8854],siargao:[9.8482,126.0458],batanes:[20.448,121.97],vigan:[17.5747,120.3869],banaue:[16.9113,121.0587],manila:[14.5995,120.9842]};
+  const center=CENTERS[S.destKey]||CENTERS.boracay;
+  const el=document.getElementById('map-el');
+  el.style.height=(window.innerHeight-200)+'px';
+  const map=L.map('map-el').setView(center,14);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© <a href="https://www.openstreetmap.org/copyright">OSM</a>',maxZoom:19
   }).addTo(map);
-  state.leafletMap=map;
+  S.leafMap=map;
   updateMapPins();
-  /* Build map day filter buttons */
-  const filterRow=document.getElementById('map-filter-row');
-  filterRow.innerHTML='<button class="map-filter-btn active" onclick="filterMap(\'all\',this)">All days</button>';
-  state.tripDays.forEach((d,i)=>{
+  /* Build day filter */
+  const fr=document.getElementById('map-filter-row');
+  fr.innerHTML='<button class="map-f-btn active" onclick="filterMap(\'all\',this)">All days</button>';
+  S.tripDays.forEach((d,i)=>{
     const btn=document.createElement('button');
-    btn.className='map-filter-btn';
-    btn.textContent=d.label;
+    btn.className='map-f-btn';btn.textContent=d.label;
     btn.onclick=()=>filterMap(i,btn);
-    filterRow.appendChild(btn);
+    fr.appendChild(btn);
   });
 }
-
 let _mapMarkers=[];
 function updateMapPins(){
-  if(!state.leafletMap)return;
+  if(!S.leafMap)return;
   _mapMarkers.forEach(m=>m.remove());_mapMarkers=[];
   let n=1;
-  state.tripDays.forEach((day,di)=>{
+  S.tripDays.forEach((day,di)=>{
     day.stops.forEach(stop=>{
       if(!stop.lat||!stop.lng)return;
-      const color=catAccent(stop.category).replace('#','');
-      const icon=L.divIcon({
-        html:`<div style="background:${catAccent(stop.category)};color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,
-        className:'',iconSize:[28,28],iconAnchor:[14,14]
-      });
-      const marker=L.marker([stop.lat,stop.lng],{icon}).addTo(state.leafletMap);
-      marker.bindPopup(`<b>${stop.name}</b><br/>${stop.area}<br/>💰 ${stop.cost}<br/><a href="https://www.google.com/maps/search/${encodeURIComponent(stop.name+' '+stop.area)}" target="_blank">Get directions →</a>`);
-      marker._dayIdx=di;
-      _mapMarkers.push(marker);
-      n++;
+      const icon=L.divIcon({html:`<div style="background:${catAccent(stop.category)};color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,className:'',iconSize:[26,26],iconAnchor:[13,13]});
+      const m=L.marker([stop.lat,stop.lng],{icon}).addTo(S.leafMap);
+      m.bindPopup(`<b>${stop.name}</b><br/>${stop.area}<br/>💰 ${stop.cost}<br/><a href="https://www.google.com/maps/search/${encodeURIComponent(stop.name)}" target="_blank">Get directions →</a>`);
+      m._day=di;_mapMarkers.push(m);n++;
     });
   });
 }
-
-function filterMap(dayFilter,btn){
-  document.querySelectorAll('.map-filter-btn').forEach(b=>b.classList.remove('active'));
+function filterMap(f,btn){
+  document.querySelectorAll('.map-f-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  _mapMarkers.forEach(m=>{
-    const show=dayFilter==='all'||m._dayIdx===dayFilter;
-    const el=m.getElement();
-    if(el)el.style.display=show?'':'none';
-  });
+  _mapMarkers.forEach(m=>{const el=m.getElement();if(el)el.style.display=(f==='all'||m._day===f)?'':'none';});
 }
 
 /* ============================================================
-   TABS
-   ============================================================ */
+   TABS / SHEETS
+============================================================ */
 function switchTab(name,btn){
-  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
 }
-
-/* ============================================================
-   SHEETS
-   ============================================================ */
 function openSheet(id){document.getElementById(id).classList.add('open');}
 function closeSheet(id){document.getElementById(id).classList.remove('open');}
-function closeSheetOutside(e,id){if(e.target.id===id)closeSheet(id);}
+function closeSheetOut(e,id){if(e.target.id===id)closeSheet(id);}
 
 /* ============================================================
-   SHARE / COPY
-   ============================================================ */
-function copyLink(){const el=document.getElementById('share-link-val');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
-function copyLink2(){const el=document.getElementById('share-link-val2');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
-
-/* ============================================================
-   JOIN TRIP (guest flow)
-   ============================================================ */
-function joinTrip(skipName){
-  const name=document.getElementById('join-name-input').value.trim();
-  if(!skipName&&!name){document.getElementById('join-name-input').focus();return;}
-  /* TODO: POST /api/members {trip_id, display_name, device_token} */
-  if(name){state.members.push({id:'m'+Date.now(),name,role:'guest',avatar_bg:'#888',avatar_color:'#fff',balance:0});}
-  state.isOwner=false;
-  loadSampleTrip();
-  state.isOwner=false;
-  /* Re-render tour panels as view-only */
-  state.tripDays.forEach((day,i)=>{
-    const panel=document.getElementById('panel-day-'+i);
-    if(panel)renderDayPanel(panel,day,i);
-  });
+   JOIN (guest)
+============================================================ */
+function joinTrip(skip){
+  const name=document.getElementById('join-name').value.trim();
+  if(!skip&&!name){document.getElementById('join-name').focus();return;}
+  if(name&&!MEMBERS.find(m=>m.name===name)){
+    /* TODO: POST /api/members {trip_id, display_name} */
+    MEMBERS.push({id:'m'+Date.now(),name,role:'guest',bg:'#888780',fg:'#F1EFE8'});
+  }
+  S.isOwner=false;
+  loadSample();
+  S.isOwner=false;
+  S.tripDays.forEach((day,i)=>{const p=document.getElementById('dp'+i);if(p)renderDayPanel(p,day,i);});
 }
 
 /* ============================================================
-   HELPERS — category styling
-   ============================================================ */
-function catLabel(c){const m={beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'};return m[c]||c;}
-function catBg(c){const m={beach:'rgba(0,134,179,.1)',restaurant:'rgba(232,81,42,.1)',tourist_spot:'rgba(26,79,160,.1)',shopping:'rgba(244,168,0,.15)',souvenirs:'rgba(244,168,0,.1)',nightlife:'rgba(61,43,31,.1)',camping:'rgba(45,106,79,.1)',nature_hike:'rgba(45,106,79,.1)',water_sports:'rgba(0,134,179,.1)',cultural:'rgba(61,43,31,.08)'};return m[c]||'rgba(28,16,8,.08)';}
-function catColor(c){const m={beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#B8860B',souvenirs:'#B8860B',nightlife:'#3D2B1F',camping:'#1B4332',nature_hike:'#1B4332',water_sports:'#0086B3',cultural:'#3D2B1F'};return m[c]||'#3D2B1F';}
-function catAccent(c){const m={beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',souvenirs:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'};return m[c]||'#888';}
+   COPY LINK
+============================================================ */
+function copyLink(){const el=document.getElementById('share-link-in');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
+function copyLink2(){const el=document.getElementById('sh-link-val');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
 
 /* ============================================================
-   HOME chip interaction
-   ============================================================ */
-document.querySelectorAll('.dest-chip').forEach(c=>{
-  c.addEventListener('click',function(){
-    document.querySelectorAll('.dest-chip').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
+   CATEGORY HELPERS
+============================================================ */
+function catLbl(c){return{beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'}[c]||c;}
+function catBg(c){return{beach:'rgba(0,134,179,.1)',restaurant:'rgba(232,81,42,.1)',tourist_spot:'rgba(26,79,160,.1)',shopping:'rgba(244,168,0,.15)',souvenirs:'rgba(244,168,0,.1)',nightlife:'rgba(61,43,31,.1)',camping:'rgba(45,106,79,.1)',nature_hike:'rgba(45,106,79,.1)',water_sports:'rgba(0,134,179,.1)'}[c]||'rgba(28,16,8,.08)';}
+function catColor(c){return{beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#B8860B',souvenirs:'#B8860B',nightlife:'#3D2B1F',camping:'#1B4332',nature_hike:'#1B4332',water_sports:'#0086B3'}[c]||'#3D2B1F';}
+function catAccent(c){return{beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',souvenirs:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'}[c]||'#888';}
+
+/* ============================================================
+   INIT
+============================================================ */
+initHero();
+initDestStrip();
 </script>
 </body>
 </html>
