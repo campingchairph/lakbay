@@ -76,42 +76,76 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .auth-btn.logout{background:rgba(192,57,43,.25);border-color:rgba(192,57,43,.4);color:#f08b80;}
 
 /* Title */
-.home-title-wrap{padding:12px 20px 0;flex-shrink:0;}
+.home-title-wrap{padding:12px 20px 0;flex-shrink:0;text-align:center;}
 .home-eyebrow{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
-.home-title{font-family:var(--ff-d);font-size:clamp(64px,17vw,96px);letter-spacing:.04em;line-height:.88;color:var(--white);}
+.home-title{font-family:var(--ff-d);font-size:clamp(56px,15vw,86px);letter-spacing:.04em;line-height:.88;color:var(--white);}
 .home-title span{color:var(--gold);}
-.home-subtitle{font-family:var(--ff-h);font-style:italic;font-size:15px;color:rgba(174,198,240,.7);margin-top:5px;}
-
-/* Hotel section */
-.hotel-section{padding:16px 20px 0;flex-shrink:0;}
-.section-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:10px;}
-.hotel-scroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px 4px;}
-.hotel-scroll::-webkit-scrollbar{display:none;}
-
-/* Skyline cards */
-.dest-skyline-card{
-  flex-shrink:0;width:182px;height:118px;border-radius:var(--r-lg);
-  overflow:hidden;cursor:pointer;transition:transform .2s;position:relative;
+.home-subtitle{font-family:var(--ff-h);font-style:italic;font-size:14px;color:rgba(174,198,240,.7);margin-top:5px;}
+/* Quirky CTA taglines */
+.home-taglines{padding:14px 20px 0;text-align:center;flex-shrink:0;}
+.tagline-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.tagline-chip{
+  font-size:11px;font-weight:600;color:rgba(255,255,255,.55);
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  padding:5px 12px;border-radius:var(--r-pill);
 }
-.dest-skyline-card:active{transform:scale(.96);}
-.dsc-bg{position:absolute;inset:0;background-size:cover;background-position:center bottom;}
-.dsc-overlay{position:absolute;inset:0;}
-.dsc-skyline{position:absolute;bottom:0;left:0;right:0;height:55%;opacity:.3;}
-.dsc-content{position:absolute;inset:0;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;}
-.dsc-trip-to{font-size:8px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.65);}
-.dsc-name{font-family:var(--ff-d);font-size:26px;letter-spacing:.04em;color:var(--white);line-height:1;}
-.dsc-bottom{display:flex;justify-content:space-between;align-items:flex-end;}
-.dsc-days{font-size:9px;color:rgba(255,255,255,.55);}
-.dsc-price{font-size:12px;font-weight:700;color:var(--gold);}
-.dsc-klook-badge{position:absolute;top:7px;right:7px;background:rgba(255,255,255,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:7px;font-weight:700;padding:2px 6px;border-radius:var(--r-pill);letter-spacing:.04em;}
 
-/* CTA at very bottom */
-.home-cta{padding:14px 20px 36px;margin-top:auto;flex-shrink:0;}
-.btn-plan{width:100%;padding:16px;background:var(--gold);color:var(--earth);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;}
+/* Hotel section — pushed to bottom, optional */
+.hotel-section{padding:10px 20px 0;flex-shrink:0;}
+.section-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:8px;}
+/* Island group cards: row of 3, column content inside, max-width constrained */
+.island-cards-row{
+  display:flex;gap:10px;justify-content:center;
+  max-width:440px;margin:0 auto;
+}
+.island-card{
+  flex:1;border-radius:var(--r-lg);overflow:hidden;cursor:pointer;
+  transition:transform .2s;position:relative;
+  aspect-ratio:1/1.4;min-width:0;
+}
+.island-card:active{transform:scale(.96);}
+.icard-bg{position:absolute;inset:0;}
+.icard-svg{position:absolute;bottom:0;left:0;right:0;height:70%;opacity:.32;}
+.icard-overlay{position:absolute;inset:0;}
+.icard-content{
+  position:absolute;inset:0;padding:10px 10px 12px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  align-items:flex-start;
+}
+.icard-explore{font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);}
+.icard-name{font-family:var(--ff-d);font-size:clamp(18px,5vw,26px);letter-spacing:.04em;color:var(--white);line-height:1;margin-top:2px;}
+.icard-bottom{display:flex;flex-direction:column;gap:1px;align-items:flex-start;}
+.icard-count{font-size:clamp(13px,3.5vw,16px);font-weight:700;color:var(--white);line-height:1.1;}
+.icard-dest-lbl{font-size:8px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.03em;}
+.icard-klook{
+  font-size:7px;font-weight:700;color:rgba(255,255,255,.75);
+  background:rgba(255,255,255,.14);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.18);
+  padding:2px 6px;border-radius:var(--r-pill);margin-top:4px;
+  letter-spacing:.04em;text-transform:uppercase;
+}
+
+/* CTA — main focus, at top */
+.home-cta{padding:16px 20px 0;flex-shrink:0;}
+.btn-plan{width:100%;padding:17px;background:var(--gold);color:var(--earth);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.01em;}
 .btn-plan:hover{background:#e09a00;box-shadow:0 6px 24px rgba(244,168,0,.4);}
 .btn-plan:active{transform:scale(.97);}
-.btn-view-sample{width:100%;margin-top:8px;padding:13px;background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-radius:var(--r-md);font-family:var(--ff-b);font-size:13px;color:rgba(255,255,255,.65);cursor:pointer;transition:all .2s;}
-.btn-view-sample:hover{color:var(--white);background:rgba(255,255,255,.18);}
+/* Budget organizer btn beside plan */
+.cta-row{display:flex;gap:8px;}
+.btn-budget-solo{
+  flex:1;padding:17px 12px;
+  background:var(--glass-bg);border:1px solid rgba(255,255,255,.22);
+  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:12px;font-weight:600;color:rgba(255,255,255,.8);cursor:pointer;transition:all .2s;
+  text-align:center;line-height:1.3;
+}
+.btn-budget-solo:hover{color:var(--white);background:rgba(255,255,255,.18);}
+.btn-plan-wrap{flex:2;}
+/* Remove old standalone btn-view-sample */
+.btn-view-sample{display:none;}
+/* Keep spacer at very bottom */
+.home-bottom-pad{height:28px;flex-shrink:0;}
 
 /* ── AUTH MODAL ── */
 .auth-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(5,12,30,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
@@ -535,6 +569,55 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 }
 .hotel-book-btn:hover{background:#e09a00;}
 
+/* ── STANDALONE BUDGET SCREEN ── */
+#s-solo-budget{background:var(--ivory);overflow-y:auto;}
+.solo-bud-header{
+  background:var(--green-d);padding:50px 20px 20px;
+  position:sticky;top:0;z-index:10;
+}
+.solo-bud-back{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;background:none;border:none;font-family:var(--ff-b);padding:0 0 10px 0;}
+.solo-bud-back:hover{color:var(--gold);}
+.solo-bud-title{font-family:var(--ff-d);font-size:40px;letter-spacing:.03em;color:var(--gold);line-height:1;}
+.solo-bud-sub{font-size:12px;color:rgba(149,213,178,.6);margin-top:2px;}
+/* Export report button */
+.btn-export-report{
+  margin-top:10px;width:100%;padding:11px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  border-radius:var(--r-md);font-family:var(--ff-b);font-size:12px;
+  font-weight:600;color:rgba(255,255,255,.8);cursor:pointer;
+  backdrop-filter:blur(8px);text-align:center;
+}
+.btn-export-report:hover{background:rgba(255,255,255,.2);}
+
+/* Report overlay */
+#s-report{background:#f5f5f0;overflow-y:auto;}
+.report-page{max-width:480px;margin:0 auto;padding:40px 24px;}
+.report-header{text-align:center;border-bottom:2px solid #333;padding-bottom:16px;margin-bottom:20px;}
+.report-brand{font-family:var(--ff-d);font-size:28px;letter-spacing:.04em;color:#333;}
+.report-brand span{color:var(--red);}
+.report-title{font-size:14px;color:#555;margin-top:4px;}
+.report-date{font-size:11px;color:#888;margin-top:2px;}
+.report-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#555;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #ddd;}
+.report-item{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid #eee;font-size:12px;color:#333;}
+.report-item-left{flex:1;}
+.report-item-name{font-weight:600;color:#222;}
+.report-item-meta{font-size:10px;color:#888;margin-top:1px;}
+.report-item-amount{font-weight:700;color:#222;text-align:right;}
+.report-item-pp{font-size:10px;color:#888;text-align:right;margin-top:1px;}
+.report-receipt{width:60px;height:40px;object-fit:cover;border-radius:4px;margin-top:4px;cursor:pointer;}
+.report-total-row{display:flex;justify-content:space-between;padding:12px 0 4px;font-weight:700;font-size:14px;color:#222;border-top:2px solid #333;}
+.report-footer{text-align:center;font-size:10px;color:#aaa;margin-top:24px;padding-top:12px;border-top:1px solid #ddd;}
+.btn-print{
+  width:100%;padding:14px;background:var(--green);color:var(--white);
+  border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;
+  font-weight:700;cursor:pointer;margin-bottom:10px;
+}
+.btn-close-report{
+  width:100%;padding:12px;background:transparent;
+  border:1.5px solid rgba(28,16,8,.15);border-radius:var(--r-md);
+  font-family:var(--ff-b);font-size:13px;color:var(--earth-m);cursor:pointer;
+}
+
 .hidden{display:none!important;}
 
 </style>
@@ -557,94 +640,104 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
     <div class="home-title-wrap">
       <div class="home-eyebrow">🇵🇭 Philippine Travel Planner</div>
       <div class="home-title">LAKWAT<span>SERO</span><br/>PH</div>
-      <div class="home-subtitle">Ano tara? — Discover the Philippines</div>
+      <div class="home-subtitle">Saan tayo? — Plan your next lakwatsa</div>
     </div>
 
-    <div class="hotel-section">
-      <div class="section-label">🏨 Top hotel deals · Book on Klook</div>
-      <div class="hotel-scroll" style="gap:12px;">
+    <!-- Quirky taglines -->
+    <div class="home-taglines">
+      <div class="tagline-row">
+        <span class="tagline-chip">📋 Mag-plano ng trip</span>
+        <span class="tagline-chip">💰 I-split ang gastos</span>
+        <span class="tagline-chip">🏝️ Puntahan ang PH</span>
+      </div>
+    </div>
 
-        <!-- LUZON -->
-        <div class="dest-skyline-card" style="width:160px;" onclick="openIslandGroup('luzon')">
-          <div class="dsc-bg" style="background:linear-gradient(160deg,#0a3d62 0%,#1a6fa8 50%,#2196c4 100%);"></div>
-          <!-- Luzon SVG map outline -->
-          <svg class="dsc-skyline" viewBox="0 0 100 130" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.55)" style="height:75%;bottom:0;top:auto;">
-            <!-- Luzon main island simplified shape -->
+    <!-- PRIMARY CTAs — main focus -->
+    <div class="home-cta">
+      <div class="cta-row">
+        <div class="btn-plan-wrap">
+          <button class="btn-plan" onclick="goTo('s-wizard');initWizard()">
+            🗺️ Mag-plano ng Trip!
+          </button>
+        </div>
+        <button class="btn-budget-solo" onclick="openSoloBudget()">
+          💸 I-organize<br/>ang Budget
+        </button>
+      </div>
+    </div>
+
+    <!-- HOTEL SECTION — optional, at bottom -->
+    <div class="hotel-section" style="margin-top:auto;">
+      <div class="section-label">🏨 Book hotels · Powered by Klook</div>
+      <div class="island-cards-row">
+
+        <!-- LUZON — RED -->
+        <div class="island-card" onclick="openIslandGroup('luzon')">
+          <div class="icard-bg" style="background:linear-gradient(170deg,#7b0d0d 0%,#c0392b 45%,#e74c3c 100%);"></div>
+          <svg class="icard-svg" viewBox="0 0 100 130" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.5)">
             <path d="M50,5 Q58,8 64,14 Q70,22 68,30 Q72,36 76,40 Q80,48 78,56 Q82,62 80,70 Q76,78 70,82 Q66,88 62,94 Q56,100 50,104 Q44,100 38,94 Q32,88 30,82 Q24,78 20,70 Q18,62 22,56 Q20,48 24,40 Q28,36 32,30 Q30,22 36,14 Q42,8 50,5Z"/>
-            <!-- Batanes islands top -->
             <ellipse cx="52" cy="0" rx="4" ry="3"/>
             <ellipse cx="48" cy="3" rx="3" ry="2"/>
-            <!-- Palawan extending left -->
             <path d="M18,72 Q12,80 8,90 Q6,98 8,106 Q10,110 12,108 Q16,100 18,90 Q20,82 18,72Z"/>
           </svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(8,30,60,.9) 0%,rgba(8,50,100,.3) 60%,transparent 100%);"></div>
-          <div class="dsc-content">
+          <div class="icard-overlay" style="background:linear-gradient(to top,rgba(100,5,5,.92) 0%,rgba(150,20,20,.35) 55%,transparent 100%);"></div>
+          <div class="icard-content">
             <div>
-              <div class="dsc-trip-to">Explore</div>
-              <div class="dsc-name" style="font-size:22px;">LUZON</div>
+              <div class="icard-explore">Explore</div>
+              <div class="icard-name">LUZON</div>
             </div>
-            <div class="dsc-bottom">
-              <div class="dsc-days">10 destinations</div>
-              <div class="dsc-price">Book on Klook</div>
+            <div class="icard-bottom">
+              <div class="icard-count">10</div>
+              <div class="icard-dest-lbl">destinations</div>
+              <div class="icard-klook">Book on Klook</div>
             </div>
           </div>
         </div>
 
-        <!-- VISAYAS -->
-        <div class="dest-skyline-card" style="width:160px;" onclick="openIslandGroup('visayas')">
-          <div class="dsc-bg" style="background:linear-gradient(160deg,#1a5276 0%,#148f77 50%,#1abc9c 100%);"></div>
-          <!-- Visayas SVG map outline — scattered island group -->
-          <svg class="dsc-skyline" viewBox="0 0 120 100" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.55)" style="height:72%;bottom:0;">
-            <!-- Samar/Leyte right -->
+        <!-- VISAYAS — GOLD/YELLOW -->
+        <div class="island-card" onclick="openIslandGroup('visayas')">
+          <div class="icard-bg" style="background:linear-gradient(170deg,#6b4800 0%,#c17f00 45%,#f4a800 100%);"></div>
+          <svg class="icard-svg" viewBox="0 0 120 100" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.5)">
             <path d="M80,10 Q90,14 92,22 Q94,30 90,38 Q86,44 80,46 Q74,48 70,44 Q66,38 68,30 Q70,20 80,10Z"/>
             <path d="M78,46 Q80,54 76,62 Q72,68 70,64 Q68,58 70,50 Q74,46 78,46Z"/>
-            <!-- Cebu long thin -->
             <path d="M54,30 Q58,34 58,42 Q58,52 56,60 Q54,66 50,66 Q46,66 44,60 Q42,52 42,42 Q42,34 46,30 Q50,26 54,30Z"/>
-            <!-- Negros -->
             <path d="M30,40 Q36,44 36,54 Q34,62 30,66 Q26,68 22,64 Q18,58 20,48 Q22,40 28,38 Q30,38 30,40Z"/>
-            <!-- Panay -->
             <path d="M20,14 Q30,10 38,14 Q44,20 40,28 Q34,32 26,30 Q18,28 16,20 Q16,16 20,14Z"/>
-            <!-- Bohol -->
             <path d="M62,70 Q68,70 70,76 Q70,82 64,84 Q58,84 56,78 Q56,72 62,70Z"/>
-            <!-- Palawan -->
-            <path d="M4,50 Q6,44 10,42 Q14,42 14,48 Q12,56 8,60 Q4,60 4,54 Q4,52 4,50Z"/>
           </svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(10,50,50,.9) 0%,rgba(10,80,70,.3) 60%,transparent 100%);"></div>
-          <div class="dsc-content">
+          <div class="icard-overlay" style="background:linear-gradient(to top,rgba(80,50,0,.94) 0%,rgba(120,80,0,.38) 55%,transparent 100%);"></div>
+          <div class="icard-content">
             <div>
-              <div class="dsc-trip-to">Explore</div>
-              <div class="dsc-name" style="font-size:22px;">VISAYAS</div>
+              <div class="icard-explore">Explore</div>
+              <div class="icard-name">VISAYAS</div>
             </div>
-            <div class="dsc-bottom">
-              <div class="dsc-days">8 destinations</div>
-              <div class="dsc-price">Book on Klook</div>
+            <div class="icard-bottom">
+              <div class="icard-count">8</div>
+              <div class="icard-dest-lbl">destinations</div>
+              <div class="icard-klook">Book on Klook</div>
             </div>
           </div>
         </div>
 
-        <!-- MINDANAO -->
-        <div class="dest-skyline-card" style="width:160px;" onclick="openIslandGroup('mindanao')">
-          <div class="dsc-bg" style="background:linear-gradient(160deg,#4a1942 0%,#8e2060 50%,#c0392b 100%);"></div>
-          <!-- Mindanao SVG map outline -->
-          <svg class="dsc-skyline" viewBox="0 0 120 110" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.55)" style="height:72%;bottom:0;">
-            <!-- Mindanao main — large irregular island -->
+        <!-- MINDANAO — BLUE -->
+        <div class="island-card" onclick="openIslandGroup('mindanao')">
+          <div class="icard-bg" style="background:linear-gradient(170deg,#05285e 0%,#1a4fa0 45%,#2980b9 100%);"></div>
+          <svg class="icard-svg" viewBox="0 0 120 110" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.5)">
             <path d="M60,8 Q72,10 80,16 Q88,22 92,32 Q96,42 94,52 Q98,60 96,70 Q92,78 84,84 Q76,90 66,92 Q56,94 46,90 Q36,86 28,78 Q20,70 18,60 Q14,52 16,42 Q18,32 26,24 Q34,16 44,10 Q52,6 60,8Z"/>
-            <!-- Camiguin small island top -->
             <ellipse cx="70" cy="3" rx="5" ry="3.5"/>
-            <!-- Basilan south -->
             <ellipse cx="30" cy="98" rx="7" ry="4"/>
-            <!-- Siargao northeast -->
             <ellipse cx="100" cy="28" rx="6" ry="4"/>
           </svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(50,10,30,.92) 0%,rgba(80,20,40,.3) 60%,transparent 100%);"></div>
-          <div class="dsc-content">
+          <div class="icard-overlay" style="background:linear-gradient(to top,rgba(5,20,70,.94) 0%,rgba(10,40,100,.38) 55%,transparent 100%);"></div>
+          <div class="icard-content">
             <div>
-              <div class="dsc-trip-to">Explore</div>
-              <div class="dsc-name" style="font-size:22px;">MINDANAO</div>
+              <div class="icard-explore">Explore</div>
+              <div class="icard-name">MINDANAO</div>
             </div>
-            <div class="dsc-bottom">
-              <div class="dsc-days">8 destinations</div>
-              <div class="dsc-price">Book on Klook</div>
+            <div class="icard-bottom">
+              <div class="icard-count">8</div>
+              <div class="icard-dest-lbl">destinations</div>
+              <div class="icard-klook">Book on Klook</div>
             </div>
           </div>
         </div>
@@ -652,11 +745,54 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       </div>
     </div>
 
-    <div class="home-cta">
-      <button class="btn-plan" onclick="goTo('s-wizard');initWizard()">Plan My Trip →</button>
-      <button class="btn-view-sample" onclick="loadSample()">View Sample Trip</button>
-    </div>
+    <div class="home-bottom-pad"></div>
 
+  </div>
+</div>
+
+<!-- ═══ STANDALONE BUDGET SCREEN ═══ -->
+<div id="s-solo-budget" class="screen">
+  <div class="solo-bud-header">
+    <button class="solo-bud-back" onclick="goTo('s-home')">← Back to Home</button>
+    <div class="solo-bud-title">KWENTA<span style="color:var(--white)">DOR</span></div>
+    <div class="solo-bud-sub">💰 I-organize ang gastos ng iyong barkada · Personal use only</div>
+    <button class="btn-export-report" onclick="generateReport()">📄 Generate Expense Report</button>
+  </div>
+  <div style="padding:16px;">
+    <!-- Budget summary (reuses same logic) -->
+    <div class="bud-summary" style="margin:-16px -16px 14px;">
+      <div class="bud-total-lbl">Total recorded expenses</div>
+      <div class="bud-total-val" id="solo-bud-total">₱0</div>
+      <div class="bud-bar-wrap"><div class="bud-bar-fill" id="solo-bud-bar" style="width:0%"></div></div>
+      <div class="bud-bar-lbls">
+        <span class="bud-bar-lbl" id="solo-bud-pct">0 expenses</span>
+        <span class="bud-bar-lbl" id="solo-bud-members-count">0 people</span>
+      </div>
+    </div>
+    <!-- Member management -->
+    <div style="background:var(--white);border-radius:var(--r-md);padding:12px;margin-bottom:12px;border:1px solid rgba(28,16,8,.06);">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:8px;">Your Lakwatseros</div>
+      <div id="solo-members-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
+      <div style="display:flex;gap:6px;">
+        <input class="finp" type="text" id="solo-member-input" placeholder="Add person's name..." style="flex:1;padding:9px 12px;font-size:13px;"/>
+        <button onclick="addSoloMember()" style="padding:9px 14px;background:var(--blue);color:#fff;border:none;border-radius:var(--r-md);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--ff-b);">Add</button>
+      </div>
+    </div>
+    <!-- Expense list -->
+    <div class="exp-sec-title">Expenses</div>
+    <div id="solo-exp-list"></div>
+    <button class="add-exp-btn" style="background:var(--green-d);" onclick="openSoloExpSheet(null)">+ Log Expense</button>
+  </div>
+</div>
+
+<!-- ═══ EXPENSE REPORT SCREEN ═══ -->
+<div id="s-report" class="screen">
+  <div style="padding:16px 20px;background:var(--white);border-bottom:1px solid #eee;position:sticky;top:0;z-index:10;display:flex;gap:8px;">
+    <button class="btn-close-report" style="flex:0 0 auto;padding:10px 14px;" onclick="goTo('s-solo-budget')">← Back</button>
+    <button class="btn-print" style="margin-bottom:0;flex:1;" onclick="window.print()">🖨️ Print / Save PDF</button>
+  </div>
+  <div class="report-page" id="report-content">
+    <!-- populated by generateReport() -->
   </div>
 </div>
 
@@ -1498,6 +1634,25 @@ function bookHotel(id, name){
   const url = `https://www.klook.com/en-PH/search/?query=${encodeURIComponent(name+' hotel '+_currentDest)}&utm_source=lakwatsero`;
   window.open(url, '_blank');
 }
+
+/* ============================================================
+   STANDALONE BUDGET — KWENTADOR
+============================================================ */
+let SOLO_EXPENSES=[];
+let SOLO_MEMBERS=["Me"];
+let _soloEditingId=null;
+let _soloSelectedET=null;
+function openSoloBudget(){renderSoloMembers();renderSoloExpenses();goTo("s-solo-budget");}
+function addSoloMember(){const inp=document.getElementById("solo-member-input");const name=inp.value.trim();if(!name||SOLO_MEMBERS.includes(name))return;SOLO_MEMBERS.push(name);inp.value="";renderSoloMembers();renderSoloExpenses();}
+function removeSoloMember(name){if(name==="Me")return;SOLO_MEMBERS=SOLO_MEMBERS.filter(m=>m!==name);renderSoloMembers();renderSoloExpenses();}
+function renderSoloMembers(){const el=document.getElementById("solo-members-list");el.innerHTML=SOLO_MEMBERS.map(m=>`<div style="display:flex;align-items:center;gap:5px;background:var(--cream);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-pill);padding:4px 10px;"><span style="font-size:12px;font-weight:600;color:var(--earth-m);">${m}</span>${m!=="Me"?`<span onclick="removeSoloMember('${m}')" style="font-size:10px;color:var(--red);cursor:pointer;margin-left:4px;">✕</span>":""}</div>`).join("");document.getElementById("solo-bud-members-count").textContent=SOLO_MEMBERS.length+" people";}
+function renderSoloExpenses(){const list=document.getElementById("solo-exp-list");const total=SOLO_EXPENSES.reduce((s,e)=>s+e.total,0);document.getElementById("solo-bud-total").textContent="₱"+total.toLocaleString();document.getElementById("solo-bud-pct").textContent=SOLO_EXPENSES.length+" expense"+(SOLO_EXPENSES.length!==1?"s":"");const maxBudget=Math.max(total*1.3,5000);document.getElementById("solo-bud-bar").style.width=Math.min(100,Math.round(total/maxBudget*100))+"%";list.innerHTML=SOLO_EXPENSES.map(e=>{const pp=Math.round(e.total/(e.members.length||1));return`<div class="exp-item"><div class="exp-item-main"><div class="exp-icon-wrap">${e.icon}</div><div class="exp-info"><div class="exp-title-txt">${e.title}</div><div class="exp-meta-txt">${e.type} · Paid by <strong>${e.paidBy}</strong>${e.members.length>1?" · Split "+e.members.length:""}</div></div><div class="exp-amounts"><div class="exp-total-val">₱${e.total.toLocaleString()}</div><div class="exp-pp-val">₱${pp.toLocaleString()}/person</div>${e.receipt?`<img class="exp-receipt-thumb" src="${e.receipt}" onclick="viewReceipt('${e.receipt}')" title="View receipt"/>`:"" }</div></div><div class="exp-actions"><button class="exp-act-btn edit" onclick="openSoloExpSheet('${e.id}')">✏️ Edit</button><button class="exp-act-btn delete" onclick="deleteSoloExpense('${e.id}')">🗑 Delete</button></div></div>`;}).join("")||"<div style="text-align:center;padding:28px;color:var(--earth-l);font-size:13px;">Wala pang gastos. Mag-log ka na! 💸</div>";}
+function deleteSoloExpense(id){SOLO_EXPENSES=SOLO_EXPENSES.filter(e=>e.id!==id);renderSoloExpenses();}
+function openSoloExpSheet(idOrNull){_soloEditingId=idOrNull;const prefill=idOrNull?SOLO_EXPENSES.find(e=>e.id===idOrNull):null;document.getElementById("exp-sheet-title").textContent=prefill?"Edit expense":"Log expense";document.querySelectorAll(".exp-type-chip").forEach(c=>c.classList.remove("active"));document.getElementById("exp-form").style.display="none";document.getElementById("exp-title-in").value="";document.getElementById("exp-amt-in").value="";document.getElementById("split-prev").style.display="none";document.getElementById("receipt-preview").style.display="none";_soloSelectedET=null;const paidSel=document.getElementById("exp-paid-by");paidSel.innerHTML=SOLO_MEMBERS.map(m=>`<option value="${m}">${m}</option>`).join("");const daySel=document.getElementById("exp-day-select");daySel.innerHTML=`<option value="-1">General</option>`;document.querySelector(".btn-save-exp").onclick=saveSoloExpense;if(prefill){document.querySelectorAll(".exp-type-chip").forEach(c=>{if(c.querySelector(".exp-type-lbl")?.textContent.includes(prefill.type.split("/")[0].trim()))c.classList.add("active");});_soloSelectedET={icon:prefill.icon,label:prefill.type,cat:""};document.getElementById("exp-form").style.display="block";document.getElementById("exp-title-in").value=prefill.title;document.getElementById("exp-amt-in").value=prefill.total;paidSel.value=prefill.paidBy;renderSoloMemberChecks(prefill.members);calcSoloSplit();if(prefill.receipt){document.getElementById("receipt-preview").src=prefill.receipt;document.getElementById("receipt-preview").style.display="block";}}openSheet("sh-exp");}
+function renderSoloMemberChecks(presel){const con=document.getElementById("exp-mem-checks");con.innerHTML=SOLO_MEMBERS.map(m=>`<div class="member-chk${(!presel||presel.length===0||presel.includes(m))?" active":""}" onclick="this.classList.toggle('active');calcSoloSplit()">${m}</div>`).join("");}
+function calcSoloSplit(){const amt=parseFloat(document.getElementById("exp-amt-in").value)||0;const sel=document.querySelectorAll("#exp-mem-checks .member-chk.active").length||1;document.getElementById("split-prev").style.display=amt>0?"flex":"none";document.getElementById("split-val").textContent="₱"+Math.round(amt/sel).toLocaleString();}
+function saveSoloExpense(){const title=document.getElementById("exp-title-in").value.trim();const amt=parseFloat(document.getElementById("exp-amt-in").value)||0;const paidBy=document.getElementById("exp-paid-by").value;const selMem=[...document.querySelectorAll("#exp-mem-checks .member-chk.active")].map(el=>el.textContent);const et=_soloSelectedET;if(!title||!amt||!et){alert("Please fill in all fields.");return;}const receipt=document.getElementById("receipt-preview").style.display!=="none"?document.getElementById("receipt-preview").src:null;if(_soloEditingId){const idx=SOLO_EXPENSES.findIndex(e=>e.id===_soloEditingId);if(idx>-1)SOLO_EXPENSES[idx]={...SOLO_EXPENSES[idx],icon:et.icon,type:et.label,title,total:amt,paidBy,members:selMem,receipt};}else SOLO_EXPENSES.push({id:"se"+Date.now(),icon:et.icon,type:et.label,title,total:amt,paidBy,day:-1,members:selMem,receipt});closeSheet("sh-exp");renderSoloExpenses();_soloEditingId=null;_soloSelectedET=null;document.querySelector(".btn-save-exp").onclick=saveExpense;}
+function generateReport(){if(SOLO_EXPENSES.length===0){alert("Wala pang expenses! Mag-log muna ng gastos.");return;}const total=SOLO_EXPENSES.reduce((s,e)=>s+e.total,0);const now=new Date().toLocaleDateString("en-PH",{year:"numeric",month:"long",day:"numeric"});const balances={};SOLO_MEMBERS.forEach(m=>balances[m]=0);SOLO_EXPENSES.forEach(e=>{const pp=Math.round(e.total/(e.members.length||1));e.members.forEach(name=>{if(balances[name]!==undefined)balances[name]-=pp;});if(balances[e.paidBy]!==undefined)balances[e.paidBy]+=e.total;});const catTotals={};SOLO_EXPENSES.forEach(e=>{catTotals[e.type]=(catTotals[e.type]||0)+e.total;});const expRows=SOLO_EXPENSES.map(e=>{const pp=Math.round(e.total/(e.members.length||1));const recEl=e.receipt?`<div><img src="${e.receipt}" class="report-receipt" onclick="window.open('${e.receipt}','_blank')"/></div>`:"";return`<div class="report-item"><div class="report-item-left"><div class="report-item-name">${e.icon} ${e.title}</div><div class="report-item-meta">${e.type} · Paid by ${e.paidBy} · Split: ${e.members.join(", ")}</div>${recEl}</div><div><div class="report-item-amount">₱${e.total.toLocaleString()}</div><div class="report-item-pp">₱${pp.toLocaleString()}/person</div></div></div>`;}).join("");const catRows=Object.entries(catTotals).map(([cat,amt])=>`<div class="report-item"><div class="report-item-left"><div class="report-item-name">${cat}</div></div><div class="report-item-amount">₱${amt.toLocaleString()}</div></div>`).join("");const balRows=SOLO_MEMBERS.map(m=>{const b=balances[m]||0;return`<div class="report-item"><div class="report-item-left"><div class="report-item-name">${m}</div></div><div class="report-item-amount" style="color:${b>=0?"var(--green)":"var(--red)"}">${b>=0?"+":""}₱${Math.abs(b).toLocaleString()}<div style="font-size:10px;color:#888">${b>=0?"gets back":"owes"}</div></div></div>`;}).join("");document.getElementById("report-content").innerHTML=`<div class="report-header"><div class="report-brand">LAKWAT<span>SERO</span>PH</div><div class="report-title">💰 Expense Report · Kwentador</div><div class="report-date">Generated: ${now}</div></div><div class="report-section-title">All Expenses</div>${expRows}<div class="report-total-row"><span>Grand Total</span><span>₱${total.toLocaleString()}</span></div><div class="report-section-title">By Category</div>${catRows}<div class="report-section-title">Who Owes What</div>${balRows}<div class="report-footer">Generated by LakwatseroPH · Saan tayo? 🇵🇭</div>`;goTo("s-report");}
 
 function catLbl(c){return{beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'}[c]||c;}
 function catBg(c){return{beach:'rgba(0,134,179,.1)',restaurant:'rgba(232,81,42,.1)',tourist_spot:'rgba(26,79,160,.1)',shopping:'rgba(244,168,0,.15)',nightlife:'rgba(61,43,31,.1)',camping:'rgba(45,106,79,.1)',nature_hike:'rgba(45,106,79,.1)',water_sports:'rgba(0,134,179,.1)'}[c]||'rgba(28,16,8,.08)';}
