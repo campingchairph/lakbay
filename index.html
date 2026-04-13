@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<title>Lakbay PH</title>
+<title>LakwatseroPH</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -412,7 +412,131 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .share-opt-icon{font-size:19px;display:block;margin-bottom:3px;}
 .share-opt-lbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.55);}
 
+/* ── ISLAND GROUP SCREEN ── */
+#s-island{background:#0a1628;overflow-y:auto;}
+.island-header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(8,18,40,.96);backdrop-filter:blur(16px);
+  padding:52px 20px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.island-back{
+  display:flex;align-items:center;gap:8px;
+  font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;margin-bottom:12px;
+  background:none;border:none;font-family:var(--ff-b);padding:0;
+}
+.island-back:hover{color:var(--gold);}
+.island-title{font-family:var(--ff-d);font-size:42px;letter-spacing:.04em;color:var(--white);line-height:1;}
+.island-title span{color:var(--gold);}
+.island-subtitle{font-size:12px;color:rgba(255,255,255,.4);margin-top:3px;}
+.island-dest-list{padding:16px 20px;}
+.dest-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-radius:var(--r-md);margin-bottom:8px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
+  cursor:pointer;transition:all .15s;
+}
+.dest-item:hover{background:rgba(255,255,255,.12);border-color:rgba(244,168,0,.3);}
+.dest-item-left{display:flex;align-items:center;gap:12px;}
+.dest-item-icon{font-size:22px;width:36px;text-align:center;}
+.dest-item-name{font-size:14px;font-weight:600;color:var(--white);}
+.dest-item-region{font-size:10px;color:rgba(255,255,255,.4);margin-top:1px;}
+.dest-item-right{display:flex;align-items:center;gap:8px;}
+.dest-item-from{font-size:11px;color:var(--gold);font-weight:600;}
+.dest-item-arrow{font-size:14px;color:rgba(255,255,255,.3);}
+
+/* ── HOTELS SCREEN ── */
+#s-hotels{background:var(--ivory);overflow-y:auto;}
+.hotels-header{
+  background:var(--blue-d);padding:50px 20px 0;
+  position:sticky;top:0;z-index:10;
+}
+.hotels-back{
+  display:flex;align-items:center;gap:8px;font-size:12px;
+  color:rgba(255,255,255,.5);cursor:pointer;background:none;border:none;
+  font-family:var(--ff-b);padding:0 0 12px 0;
+}
+.hotels-back:hover{color:var(--gold);}
+.hotels-dest-title{font-family:var(--ff-d);font-size:36px;letter-spacing:.03em;color:var(--white);line-height:1;}
+.hotels-dest-sub{font-size:11px;color:rgba(174,198,240,.55);margin:2px 0 14px;}
+/* Search bar */
+.hotels-search{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  border-radius:var(--r-pill);padding:10px 16px;margin-bottom:12px;
+}
+.hotels-search-icon{font-size:14px;color:rgba(255,255,255,.4);}
+.hotels-search-input{
+  flex:1;background:none;border:none;outline:none;
+  font-family:var(--ff-b);font-size:13px;color:var(--white);
+}
+.hotels-search-input::placeholder{color:rgba(255,255,255,.3);}
+/* Filter pills */
+.hotels-filters{
+  display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;
+  padding:0 0 12px;
+}
+.hotels-filters::-webkit-scrollbar{display:none;}
+.hf-btn{
+  flex-shrink:0;padding:6px 13px;border-radius:var(--r-pill);
+  border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);
+  font-size:11px;font-weight:600;color:rgba(255,255,255,.7);cursor:pointer;
+  transition:all .15s;font-family:var(--ff-b);
+}
+.hf-btn.active{background:var(--gold);border-color:var(--gold);color:var(--earth);}
+
+/* Hotel cards */
+.hotels-body{padding:16px 20px;}
+.hotel-card{
+  background:var(--white);border-radius:var(--r-lg);
+  margin-bottom:14px;overflow:hidden;
+  border:1px solid rgba(28,16,8,.06);
+}
+.hotel-card-img{
+  height:160px;position:relative;overflow:hidden;
+  background-size:cover;background-position:center;
+}
+.hotel-card-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(28,16,8,.5) 0%,transparent 60%);
+}
+.hotel-trending-badge{
+  position:absolute;top:10px;left:10px;
+  background:var(--red);color:var(--white);
+  font-size:9px;font-weight:700;padding:3px 9px;
+  border-radius:var(--r-pill);letter-spacing:.04em;text-transform:uppercase;
+}
+.hotel-price-badge{
+  position:absolute;bottom:10px;right:10px;
+  background:rgba(28,16,8,.7);backdrop-filter:blur(8px);
+  color:var(--gold);font-size:13px;font-weight:700;
+  padding:4px 10px;border-radius:var(--r-pill);font-family:var(--ff-h);
+}
+.hotel-card-body{padding:14px 14px 12px;}
+.hotel-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.hotel-name{font-size:15px;font-weight:600;color:var(--earth);line-height:1.3;flex:1;margin-right:8px;}
+.hotel-stars{color:var(--gold);font-size:11px;letter-spacing:1px;}
+.hotel-address{font-size:11px;color:var(--earth-l);margin-bottom:8px;}
+.hotel-meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.hotel-meta-pill{
+  font-size:10px;font-weight:500;color:var(--earth-m);
+  background:var(--cream);padding:3px 9px;border-radius:var(--r-pill);
+}
+.hotel-rating-row{display:flex;align-items:center;gap:8px;}
+.hotel-rating-badge{
+  background:var(--blue);color:var(--white);
+  font-size:12px;font-weight:700;padding:3px 8px;border-radius:var(--r-sm);
+}
+.hotel-rating-count{font-size:10px;color:var(--earth-l);}
+.hotel-book-btn{
+  margin-left:auto;padding:7px 16px;background:var(--gold);
+  color:var(--earth);border:none;border-radius:var(--r-pill);
+  font-size:11px;font-weight:700;cursor:pointer;font-family:var(--ff-b);
+  transition:all .15s;
+}
+.hotel-book-btn:hover{background:#e09a00;}
+
 .hidden{display:none!important;}
+
 </style>
 </head>
 <body>
@@ -423,7 +547,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   <div class="home-content">
 
     <div class="home-topbar">
-      <div class="home-greeting" id="home-greeting">Welcome to Lakbay PH</div>
+      <div class="home-greeting" id="home-greeting">Welcome to LakwatseroPH</div>
       <div class="auth-row" id="auth-row">
         <button class="auth-btn" onclick="openAuthModal('signin')">Sign in</button>
         <button class="auth-btn primary" onclick="openAuthModal('signup')">Sign up</button>
@@ -432,60 +556,97 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 
     <div class="home-title-wrap">
       <div class="home-eyebrow">🇵🇭 Philippine Travel Planner</div>
-      <div class="home-title">LAK<span>BAY</span><br/>PH</div>
-      <div class="home-subtitle">Discover the Pearl of the Orient</div>
+      <div class="home-title">LAKWAT<span>SERO</span><br/>PH</div>
+      <div class="home-subtitle">Ano tara? — Discover the Philippines</div>
     </div>
 
     <div class="hotel-section">
       <div class="section-label">🏨 Top hotel deals · Book on Klook</div>
-      <div class="hotel-scroll">
+      <div class="hotel-scroll" style="gap:12px;">
 
-        <div class="dest-skyline-card" onclick="openKlook('boracay-hotels')">
-          <div class="dsc-bg" style="background:linear-gradient(135deg,#006994,#1a7ab5,#00c4e8);"></div>
-          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white"><ellipse cx="100" cy="80" rx="120" ry="20"/><path d="M20,80 Q25,60 30,55 Q35,50 40,55 Q45,60 50,80Z"/><path d="M60,80 Q63,45 68,38 Q73,31 78,38 Q83,45 86,80Z"/><path d="M90,80 L92,50 L96,30 L100,50 L102,80Z"/><path d="M110,80 Q114,52 120,44 Q126,36 132,44 Q138,52 142,80Z"/><path d="M150,80 Q153,60 157,55 Q161,50 165,55 Q169,60 172,80Z"/></svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(0,60,100,.82),rgba(0,100,148,.15));"></div>
-          <div class="dsc-content"><div><div class="dsc-trip-to">Trip to</div><div class="dsc-name">BORACAY</div></div><div class="dsc-bottom"><div class="dsc-days">3–7 nights</div><div class="dsc-price">from ₱2,500</div></div></div>
-          <div class="dsc-klook-badge">Book on Klook</div>
+        <!-- LUZON -->
+        <div class="dest-skyline-card" style="width:160px;" onclick="openIslandGroup('luzon')">
+          <div class="dsc-bg" style="background:linear-gradient(160deg,#0a3d62 0%,#1a6fa8 50%,#2196c4 100%);"></div>
+          <!-- Luzon SVG map outline -->
+          <svg class="dsc-skyline" viewBox="0 0 100 130" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.55)" style="height:75%;bottom:0;top:auto;">
+            <!-- Luzon main island simplified shape -->
+            <path d="M50,5 Q58,8 64,14 Q70,22 68,30 Q72,36 76,40 Q80,48 78,56 Q82,62 80,70 Q76,78 70,82 Q66,88 62,94 Q56,100 50,104 Q44,100 38,94 Q32,88 30,82 Q24,78 20,70 Q18,62 22,56 Q20,48 24,40 Q28,36 32,30 Q30,22 36,14 Q42,8 50,5Z"/>
+            <!-- Batanes islands top -->
+            <ellipse cx="52" cy="0" rx="4" ry="3"/>
+            <ellipse cx="48" cy="3" rx="3" ry="2"/>
+            <!-- Palawan extending left -->
+            <path d="M18,72 Q12,80 8,90 Q6,98 8,106 Q10,110 12,108 Q16,100 18,90 Q20,82 18,72Z"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(8,30,60,.9) 0%,rgba(8,50,100,.3) 60%,transparent 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Explore</div>
+              <div class="dsc-name" style="font-size:22px;">LUZON</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">10 destinations</div>
+              <div class="dsc-price">Book on Klook</div>
+            </div>
+          </div>
         </div>
 
-        <div class="dest-skyline-card" onclick="openKlook('palawan-hotels')">
-          <div class="dsc-bg" style="background:linear-gradient(135deg,#0d5016,#1a7a30,#4db86e);"></div>
-          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white"><path d="M0,80 Q10,55 20,50 Q30,45 35,50 Q40,55 45,80Z"/><path d="M50,80 Q55,40 65,30 Q75,20 85,30 Q95,40 100,80Z"/><path d="M110,80 Q118,35 128,25 Q138,15 148,25 Q158,35 165,80Z"/><path d="M170,80 Q175,58 182,52 Q189,46 196,52 Q200,58 200,80Z"/></svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(13,50,22,.85),rgba(13,80,22,.12));"></div>
-          <div class="dsc-content"><div><div class="dsc-trip-to">Trip to</div><div class="dsc-name">PALAWAN</div></div><div class="dsc-bottom"><div class="dsc-days">4–10 nights</div><div class="dsc-price">from ₱3,200</div></div></div>
-          <div class="dsc-klook-badge">Book on Klook</div>
+        <!-- VISAYAS -->
+        <div class="dest-skyline-card" style="width:160px;" onclick="openIslandGroup('visayas')">
+          <div class="dsc-bg" style="background:linear-gradient(160deg,#1a5276 0%,#148f77 50%,#1abc9c 100%);"></div>
+          <!-- Visayas SVG map outline — scattered island group -->
+          <svg class="dsc-skyline" viewBox="0 0 120 100" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.55)" style="height:72%;bottom:0;">
+            <!-- Samar/Leyte right -->
+            <path d="M80,10 Q90,14 92,22 Q94,30 90,38 Q86,44 80,46 Q74,48 70,44 Q66,38 68,30 Q70,20 80,10Z"/>
+            <path d="M78,46 Q80,54 76,62 Q72,68 70,64 Q68,58 70,50 Q74,46 78,46Z"/>
+            <!-- Cebu long thin -->
+            <path d="M54,30 Q58,34 58,42 Q58,52 56,60 Q54,66 50,66 Q46,66 44,60 Q42,52 42,42 Q42,34 46,30 Q50,26 54,30Z"/>
+            <!-- Negros -->
+            <path d="M30,40 Q36,44 36,54 Q34,62 30,66 Q26,68 22,64 Q18,58 20,48 Q22,40 28,38 Q30,38 30,40Z"/>
+            <!-- Panay -->
+            <path d="M20,14 Q30,10 38,14 Q44,20 40,28 Q34,32 26,30 Q18,28 16,20 Q16,16 20,14Z"/>
+            <!-- Bohol -->
+            <path d="M62,70 Q68,70 70,76 Q70,82 64,84 Q58,84 56,78 Q56,72 62,70Z"/>
+            <!-- Palawan -->
+            <path d="M4,50 Q6,44 10,42 Q14,42 14,48 Q12,56 8,60 Q4,60 4,54 Q4,52 4,50Z"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(10,50,50,.9) 0%,rgba(10,80,70,.3) 60%,transparent 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Explore</div>
+              <div class="dsc-name" style="font-size:22px;">VISAYAS</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">8 destinations</div>
+              <div class="dsc-price">Book on Klook</div>
+            </div>
+          </div>
         </div>
 
-        <div class="dest-skyline-card" onclick="openKlook('cebu-hotels')">
-          <div class="dsc-bg" style="background:linear-gradient(135deg,#7b3f00,#c0392b,#e88b4a);"></div>
-          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white"><rect x="10" y="50" width="20" height="30"/><rect x="35" y="40" width="18" height="40"/><rect x="58" y="28" width="22" height="52"/><rect x="85" y="18" width="28" height="62"/><rect x="118" y="34" width="18" height="46"/><rect x="140" y="44" width="22" height="36"/><rect x="170" y="54" width="20" height="26"/><rect x="63" y="13" width="5" height="17"/></svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(80,20,10,.88),rgba(120,30,10,.12));"></div>
-          <div class="dsc-content"><div><div class="dsc-trip-to">Trip to</div><div class="dsc-name">CEBU</div></div><div class="dsc-bottom"><div class="dsc-days">3–6 nights</div><div class="dsc-price">from ₱1,800</div></div></div>
-          <div class="dsc-klook-badge">Book on Klook</div>
-        </div>
-
-        <div class="dest-skyline-card" onclick="openKlook('siargao-hotels')">
-          <div class="dsc-bg" style="background:linear-gradient(135deg,#1a5276,#148f77,#76d7c4);"></div>
-          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white"><path d="M0,80 C20,70 40,60 60,55 C80,50 100,52 120,50 C140,48 160,55 200,80Z"/><path d="M30,80 Q35,60 42,50 Q49,40 56,50 Q63,60 68,80Z"/><path d="M80,80 Q84,58 90,50 Q96,42 102,50 Q108,58 112,80Z"/><circle cx="150" cy="60" r="8"/><circle cx="168" cy="58" r="6"/></svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(10,50,60,.88),rgba(10,80,80,.12));"></div>
-          <div class="dsc-content"><div><div class="dsc-trip-to">Trip to</div><div class="dsc-name">SIARGAO</div></div><div class="dsc-bottom"><div class="dsc-days">4–7 nights</div><div class="dsc-price">from ₱2,800</div></div></div>
-          <div class="dsc-klook-badge">Book on Klook</div>
-        </div>
-
-        <div class="dest-skyline-card" onclick="openKlook('batanes-hotels')">
-          <div class="dsc-bg" style="background:linear-gradient(135deg,#2c5282,#4a7fa5,#9bc4d9);"></div>
-          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white"><path d="M0,80 Q20,55 50,45 Q80,35 110,42 Q140,49 170,44 Q185,42 200,50 L200,80Z"/><path d="M60,80 Q65,55 72,48 Q79,41 86,48 Q93,55 98,80Z"/><path d="M120,80 Q124,60 129,55 Q134,50 139,55 Q144,60 148,80Z"/></svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(20,40,70,.88),rgba(30,60,100,.12));"></div>
-          <div class="dsc-content"><div><div class="dsc-trip-to">Trip to</div><div class="dsc-name">BATANES</div></div><div class="dsc-bottom"><div class="dsc-days">4–7 nights</div><div class="dsc-price">from ₱3,500</div></div></div>
-          <div class="dsc-klook-badge">Book on Klook</div>
-        </div>
-
-        <div class="dest-skyline-card" onclick="openKlook('manila-hotels')">
-          <div class="dsc-bg" style="background:linear-gradient(135deg,#1c2833,#2e4057,#5d8aa8);"></div>
-          <svg class="dsc-skyline" viewBox="0 0 200 80" preserveAspectRatio="none" fill="white"><rect x="5" y="45" width="15" height="35"/><rect x="23" y="34" width="14" height="46"/><rect x="40" y="19" width="18" height="61"/><rect x="62" y="9" width="22" height="71"/><rect x="88" y="24" width="16" height="56"/><rect x="108" y="29" width="20" height="51"/><rect x="132" y="38" width="18" height="42"/><rect x="154" y="49" width="15" height="31"/><rect x="172" y="54" width="18" height="26"/><rect x="66" y="4" width="5" height="12"/></svg>
-          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(15,25,40,.92),rgba(20,35,55,.12));"></div>
-          <div class="dsc-content"><div><div class="dsc-trip-to">Trip to</div><div class="dsc-name">MANILA</div></div><div class="dsc-bottom"><div class="dsc-days">2–4 nights</div><div class="dsc-price">from ₱1,500</div></div></div>
-          <div class="dsc-klook-badge">Book on Klook</div>
+        <!-- MINDANAO -->
+        <div class="dest-skyline-card" style="width:160px;" onclick="openIslandGroup('mindanao')">
+          <div class="dsc-bg" style="background:linear-gradient(160deg,#4a1942 0%,#8e2060 50%,#c0392b 100%);"></div>
+          <!-- Mindanao SVG map outline -->
+          <svg class="dsc-skyline" viewBox="0 0 120 110" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.55)" style="height:72%;bottom:0;">
+            <!-- Mindanao main — large irregular island -->
+            <path d="M60,8 Q72,10 80,16 Q88,22 92,32 Q96,42 94,52 Q98,60 96,70 Q92,78 84,84 Q76,90 66,92 Q56,94 46,90 Q36,86 28,78 Q20,70 18,60 Q14,52 16,42 Q18,32 26,24 Q34,16 44,10 Q52,6 60,8Z"/>
+            <!-- Camiguin small island top -->
+            <ellipse cx="70" cy="3" rx="5" ry="3.5"/>
+            <!-- Basilan south -->
+            <ellipse cx="30" cy="98" rx="7" ry="4"/>
+            <!-- Siargao northeast -->
+            <ellipse cx="100" cy="28" rx="6" ry="4"/>
+          </svg>
+          <div class="dsc-overlay" style="background:linear-gradient(to top,rgba(50,10,30,.92) 0%,rgba(80,20,40,.3) 60%,transparent 100%);"></div>
+          <div class="dsc-content">
+            <div>
+              <div class="dsc-trip-to">Explore</div>
+              <div class="dsc-name" style="font-size:22px;">MINDANAO</div>
+            </div>
+            <div class="dsc-bottom">
+              <div class="dsc-days">8 destinations</div>
+              <div class="dsc-price">Book on Klook</div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -496,6 +657,42 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       <button class="btn-view-sample" onclick="loadSample()">View Sample Trip</button>
     </div>
 
+  </div>
+</div>
+
+<!-- ═══ ISLAND GROUP SCREEN ═══ -->
+<div id="s-island" class="screen">
+  <div class="island-header">
+    <button class="island-back" onclick="goTo('s-home')">← Back to LakwatseroPH</button>
+    <div class="island-title" id="island-group-title">LUZON</div>
+    <div class="island-subtitle" id="island-group-sub">10 destinations — tap a place to see hotels</div>
+  </div>
+  <div class="island-dest-list" id="island-dest-list">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- ═══ HOTELS SCREEN ═══ -->
+<div id="s-hotels" class="screen">
+  <div class="hotels-header">
+    <button class="hotels-back" onclick="goTo('s-island')">← Back</button>
+    <div class="hotels-dest-title" id="hotels-dest-title">BORACAY</div>
+    <div class="hotels-dest-sub" id="hotels-dest-sub">Aklan, Visayas · Hotels & Resorts</div>
+    <div class="hotels-search">
+      <span class="hotels-search-icon">🔍</span>
+      <input class="hotels-search-input" type="text" id="hotels-search-input" placeholder="Search hotels..." oninput="filterHotels()"/>
+    </div>
+    <div class="hotels-filters">
+      <button class="hf-btn active" onclick="setHotelFilter('all',this)">All</button>
+      <button class="hf-btn" onclick="setHotelFilter('trending',this)">🔥 Trending</button>
+      <button class="hf-btn" onclick="setHotelFilter('budget',this)">💸 Budget</button>
+      <button class="hf-btn" onclick="setHotelFilter('midrange',this)">⭐ Mid-range</button>
+      <button class="hf-btn" onclick="setHotelFilter('luxury',this)">💎 Luxury</button>
+      <button class="hf-btn" onclick="setHotelFilter('resort',this)">🏖️ Resort</button>
+    </div>
+  </div>
+  <div class="hotels-body" id="hotels-body">
+    <!-- populated by JS -->
   </div>
 </div>
 
@@ -994,12 +1191,12 @@ function loadSample(){S.isOwner=true;buildTripUI();goTo('s-app');}
 
 /* ─── AUTH ─── */
 let authMode='signin';
-function openAuthModal(m){authMode=m;document.getElementById('auth-modal').classList.add('open');document.getElementById('auth-title').textContent=m==='signin'?'Welcome back':'Create account';document.getElementById('auth-sub').textContent=m==='signin'?'Sign in to save your trips':'Join Lakbay PH — free';document.getElementById('name-field').classList.toggle('hidden',m==='signin');document.getElementById('auth-submit-btn').textContent=m==='signin'?'Sign in':'Create account';document.getElementById('auth-switch').innerHTML=m==='signin'?"Don't have an account? <span onclick='switchAuthMode()'>Sign up</span>":"Already have an account? <span onclick='switchAuthMode()'>Sign in</span>";}
+function openAuthModal(m){authMode=m;document.getElementById('auth-modal').classList.add('open');document.getElementById('auth-title').textContent=m==='signin'?'Welcome back':'Create account';document.getElementById('auth-sub').textContent=m==='signin'?'Sign in to save your trips':'Join LakwatseroPH — free';document.getElementById('name-field').classList.toggle('hidden',m==='signin');document.getElementById('auth-submit-btn').textContent=m==='signin'?'Sign in':'Create account';document.getElementById('auth-switch').innerHTML=m==='signin'?"Don't have an account? <span onclick='switchAuthMode()'>Sign up</span>":"Already have an account? <span onclick='switchAuthMode()'>Sign in</span>";}
 function switchAuthMode(){openAuthModal(authMode==='signin'?'signup':'signin');}
 function closeAuth(){document.getElementById('auth-modal').classList.remove('open');}
 function closeAuthOutside(e){if(e.target.id==='auth-modal')closeAuth();}
 function submitAuth(){const email=document.getElementById('auth-email').value.trim();const name=document.getElementById('auth-name').value.trim()||email.split('@')[0];if(!email)return;S.user={name,email};updateGreeting();closeAuth();}
-function updateGreeting(){const el=document.getElementById('home-greeting');const ar=document.getElementById('auth-row');if(S.user){el.innerHTML=`Hello, <strong>${S.user.name}</strong>! 👋`;ar.innerHTML=`<button class="auth-btn logout" onclick="logout()">Sign out</button>`;}else{el.textContent='Welcome to Lakbay PH';ar.innerHTML=`<button class="auth-btn" onclick="openAuthModal('signin')">Sign in</button><button class="auth-btn primary" onclick="openAuthModal('signup')">Sign up</button>`;}}
+function updateGreeting(){const el=document.getElementById('home-greeting');const ar=document.getElementById('auth-row');if(S.user){el.innerHTML=`Hello, <strong>${S.user.name}</strong>! 👋`;ar.innerHTML=`<button class="auth-btn logout" onclick="logout()">Sign out</button>`;}else{el.textContent='Welcome to LakwatseroPH';ar.innerHTML=`<button class="auth-btn" onclick="openAuthModal('signin')">Sign in</button><button class="auth-btn primary" onclick="openAuthModal('signup')">Sign up</button>`;}}
 function logout(){S.user=null;updateGreeting();}
 
 /* ─── WIZARD ─── */
@@ -1098,7 +1295,210 @@ function joinTrip(skip){const name=document.getElementById('join-name').value.tr
 function copyLink(){const el=document.getElementById('share-link-in');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
 function copyLink2(){const el=document.getElementById('sh-link-val');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
 
-/* ─── HELPERS ─── */
+
+/* ============================================================
+   ISLAND GROUPS & DESTINATIONS DATA
+============================================================ */
+const ISLAND_GROUPS = {
+  luzon: {
+    title: 'LUZON',
+    color: 'linear-gradient(160deg,#0a3d62,#1a6fa8,#2196c4)',
+    destinations: [
+      {key:'batanes',name:'Batanes',region:'Cagayan Valley',icon:'🌾',from:'₱3,500',lat:20.448,lng:121.97},
+      {key:'baguio',name:'Baguio City',region:'Benguet, CAR',icon:'🌲',from:'₱1,200',lat:16.4023,lng:120.596},
+      {key:'vigan',name:'Vigan',region:'Ilocos Sur',icon:'🏛️',from:'₱1,800',lat:17.5747,lng:120.387},
+      {key:'sagada',name:'Sagada',region:'Mountain Province, CAR',icon:'⛰️',from:'₱900',lat:17.085,lng:120.905},
+      {key:'batangas',name:'Batangas',region:'CALABARZON',icon:'🤿',from:'₱1,100',lat:13.756,lng:121.058},
+      {key:'launion',name:'La Union',region:'Ilocos Region',icon:'🏄',from:'₱1,000',lat:16.619,lng:120.316},
+      {key:'ilocosNorte',name:'Ilocos Norte',region:'Ilocos Region',icon:'🌊',from:'₱1,500',lat:18.198,lng:120.594},
+      {key:'subic',name:'Subic Bay',region:'Zambales, Region III',icon:'⚓',from:'₱1,800',lat:14.824,lng:120.267},
+      {key:'manila',name:'Manila',region:'Metro Manila, NCR',icon:'🏙️',from:'₱1,500',lat:14.5995,lng:120.984},
+      {key:'marinduque',name:'Marinduque',region:'MIMAROPA',icon:'🥁',from:'₱1,200',lat:13.368,lng:122.065},
+    ]
+  },
+  visayas: {
+    title: 'VISAYAS',
+    color: 'linear-gradient(160deg,#1a5276,#148f77,#1abc9c)',
+    destinations: [
+      {key:'boracay',name:'Boracay',region:'Aklan, Western Visayas',icon:'🏖️',from:'₱2,500',lat:11.9674,lng:121.921},
+      {key:'cebu',name:'Cebu',region:'Central Visayas',icon:'⛪',from:'₱1,800',lat:10.3157,lng:123.885},
+      {key:'palawan',name:'Palawan / El Nido',region:'MIMAROPA',icon:'🏝️',from:'₱3,200',lat:11.183,lng:119.367},
+      {key:'bohol',name:'Bohol',region:'Central Visayas',icon:'🦎',from:'₱2,000',lat:9.85,lng:124.143},
+      {key:'iloilo',name:'Iloilo',region:'Western Visayas',icon:'🍜',from:'₱1,400',lat:10.72,lng:122.562},
+      {key:'bacolod',name:'Bacolod',region:'Western Visayas',icon:'🎭',from:'₱1,200',lat:10.676,lng:122.956},
+      {key:'dumaguete',name:'Dumaguete',region:'Negros Oriental',icon:'🌊',from:'₱1,500',lat:9.307,lng:123.307},
+      {key:'siquijor',name:'Siquijor',region:'Central Visayas',icon:'🔮',from:'₱1,800',lat:9.2,lng:123.587},
+    ]
+  },
+  mindanao: {
+    title: 'MINDANAO',
+    color: 'linear-gradient(160deg,#4a1942,#8e2060,#c0392b)',
+    destinations: [
+      {key:'siargao',name:'Siargao',region:'Surigao del Norte',icon:'🏄',from:'₱2,800',lat:9.848,lng:126.046},
+      {key:'davao',name:'Davao City',region:'Davao Region',icon:'🦅',from:'₱1,800',lat:7.0707,lng:125.613},
+      {key:'camiguin',name:'Camiguin',region:'Northern Mindanao',icon:'🌋',from:'₱1,500',lat:9.176,lng:124.73},
+      {key:'cdo',name:'Cagayan de Oro',region:'Northern Mindanao',icon:'🛶',from:'₱1,200',lat:8.4542,lng:124.64},
+      {key:'bukidnon',name:'Bukidnon',region:'Northern Mindanao',icon:'🌿',from:'₱900',lat:8.032,lng:125.09},
+      {key:'zamboanga',name:'Zamboanga City',region:'Zamboanga Peninsula',icon:'💐',from:'₱1,400',lat:6.921,lng:122.079},
+      {key:'surigao',name:'Surigao City',region:'Caraga',icon:'🌊',from:'₱1,100',lat:9.787,lng:125.496},
+      {key:'gensan',name:'General Santos',region:'SOCCSKSARGEN',icon:'🐟',from:'₱1,300',lat:6.112,lng:125.172},
+    ]
+  }
+};
+
+/* ============================================================
+   HOTEL PLACEHOLDER DATA — TODO: Replace with Neon/API
+============================================================ */
+const HOTELS_BY_DEST = {
+  boracay: [
+    {id:'h1',name:'Henann Resort Boracay',address:'Station 1, White Beach, Boracay',rooms:['Deluxe','Suite','Villa'],pricePerNight:6500,rating:9.1,reviews:2840,trending:true,tier:'luxury',tags:['Beachfront','Pool','Spa'],img:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&q=65'},
+    {id:'h2',name:'Boracay Sands Hotel',address:'Station 2, White Beach, Boracay',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.4,reviews:1200,trending:false,tier:'midrange',tags:['Beachfront','Restaurant'],img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
+    {id:'h3',name:'Puka Shell Beach Resort',address:'Puka Beach, North Boracay',rooms:['Cottage','Bungalow'],pricePerNight:1800,rating:8.0,reviews:650,trending:true,tier:'budget',tags:['Quiet','Nature'],img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
+    {id:'h4',name:'Discovery Shores Boracay',address:'Station 1, White Beach, Boracay',rooms:['Junior Suite','Premier Room'],pricePerNight:12000,rating:9.5,reviews:3200,trending:true,tier:'luxury',tags:['Luxury','Spa','Beachfront'],img:'https://images.unsplash.com/photo-1455587734955-081b22074882?w=400&q=65'},
+    {id:'h5',name:'Sand Bar Resort',address:'Station 2, Boracay',rooms:['Standard'],pricePerNight:1200,rating:7.8,reviews:420,trending:false,tier:'budget',tags:['Budget-friendly'],img:'https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&q=65'},
+  ],
+  cebu: [
+    {id:'h6',name:'Shangri-La Mactan Cebu',address:'Punta Engano Rd, Lapu-Lapu City',rooms:['Garden Room','Ocean View','Villa'],pricePerNight:14000,rating:9.4,reviews:5100,trending:true,tier:'luxury',tags:['Island Resort','Spa','Dive Center'],img:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&q=65'},
+    {id:'h7',name:'Crimson Resort and Spa',address:'Seascapes Village, Mactan',rooms:['Deluxe','Suite'],pricePerNight:8500,rating:9.0,reviews:2200,trending:false,tier:'luxury',tags:['Beachfront','Spa'],img:'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400&q=65'},
+    {id:'h8',name:'Radisson Blu Cebu',address:'Serging Osmeña Blvd, Cebu City',rooms:['Superior','Deluxe','Suite'],pricePerNight:5200,rating:8.7,reviews:1800,trending:true,tier:'midrange',tags:['City Center','Pool'],img:'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&q=65'},
+    {id:'h9',name:'Ayala Grand Palace Hotel',address:'Ayala Center, Cebu City',rooms:['Standard','Deluxe'],pricePerNight:3200,rating:8.2,reviews:900,trending:false,tier:'midrange',tags:['Mall Access','Business'],img:'https://images.unsplash.com/photo-1543968996-ee822b8176ba?w=400&q=65'},
+  ],
+  siargao: [
+    {id:'h10',name:'Nay Palad Hideaway',address:'Siargao Island, Surigao del Norte',rooms:['Floating Cottage','Tree House'],pricePerNight:18000,rating:9.7,reviews:340,trending:true,tier:'luxury',tags:['Eco-luxury','Private Beach'],img:'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=65'},
+    {id:'h11',name:'Kermit Surf Resort',address:'General Luna, Siargao',rooms:['Dorm','Private Room'],pricePerNight:1500,rating:8.5,reviews:1200,trending:true,tier:'budget',tags:['Surfer Vibe','Restaurant'],img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&q=65'},
+    {id:'h12',name:'Bravo Beach Resort',address:'Dapa Road, General Luna',rooms:['Deluxe','Villa'],pricePerNight:5500,rating:8.9,reviews:780,trending:false,tier:'midrange',tags:['Beach Access','Pool'],img:'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=400&q=65'},
+  ],
+  palawan: [
+    {id:'h13',name:'El Nido Resorts Lagen Island',address:'Lagen Island, El Nido',rooms:['Forest Room','Watercottage'],pricePerNight:22000,rating:9.6,reviews:1100,trending:true,tier:'luxury',tags:['Island Resort','All-inclusive'],img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=65'},
+    {id:'h14',name:'Miniloc Island Resort',address:'Bacuit Bay, El Nido',rooms:['Water Cottage','Garden Room'],pricePerNight:16000,rating:9.4,reviews:890,trending:false,tier:'luxury',tags:['Overwater','Snorkeling'],img:'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=400&q=65'},
+    {id:'h15',name:'La Natura Resort',address:'El Nido Town, Palawan',rooms:['Standard','Superior'],pricePerNight:2800,rating:8.1,reviews:650,trending:false,tier:'midrange',tags:['Town Center','AC'],img:'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&q=65'},
+  ],
+  manila: [
+    {id:'h16',name:'Conrad Manila',address:'Seaside Blvd, Mall of Asia Complex',rooms:['Deluxe','Suite','Penthouse'],pricePerNight:12000,rating:9.3,reviews:4200,trending:true,tier:'luxury',tags:['Bay View','Spa','Casino'],img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&q=65'},
+    {id:'h17',name:'Okada Manila',address:'Entertainment City, Parañaque',rooms:['Deluxe','Suite'],pricePerNight:15000,rating:9.2,reviews:3100,trending:true,tier:'luxury',tags:['Casino Resort','Pool'],img:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&q=65'},
+    {id:'h18',name:'Seda Vertis North',address:'Vertis North, Quezon City',rooms:['Deluxe','Executive'],pricePerNight:4500,rating:8.8,reviews:2100,trending:false,tier:'midrange',tags:['Business','Mall Access'],img:'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=65'},
+    {id:'h19',name:'Miramar Hotel Manila',address:'Roxas Blvd, Manila',rooms:['Standard','Superior'],pricePerNight:2200,rating:7.9,reviews:800,trending:false,tier:'budget',tags:['Bay View','Budget'],img:'https://images.unsplash.com/photo-1568495248636-6432b97bd949?w=400&q=65'},
+  ],
+  baguio: [
+    {id:'h20',name:'The Manor at Camp John Hay',address:'Camp John Hay, Baguio City',rooms:['Deluxe','Suite','Cabin'],pricePerNight:8500,rating:9.1,reviews:1900,trending:true,tier:'luxury',tags:['Pine Forest','Golf','Spa'],img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
+    {id:'h21',name:'Forest Lodge Camp John Hay',address:'Camp John Hay, Baguio City',rooms:['Studio','Deluxe'],pricePerNight:5200,rating:8.6,reviews:1100,trending:false,tier:'midrange',tags:['Nature','Cool Breeze'],img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=65'},
+    {id:'h22',name:'Casa Vallejo Heritage Hotel',address:'Upper Session Road, Baguio',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.3,reviews:700,trending:true,tier:'midrange',tags:['Heritage','City Center'],img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&q=65'},
+  ],
+  davao: [
+    {id:'h23',name:'Marco Polo Davao',address:'CM Recto St, Davao City',rooms:['Deluxe','Junior Suite'],pricePerNight:6800,rating:9.0,reviews:2300,trending:true,tier:'luxury',tags:['City Center','Pool','Spa'],img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
+    {id:'h24',name:'Seda Abreeza Davao',address:'JP Laurel Ave, Davao City',rooms:['Deluxe','Suite'],pricePerNight:4200,rating:8.7,reviews:1400,trending:false,tier:'midrange',tags:['Business','Mall'],img:'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&q=65'},
+  ],
+};
+/* Default hotel set for destinations without specific data */
+const DEFAULT_HOTELS = [
+  {id:'dh1',name:'Grand Plaza Hotel',address:'Town Center',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.2,reviews:450,trending:false,tier:'midrange',tags:['AC','WiFi'],img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
+  {id:'dh2',name:'Island View Resort',address:'Beach Road',rooms:['Cottage','Suite'],pricePerNight:4500,rating:8.6,reviews:320,trending:true,tier:'resort',tags:['Beachfront','Pool'],img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
+  {id:'dh3',name:'Budget Inn & Suites',address:'Main Street',rooms:['Fan Room','AC Room'],pricePerNight:800,rating:7.5,reviews:210,trending:false,tier:'budget',tags:['Budget','Central'],img:'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=65'},
+];
+
+/* ============================================================
+   ISLAND GROUP & HOTEL FUNCTIONS
+============================================================ */
+let _currentGroup = 'luzon';
+let _currentDest = null;
+let _hotelFilter = 'all';
+
+function openIslandGroup(group){
+  _currentGroup = group;
+  const g = ISLAND_GROUPS[group];
+  document.getElementById('island-group-title').innerHTML = g.title.slice(0,4)+'<span style="color:var(--gold)">'+g.title.slice(4)+'</span>';
+  document.getElementById('island-group-sub').textContent = g.destinations.length + ' destinations — tap a place to see hotels';
+  const list = document.getElementById('island-dest-list');
+  list.innerHTML = g.destinations.map(d => `
+    <div class="dest-item" onclick="openHotels('${d.key}','${d.name}','${d.region}')">
+      <div class="dest-item-left">
+        <div class="dest-item-icon">${d.icon}</div>
+        <div>
+          <div class="dest-item-name">${d.name}</div>
+          <div class="dest-item-region">${d.region}</div>
+        </div>
+      </div>
+      <div class="dest-item-right">
+        <div class="dest-item-from">${d.from}/night</div>
+        <div class="dest-item-arrow">›</div>
+      </div>
+    </div>`).join('');
+  goTo('s-island');
+}
+
+function openHotels(destKey, destName, destRegion){
+  _currentDest = destKey;
+  _hotelFilter = 'all';
+  document.getElementById('hotels-dest-title').textContent = destName.toUpperCase();
+  document.getElementById('hotels-dest-sub').textContent = destRegion + ' · Hotels & Resorts';
+  document.getElementById('hotels-search-input').value = '';
+  document.querySelectorAll('.hf-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.hf-btn').classList.add('active');
+  renderHotels();
+  goTo('s-hotels');
+}
+
+function setHotelFilter(f, btn){
+  _hotelFilter = f;
+  document.querySelectorAll('.hf-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderHotels();
+}
+
+function filterHotels(){
+  renderHotels();
+}
+
+function renderHotels(){
+  const raw = HOTELS_BY_DEST[_currentDest] || DEFAULT_HOTELS;
+  const query = (document.getElementById('hotels-search-input').value||'').toLowerCase();
+  let hotels = raw.filter(h => {
+    const matchSearch = !query || h.name.toLowerCase().includes(query) || h.address.toLowerCase().includes(query);
+    const matchFilter = _hotelFilter === 'all' || h.tier === _hotelFilter || (_hotelFilter === 'trending' && h.trending);
+    return matchSearch && matchFilter;
+  });
+  const body = document.getElementById('hotels-body');
+  if(hotels.length === 0){
+    body.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--earth-l);font-size:13px;">No hotels match your search. Try a different keyword.</div>';
+    return;
+  }
+  body.innerHTML = hotels.map(h => {
+    const stars = '★'.repeat(Math.round(h.rating/2));
+    const trendBadge = h.trending ? '<div class="hotel-trending-badge">🔥 Trending</div>' : '';
+    const tierColors = {luxury:'#8B6914',midrange:'#1A4FA0',budget:'#2D6A4F',resort:'#C0392B'};
+    return `
+    <div class="hotel-card">
+      <div class="hotel-card-img" style="background-image:url('${h.img}')">
+        <div class="hotel-card-img-overlay"></div>
+        ${trendBadge}
+        <div class="hotel-price-badge">₱${h.pricePerNight.toLocaleString()}/night</div>
+      </div>
+      <div class="hotel-card-body">
+        <div class="hotel-card-top">
+          <div class="hotel-name">${h.name}</div>
+          <div class="hotel-stars">${stars}</div>
+        </div>
+        <div class="hotel-address">📍 ${h.address}</div>
+        <div class="hotel-meta-row">
+          ${h.rooms.map(r=>`<span class="hotel-meta-pill">🛏 ${r}</span>`).join('')}
+          ${h.tags.map(t=>`<span class="hotel-meta-pill">${t}</span>`).join('')}
+        </div>
+        <div class="hotel-rating-row">
+          <div class="hotel-rating-badge">${h.rating.toFixed(1)}</div>
+          <div class="hotel-rating-count">${h.reviews.toLocaleString()} reviews</div>
+          <button class="hotel-book-btn" onclick="bookHotel('${h.id}','${h.name}')">Book on Klook →</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function bookHotel(id, name){
+  /* TODO: Replace with real Klook affiliate deep-link per hotel */
+  const url = `https://www.klook.com/en-PH/search/?query=${encodeURIComponent(name+' hotel '+_currentDest)}&utm_source=lakwatsero`;
+  window.open(url, '_blank');
+}
+
 function catLbl(c){return{beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'}[c]||c;}
 function catBg(c){return{beach:'rgba(0,134,179,.1)',restaurant:'rgba(232,81,42,.1)',tourist_spot:'rgba(26,79,160,.1)',shopping:'rgba(244,168,0,.15)',nightlife:'rgba(61,43,31,.1)',camping:'rgba(45,106,79,.1)',nature_hike:'rgba(45,106,79,.1)',water_sports:'rgba(0,134,179,.1)'}[c]||'rgba(28,16,8,.08)';}
 function catColor(c){return{beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#B8860B',nightlife:'#3D2B1F',camping:'#1B4332',nature_hike:'#1B4332',water_sports:'#0086B3'}[c]||'#3D2B1F';}
