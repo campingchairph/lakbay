@@ -30,29 +30,10 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .screen{display:none;position:fixed;inset:0;flex-direction:column;overflow:hidden;}
 .screen.active{display:flex;}
 
-/* ── HOME ── */
-#s-home{overflow:hidden;}
-
-/* Static hero — airplane window photo */
-.hero-static{
-  position:fixed;inset:0;z-index:0;
-  background:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=75') center/cover no-repeat;
-}
-.hero-static::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(
-    to bottom,
-    rgba(8,18,40,.72) 0%,
-    rgba(8,18,40,.45) 30%,
-    rgba(8,18,40,.60) 60%,
-    rgba(8,18,40,.97) 100%
-  );
-}
-
-/* Home layout — fixed height, no scroll */
+/* ── Home layout ── */
 .home-content{
-  position:relative;z-index:5;
-  height:100vh;display:flex;flex-direction:column;
+  position:relative;z-index:2;
+  height:100%;display:flex;flex-direction:column;
   padding:0;overflow:hidden;
 }
 
@@ -75,14 +56,134 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .auth-btn.primary{background:var(--gold);color:var(--earth);border-color:var(--gold);}
 .auth-btn.logout{background:rgba(192,57,43,.25);border-color:rgba(192,57,43,.4);color:#f08b80;}
 
+/* ── AUTH LANDING SCREEN (new first screen) ── */
+#s-auth-landing{
+  overflow:hidden;
+  /* Geometric color background using primary colors */
+  background:#0a1628;
+  position:relative;
+}
+/* Decorative geometric shapes */
+.al-bg{position:absolute;inset:0;overflow:hidden;}
+.al-blob1{
+  position:absolute;top:-80px;right:-60px;
+  width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(192,57,43,.35) 0%,transparent 70%);
+}
+.al-blob2{
+  position:absolute;bottom:-60px;left:-80px;
+  width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,79,160,.4) 0%,transparent 70%);
+}
+.al-blob3{
+  position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(244,168,0,.18) 0%,transparent 70%);
+}
+/* Color bar strip at top */
+.al-colorbar{
+  position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(to right,var(--red) 0%,var(--red) 33%,var(--gold) 33%,var(--gold) 66%,var(--blue) 66%,var(--blue) 100%);
+}
+.al-content{
+  position:relative;z-index:2;
+  height:100vh;display:flex;flex-direction:column;
+  padding:0 28px;
+}
+.al-top{padding-top:68px;flex-shrink:0;}
+.al-flag{font-size:28px;margin-bottom:12px;}
+.al-eyebrow{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.al-title{font-family:var(--ff-d);font-size:clamp(58px,16vw,90px);letter-spacing:.04em;line-height:.88;color:var(--white);}
+.al-title .accent{color:var(--gold);}
+.al-tagline{font-family:var(--ff-h);font-style:italic;font-size:16px;color:rgba(174,198,240,.65);margin-top:8px;}
+/* Feature pills */
+.al-features{display:flex;flex-direction:column;gap:10px;margin-top:22px;flex-shrink:0;}
+.al-feat{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
+}
+.al-feat-icon{font-size:20px;flex-shrink:0;}
+.al-feat-text{font-size:13px;color:rgba(255,255,255,.75);font-weight:500;}
+.al-feat-text strong{color:var(--white);font-weight:700;}
+/* Auth buttons at bottom */
+.al-actions{margin-top:auto;padding-bottom:44px;flex-shrink:0;}
+.btn-al-signup{
+  width:100%;padding:17px;background:var(--gold);color:var(--earth);
+  border:none;border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;
+  margin-bottom:10px;
+}
+.btn-al-signup:hover{background:#e09a00;box-shadow:0 6px 24px rgba(244,168,0,.4);}
+.btn-al-signin{
+  width:100%;padding:16px;
+  background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);
+  border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:15px;font-weight:700;color:var(--white);cursor:pointer;
+  transition:all .15s;
+  backdrop-filter:blur(8px);
+}
+.btn-al-signin:hover{background:rgba(255,255,255,.15);}
+.al-guest-link{
+  text-align:center;margin-top:14px;
+  font-size:12px;color:rgba(255,255,255,.35);
+}
+.al-guest-link span{
+  color:rgba(255,255,255,.55);cursor:pointer;text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+/* ── HOME screen (after login) — plain color ── */
+#s-home{background:#0a1628;overflow:hidden;}
+
+/* Color accent bar at top of home */
+.home-colorbar{
+  position:absolute;top:0;left:0;right:0;height:3px;z-index:10;
+  background:linear-gradient(to right,var(--red) 0%,var(--red) 33%,var(--gold) 33%,var(--gold) 66%,var(--blue) 66%,var(--blue) 100%);
+}
+
+/* Home decorative blobs */
+.home-deco{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.home-deco-r{
+  position:absolute;top:-100px;right:-80px;
+  width:350px;height:350px;border-radius:50%;
+  background:radial-gradient(circle,rgba(192,57,43,.2) 0%,transparent 65%);
+}
+.home-deco-b{
+  position:absolute;bottom:-80px;left:-60px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,79,160,.25) 0%,transparent 65%);
+}
+.home-deco-g{
+  position:absolute;top:40%;right:-40px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(244,168,0,.12) 0%,transparent 65%);
+}
+
+/* Top bar — with greeting and logout */
+.home-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:52px 20px 0;flex-shrink:0;position:relative;z-index:2;
+}
+.home-greeting{font-size:13px;color:rgba(255,255,255,.65);font-weight:400;}
+.home-greeting strong{color:var(--gold);font-weight:700;}
+.logout-btn{
+  background:rgba(192,57,43,.2);border:1px solid rgba(192,57,43,.35);
+  color:#f08b80;width:32px;height:32px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:14px;transition:all .2s;flex-shrink:0;
+}
+.logout-btn:hover{background:rgba(192,57,43,.38);}
+
 /* Title */
-.home-title-wrap{padding:12px 20px 0;flex-shrink:0;text-align:center;}
+.home-title-wrap{padding:12px 20px 0;flex-shrink:0;text-align:center;position:relative;z-index:2;}
 .home-eyebrow{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
 .home-title{font-family:var(--ff-d);font-size:clamp(56px,15vw,86px);letter-spacing:.04em;line-height:.88;color:var(--white);}
 .home-title span{color:var(--gold);}
 .home-subtitle{font-family:var(--ff-h);font-style:italic;font-size:14px;color:rgba(174,198,240,.7);margin-top:5px;}
+
 /* Quirky CTA taglines */
-.home-taglines{padding:14px 20px 0;text-align:center;flex-shrink:0;}
+.home-taglines{padding:14px 20px 0;text-align:center;flex-shrink:0;position:relative;z-index:2;}
 .tagline-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
 .tagline-chip{
   font-size:11px;font-weight:600;color:rgba(255,255,255,.55);
@@ -91,7 +192,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 }
 
 /* Hotel section — pushed to bottom, optional */
-.hotel-section{padding:10px 20px 0;flex-shrink:0;}
+.hotel-section{padding:10px 20px 0;flex-shrink:0;position:relative;z-index:2;}
 .section-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:8px;}
 /* Island group cards: row of 3, column content inside, max-width constrained */
 .island-cards-row{
@@ -125,43 +226,37 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   letter-spacing:.04em;text-transform:uppercase;
 }
 
-/* CTA — main focus, at top */
-.home-cta{padding:16px 20px 0;flex-shrink:0;}
-.btn-plan{width:100%;padding:17px;background:var(--gold);color:var(--earth);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.01em;}
+/* CTA — stacked, equal font size */
+.home-cta{padding:16px 20px 0;flex-shrink:0;position:relative;z-index:2;}
+.btn-plan{
+  width:100%;padding:17px;background:var(--gold);color:var(--earth);
+  border:none;border-radius:var(--r-md);font-family:var(--ff-b);
+  font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;
+  letter-spacing:.01em;display:block;margin-bottom:10px;
+}
 .btn-plan:hover{background:#e09a00;box-shadow:0 6px 24px rgba(244,168,0,.4);}
 .btn-plan:active{transform:scale(.97);}
-/* Budget organizer btn beside plan */
-.cta-row{display:flex;gap:8px;}
+/* Budget button — stacked below, same font size, blue */
 .btn-budget-solo{
-  flex:1;padding:17px 12px;
-  background:var(--glass-bg);border:1px solid rgba(255,255,255,.22);
-  backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);
+  width:100%;padding:17px;
+  background:var(--blue);border:none;
   border-radius:var(--r-md);font-family:var(--ff-b);
-  font-size:12px;font-weight:600;color:rgba(255,255,255,.8);cursor:pointer;transition:all .2s;
-  text-align:center;line-height:1.3;
+  font-size:15px;font-weight:700;color:var(--white);cursor:pointer;
+  transition:all .15s;display:block;
 }
-.btn-budget-solo:hover{color:var(--white);background:rgba(255,255,255,.18);}
-.btn-plan-wrap{flex:2;}
-/* Remove old standalone btn-view-sample */
-.btn-view-sample{display:none;}
+.btn-budget-solo:hover{background:var(--blue-d);box-shadow:0 6px 24px rgba(26,79,160,.4);}
+.btn-budget-solo:active{transform:scale(.97);}
+/* Sample trip link */
+.sample-trip-link{
+  text-align:center;margin-top:12px;
+  font-size:12px;color:rgba(255,255,255,.35);
+}
+.sample-trip-link span{
+  color:rgba(255,255,255,.55);cursor:pointer;
+  text-decoration:underline;text-underline-offset:3px;
+}
 /* Keep spacer at very bottom */
 .home-bottom-pad{height:28px;flex-shrink:0;}
-
-/* ── AUTH MODAL ── */
-.auth-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(5,12,30,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px;}
-.auth-overlay.open{display:flex;}
-.auth-modal{width:100%;max-width:360px;background:rgba(15,28,60,.88);backdrop-filter:blur(28px) saturate(1.8);-webkit-backdrop-filter:blur(28px) saturate(1.8);border:1px solid rgba(255,255,255,.18);border-radius:var(--r-xl);padding:26px 22px;}
-.auth-modal-title{font-family:var(--ff-h);font-size:21px;font-weight:700;color:var(--white);margin-bottom:3px;}
-.auth-modal-sub{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:20px;}
-.auth-field{margin-bottom:12px;}
-.auth-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.38);display:block;margin-bottom:5px;}
-.auth-input{width:100%;padding:11px 13px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;color:var(--white);outline:none;transition:border-color .2s;}
-.auth-input:focus{border-color:rgba(244,168,0,.5);}
-.auth-input::placeholder{color:rgba(255,255,255,.22);}
-.btn-auth-submit{width:100%;padding:13px;background:var(--gold);color:var(--earth);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;}
-.auth-switch{text-align:center;margin-top:12px;font-size:12px;color:rgba(255,255,255,.35);}
-.auth-switch span{color:var(--gold);cursor:pointer;font-weight:600;}
-.auth-close{float:right;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);width:24px;height:24px;border-radius:50%;cursor:pointer;color:rgba(255,255,255,.45);font-size:11px;display:flex;align-items:center;justify-content:center;}
 
 /* ── JOIN ── */
 #s-join{background:rgba(5,12,30,.96);align-items:center;justify-content:center;padding:24px;}
@@ -618,23 +713,161 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   font-family:var(--ff-b);font-size:13px;color:var(--earth-m);cursor:pointer;
 }
 
+/* ── SPLIT TOGGLE ── */
+.split-mode-toggle{
+  display:flex;gap:0;margin-bottom:12px;
+  border-radius:var(--r-sm);overflow:hidden;
+  border:1px solid rgba(255,255,255,.15);
+}
+.split-mode-btn{
+  flex:1;padding:9px;font-size:12px;font-weight:600;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.45);
+  border:none;cursor:pointer;font-family:var(--ff-b);transition:all .15s;
+}
+.split-mode-btn.active{
+  background:var(--blue);color:var(--white);
+}
+
+/* Custom split inputs */
+.custom-split-list{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.custom-split-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+}
+.csr-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.csr-input{
+  width:90px;padding:7px 10px;text-align:right;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:var(--r-sm);font-family:var(--ff-b);font-size:13px;font-weight:600;
+  color:var(--white);outline:none;
+}
+.csr-input:focus{border-color:var(--gold);}
+.csr-input::placeholder{color:rgba(255,255,255,.25);}
+
+/* Split balance bar */
+.split-balance{
+  margin-top:10px;padding:11px 13px;border-radius:var(--r-md);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+}
+.split-balance-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.split-balance-lbl{font-size:11px;color:rgba(255,255,255,.4);}
+.split-balance-val{font-family:var(--ff-h);font-size:18px;font-weight:700;}
+.split-balance-bar-wrap{height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;margin-bottom:6px;}
+.split-balance-bar{height:100%;border-radius:2px;transition:width .2s,background .2s;}
+.split-balance-note{font-size:11px;text-align:right;}
+.btn-fill-remaining{
+  margin-top:8px;width:100%;padding:8px;
+  background:rgba(244,168,0,.15);border:1px solid rgba(244,168,0,.3);
+  border-radius:var(--r-sm);font-family:var(--ff-b);font-size:11px;font-weight:600;
+  color:var(--gold);cursor:pointer;
+}
+.btn-fill-remaining:hover{background:rgba(244,168,0,.25);}
+
+/* Custom split breakdown on expense card */
+.exp-split-breakdown{
+  display:flex;flex-wrap:wrap;gap:4px;
+  padding:6px 11px 9px;border-top:1px solid rgba(28,16,8,.05);
+}
+.exp-split-chip{
+  font-size:10px;font-weight:500;color:var(--earth-m);
+  background:var(--cream);padding:2px 8px;border-radius:var(--r-pill);
+}
+.exp-split-chip.me{background:var(--blue-l);color:var(--blue);}
+
 .hidden{display:none!important;}
 
 </style>
 </head>
 <body>
 
-<!-- ═══ HOME ═══ -->
-<div id="s-home" class="screen active">
-  <div class="hero-static"></div>
+<!-- ═══ AUTH LANDING (first screen shown) ═══ -->
+<div id="s-auth-landing" class="screen active">
+  <div class="al-bg">
+    <div class="al-blob1"></div>
+    <div class="al-blob2"></div>
+    <div class="al-blob3"></div>
+  </div>
+  <div class="al-colorbar"></div>
+  <div class="al-content">
+    <div class="al-top">
+      <div class="al-flag">🇵🇭</div>
+      <div class="al-eyebrow">Philippine Travel Planner</div>
+      <div class="al-title">LAKWAT<span class="accent">SERO</span><br/>PH</div>
+      <div class="al-tagline">Ano tara? — I-plan ang susunod mong lakwatsa</div>
+    </div>
+    <div class="al-features">
+      <div class="al-feat">
+        <div class="al-feat-icon">🗺️</div>
+        <div class="al-feat-text"><strong>Mag-plano ng trip</strong> — day-by-day itinerary kasama ang barkada</div>
+      </div>
+      <div class="al-feat">
+        <div class="al-feat-icon">💰</div>
+        <div class="al-feat-text"><strong>I-split ang gastos</strong> — track expenses, who owes who</div>
+      </div>
+      <div class="al-feat">
+        <div class="al-feat-icon">🏝️</div>
+        <div class="al-feat-text"><strong>Discover the Philippines</strong> — hotels, destinations, Klook deals</div>
+      </div>
+    </div>
+    <div class="al-actions">
+      <button class="btn-al-signup" onclick="showAuthForm('signup')">Gumawa ng account — libre!</button>
+      <button class="btn-al-signin" onclick="showAuthForm('signin')">Mag-sign in na</button>
+      <div class="al-guest-link">
+        <span onclick="enterAsGuest()">o mag-browse muna bilang bisita →</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AUTH FORM SCREEN ═══ -->
+<div id="s-auth-form" class="screen">
+  <div style="position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;background:#0a1628;overflow:hidden;">
+    <div class="al-colorbar"></div>
+    <div class="al-bg" style="opacity:.5;"><div class="al-blob1"></div><div class="al-blob2"></div></div>
+    <div style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:0 28px;">
+      <div style="padding-top:58px;margin-bottom:24px;">
+        <button onclick="goTo('s-auth-landing')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.5);font-family:var(--ff-b);font-size:12px;padding:6px 12px;border-radius:var(--r-pill);cursor:pointer;">← Back</button>
+      </div>
+      <div style="font-family:var(--ff-d);font-size:36px;letter-spacing:.04em;color:var(--white);line-height:1;margin-bottom:4px;" id="af-title">CREATE ACCOUNT</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:24px;" id="af-sub">Libre at walang bayad. Mag-sign up na!</div>
+
+      <div id="af-name-field" style="margin-bottom:14px;">
+        <label class="auth-label">Your name</label>
+        <input class="auth-input" type="text" id="af-name" placeholder="e.g. Juan dela Cruz"/>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label class="auth-label">Email address</label>
+        <input class="auth-input" type="email" id="af-email" placeholder="you@email.com"/>
+      </div>
+      <div style="margin-bottom:6px;">
+        <label class="auth-label">Password</label>
+        <input class="auth-input" type="password" id="af-pass" placeholder="••••••••"/>
+      </div>
+
+      <div style="margin-top:auto;padding-bottom:44px;">
+        <button id="af-submit" onclick="submitAuthForm()" style="width:100%;padding:17px;background:var(--gold);color:var(--earth);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;">Create account</button>
+        <div style="text-align:center;font-size:12px;color:rgba(255,255,255,.35);" id="af-switch">
+          Already have an account? <span onclick="toggleAuthForm()" style="color:var(--gold);cursor:pointer;font-weight:600;">Sign in</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HOME (logged-in dashboard) ═══ -->
+<div id="s-home" class="screen">
+  <div class="home-colorbar"></div>
+  <div class="home-deco">
+    <div class="home-deco-r"></div>
+    <div class="home-deco-b"></div>
+    <div class="home-deco-g"></div>
+  </div>
   <div class="home-content">
 
     <div class="home-topbar">
-      <div class="home-greeting" id="home-greeting">Welcome to LakwatseroPH</div>
-      <div class="auth-row" id="auth-row">
-        <button class="auth-btn" onclick="openAuthModal('signin')">Sign in</button>
-        <button class="auth-btn primary" onclick="openAuthModal('signup')">Sign up</button>
-      </div>
+      <div class="home-greeting" id="home-greeting">Kumusta, <strong>Lakwatsero!</strong> 👋</div>
+      <button class="logout-btn" onclick="logout()" title="Sign out">⏻</button>
     </div>
 
     <div class="home-title-wrap">
@@ -643,7 +876,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       <div class="home-subtitle">Saan tayo? — Plan your next lakwatsa</div>
     </div>
 
-    <!-- Quirky taglines -->
     <div class="home-taglines">
       <div class="tagline-row">
         <span class="tagline-chip">📋 Mag-plano ng trip</span>
@@ -652,49 +884,36 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       </div>
     </div>
 
-    <!-- PRIMARY CTAs — main focus -->
     <div class="home-cta">
-      <div class="cta-row">
-        <div class="btn-plan-wrap">
-          <button class="btn-plan" onclick="goTo('s-wizard');initWizard()">
-            🗺️ Mag-plano ng Trip!
-          </button>
-        </div>
-        <button class="btn-budget-solo" onclick="openSoloBudget()">
-          💸 I-organize<br/>ang Budget
-        </button>
+      <button class="btn-plan" onclick="goTo('s-wizard');initWizard()">
+        🗺️ Mag-plano ng Trip kasama ang Barkada!
+      </button>
+      <button class="btn-budget-solo" onclick="openSoloBudget()">
+        💸 I-kwenta ang Gastos ng Lakwatsa!
+      </button>
+      <div class="sample-trip-link">
+        <span onclick="loadSample()">o subukan ang sample trip →</span>
       </div>
     </div>
 
-    <!-- HOTEL SECTION — optional, at bottom -->
     <div class="hotel-section" style="margin-top:auto;">
       <div class="section-label">🏨 Book hotels · Powered by Klook</div>
       <div class="island-cards-row">
 
-        <!-- LUZON — RED -->
         <div class="island-card" onclick="openIslandGroup('luzon')">
           <div class="icard-bg" style="background:linear-gradient(170deg,#7b0d0d 0%,#c0392b 45%,#e74c3c 100%);"></div>
           <svg class="icard-svg" viewBox="0 0 100 130" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.5)">
             <path d="M50,5 Q58,8 64,14 Q70,22 68,30 Q72,36 76,40 Q80,48 78,56 Q82,62 80,70 Q76,78 70,82 Q66,88 62,94 Q56,100 50,104 Q44,100 38,94 Q32,88 30,82 Q24,78 20,70 Q18,62 22,56 Q20,48 24,40 Q28,36 32,30 Q30,22 36,14 Q42,8 50,5Z"/>
-            <ellipse cx="52" cy="0" rx="4" ry="3"/>
-            <ellipse cx="48" cy="3" rx="3" ry="2"/>
+            <ellipse cx="52" cy="0" rx="4" ry="3"/><ellipse cx="48" cy="3" rx="3" ry="2"/>
             <path d="M18,72 Q12,80 8,90 Q6,98 8,106 Q10,110 12,108 Q16,100 18,90 Q20,82 18,72Z"/>
           </svg>
           <div class="icard-overlay" style="background:linear-gradient(to top,rgba(100,5,5,.92) 0%,rgba(150,20,20,.35) 55%,transparent 100%);"></div>
           <div class="icard-content">
-            <div>
-              <div class="icard-explore">Explore</div>
-              <div class="icard-name">LUZON</div>
-            </div>
-            <div class="icard-bottom">
-              <div class="icard-count">10</div>
-              <div class="icard-dest-lbl">destinations</div>
-              <div class="icard-klook">Book on Klook</div>
-            </div>
+            <div><div class="icard-explore">Explore</div><div class="icard-name">LUZON</div></div>
+            <div class="icard-bottom"><div class="icard-count">10</div><div class="icard-dest-lbl">destinations</div><div class="icard-klook">Book on Klook</div></div>
           </div>
         </div>
 
-        <!-- VISAYAS — GOLD/YELLOW -->
         <div class="island-card" onclick="openIslandGroup('visayas')">
           <div class="icard-bg" style="background:linear-gradient(170deg,#6b4800 0%,#c17f00 45%,#f4a800 100%);"></div>
           <svg class="icard-svg" viewBox="0 0 120 100" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.5)">
@@ -707,38 +926,21 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
           </svg>
           <div class="icard-overlay" style="background:linear-gradient(to top,rgba(80,50,0,.94) 0%,rgba(120,80,0,.38) 55%,transparent 100%);"></div>
           <div class="icard-content">
-            <div>
-              <div class="icard-explore">Explore</div>
-              <div class="icard-name">VISAYAS</div>
-            </div>
-            <div class="icard-bottom">
-              <div class="icard-count">8</div>
-              <div class="icard-dest-lbl">destinations</div>
-              <div class="icard-klook">Book on Klook</div>
-            </div>
+            <div><div class="icard-explore">Explore</div><div class="icard-name">VISAYAS</div></div>
+            <div class="icard-bottom"><div class="icard-count">8</div><div class="icard-dest-lbl">destinations</div><div class="icard-klook">Book on Klook</div></div>
           </div>
         </div>
 
-        <!-- MINDANAO — BLUE -->
         <div class="island-card" onclick="openIslandGroup('mindanao')">
           <div class="icard-bg" style="background:linear-gradient(170deg,#05285e 0%,#1a4fa0 45%,#2980b9 100%);"></div>
           <svg class="icard-svg" viewBox="0 0 120 110" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.5)">
             <path d="M60,8 Q72,10 80,16 Q88,22 92,32 Q96,42 94,52 Q98,60 96,70 Q92,78 84,84 Q76,90 66,92 Q56,94 46,90 Q36,86 28,78 Q20,70 18,60 Q14,52 16,42 Q18,32 26,24 Q34,16 44,10 Q52,6 60,8Z"/>
-            <ellipse cx="70" cy="3" rx="5" ry="3.5"/>
-            <ellipse cx="30" cy="98" rx="7" ry="4"/>
-            <ellipse cx="100" cy="28" rx="6" ry="4"/>
+            <ellipse cx="70" cy="3" rx="5" ry="3.5"/><ellipse cx="30" cy="98" rx="7" ry="4"/><ellipse cx="100" cy="28" rx="6" ry="4"/>
           </svg>
           <div class="icard-overlay" style="background:linear-gradient(to top,rgba(5,20,70,.94) 0%,rgba(10,40,100,.38) 55%,transparent 100%);"></div>
           <div class="icard-content">
-            <div>
-              <div class="icard-explore">Explore</div>
-              <div class="icard-name">MINDANAO</div>
-            </div>
-            <div class="icard-bottom">
-              <div class="icard-count">8</div>
-              <div class="icard-dest-lbl">destinations</div>
-              <div class="icard-klook">Book on Klook</div>
-            </div>
+            <div><div class="icard-explore">Explore</div><div class="icard-name">MINDANAO</div></div>
+            <div class="icard-bottom"><div class="icard-count">8</div><div class="icard-dest-lbl">destinations</div><div class="icard-klook">Book on Klook</div></div>
           </div>
         </div>
 
@@ -746,7 +948,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
     </div>
 
     <div class="home-bottom-pad"></div>
-
   </div>
 </div>
 
@@ -833,28 +1034,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 </div>
 
 <!-- ═══ AUTH MODAL ═══ -->
-<div class="auth-overlay" id="auth-modal" onclick="closeAuthOutside(event)">
-  <div class="auth-modal">
-    <button class="auth-close" onclick="closeAuth()">✕</button>
-    <div class="auth-modal-title" id="auth-title">Welcome back</div>
-    <div class="auth-modal-sub" id="auth-sub">Sign in to save and manage your trips</div>
-    <div class="auth-field hidden" id="name-field">
-      <label class="auth-label">Full name</label>
-      <input class="auth-input" type="text" id="auth-name" placeholder="e.g. Juan dela Cruz"/>
-    </div>
-    <div class="auth-field">
-      <label class="auth-label">Email</label>
-      <input class="auth-input" type="email" id="auth-email" placeholder="you@email.com"/>
-    </div>
-    <div class="auth-field">
-      <label class="auth-label">Password</label>
-      <input class="auth-input" type="password" id="auth-pass" placeholder="••••••••"/>
-    </div>
-    <button class="btn-auth-submit" id="auth-submit-btn" onclick="submitAuth()">Sign in</button>
-    <div class="auth-switch" id="auth-switch">Don't have an account? <span onclick="switchAuthMode()">Sign up</span></div>
-  </div>
-</div>
-
 <!-- ═══ JOIN ═══ -->
 <div id="s-join" class="screen">
   <div class="join-glass">
@@ -1171,7 +1350,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
         </div>
         <div class="fld">
           <label class="glass-label">Total amount (₱)</label>
-          <input class="glass-input" type="number" id="exp-amt-in" placeholder="0.00" oninput="calcSplit()"/>
+          <input class="glass-input" type="number" id="exp-amt-in" placeholder="0.00" oninput="calcSplit();if(S._splitMode==='custom')updateSplitBalance();"/>
         </div>
         <div class="fld">
           <label class="glass-label">Paid by</label>
@@ -1187,12 +1366,38 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
           </select>
         </div>
         <div class="fld">
-          <label class="glass-label">Split among</label>
-          <div class="member-checks" id="exp-mem-checks"></div>
-        </div>
-        <div class="split-preview" id="split-prev" style="display:none;">
-          <span class="split-lbl">Per person</span>
-          <span class="split-val" id="split-val">₱0</span>
+          <label class="glass-label">How to split?</label>
+          <div class="split-mode-toggle">
+            <button class="split-mode-btn active" id="split-mode-equal" onclick="setSplitMode('equal')">⚖️ Equal split</button>
+            <button class="split-mode-btn" id="split-mode-custom" onclick="setSplitMode('custom')">✏️ Custom amounts</button>
+          </div>
+
+          <!-- Equal split mode -->
+          <div id="split-equal-section">
+            <div class="glass-label" style="margin-bottom:6px;">Split among</div>
+            <div class="member-checks" id="exp-mem-checks"></div>
+            <div class="split-preview" id="split-prev" style="display:none;">
+              <span class="split-lbl">Per person</span>
+              <span class="split-val" id="split-val">₱0</span>
+            </div>
+          </div>
+
+          <!-- Custom split mode -->
+          <div id="split-custom-section" style="display:none;">
+            <div class="glass-label" style="margin-bottom:6px;">Amount per person</div>
+            <div class="custom-split-list" id="custom-split-list"></div>
+            <div class="split-balance" id="split-balance" style="display:none;">
+              <div class="split-balance-row">
+                <span class="split-balance-lbl">Assigned</span>
+                <span class="split-balance-val" id="split-balance-val">₱0</span>
+              </div>
+              <div class="split-balance-bar-wrap">
+                <div class="split-balance-bar" id="split-balance-bar" style="width:0%;background:var(--green);"></div>
+              </div>
+              <div class="split-balance-note" id="split-balance-note"></div>
+            </div>
+            <button class="btn-fill-remaining" onclick="fillRemaining()">⚡ Auto-fill remaining to last person</button>
+          </div>
         </div>
         <!-- Receipt upload -->
         <div class="fld">
@@ -1279,385 +1484,1278 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 </div>
 
 <script>
-/* ============================================================
-   PLACEHOLDER DATA — TODO: Replace with Neon API calls
-============================================================ */
-const PLACES={boracay:{beach:[{id:'b1',name:'White Beach Station 1',area:'Station 1, Boracay',distance:"0.5 km from D'Mall",cost:'Free (chair ₱150)',desc:'World-famous 4km powdery white sand beach.',lat:11.9674,lng:121.9213,hours:'Open 24hrs',tips:'Best at sunrise before the crowds.',img:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=140&q=55'},{id:'b2',name:'Puka Beach',area:'North Boracay',distance:"8.2 km from D'Mall",cost:'Free',desc:'Quieter, shell-covered beach away from tourists.',lat:11.9940,lng:121.9327,hours:'Open 24hrs',tips:'Bring your own food — few vendors here.',img:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=140&q=55'},{id:'b3',name:'Diniwid Beach',area:'North of Station 1',distance:"1.4 km from D'Mall",cost:'Free',desc:'Small secluded cove perfect for snorkeling.',lat:11.9720,lng:121.9178,hours:'Open 24hrs',tips:'Rocky entry — wear water shoes.',img:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=140&q=55'}],restaurant:[{id:'r1',name:"Real Coffee & Tea Café",area:'Station 2',distance:"0.2 km from D'Mall",cost:'₱200–400/person',desc:'Famous for bulalo and fresh buko shakes.',lat:11.9645,lng:121.9241,hours:'7AM–10PM',tips:'Order the buko pie — sells out fast.',img:'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=140&q=55'},{id:'r2',name:'Smoke BBQ',area:'Station 2 beachfront',distance:"0.3 km from D'Mall",cost:'₱450–700/person',desc:'Best BBQ ribs and seafood on the island.',lat:11.9638,lng:121.9248,hours:'11AM–11PM',tips:'Reserve a beachfront table before 6PM.',img:'https://images.unsplash.com/photo-1529516548873-9ce57c8f155e?w=140&q=55'},{id:'r3',name:"Jonah's Fruit Shake",area:'Station 2',distance:"0.1 km from D'Mall",cost:'₱80–150/person',desc:'Iconic shake bar. Try mango-avocado.',lat:11.9642,lng:121.9244,hours:'8AM–11PM',tips:'Queue can be long at sunset.',img:'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=140&q=55'}],tourist_spot:[{id:'t1',name:'Mt. Luho View Deck',area:'North Boracay',distance:"5.5 km from D'Mall",cost:'₱50 entrance',desc:'Highest peak on Boracay with 360° views.',lat:11.9856,lng:121.9312,hours:'7AM–5PM',tips:'Go at 5AM for sunrise.',img:'https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=140&q=55'}],shopping:[{id:'s1',name:"D'Mall Boracay",area:'Station 2',distance:'0 km (reference)',cost:'Varies',desc:'Main shopping hub with 100+ shops and ATMs.',lat:11.9640,lng:121.9243,hours:'9AM–11PM',tips:'Best prices on the second level.',img:'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=140&q=55'}],nightlife:[{id:'n1',name:'Epic Bar',area:'Station 2 beachfront',distance:"0.2 km from D'Mall",cost:'₱300 min spend',desc:'Top nightlife with live DJs and beach dancing.',lat:11.9639,lng:121.9246,hours:'10PM–4AM',tips:'Best nights are Thursday and Saturday.',img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=140&q=55'}],water_sports:[{id:'w1',name:"Ariel's Point Cliff Diving",area:'Buruanga (boat trip)',distance:'45 min by boat',cost:'₱1,800/person all incl.',desc:'Cliff diving, kayaking, snorkeling.',lat:11.9290,lng:121.8950,hours:'Departs 9AM daily',tips:'Bring sunscreen — 6+ hours outdoors.',img:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=140&q=55'}],souvenirs:[{id:'sov1',name:"Pasalubong Shops D'Mall",area:'Station 2',distance:"0.1 km from D'Mall",cost:'₱50–500',desc:'Dried mangoes, shell jewelry, shirts.',lat:11.9641,lng:121.9243,hours:'9AM–10PM',tips:'Buy dried mangoes in bulk — cheaper per pack.',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=140&q=55'}],nature_hike:[{id:'nh1',name:'Bat Cave & Forest Trail',area:'North Boracay',distance:"6.0 km from D'Mall",cost:'₱100 guide fee',desc:'Short trek through forest to a bat cave.',lat:11.9870,lng:121.9320,hours:'4PM–7PM',tips:'Visit at 5:30PM when bats emerge.',img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=140&q=55'}],camping:[{id:'c1',name:'Puka Beach Campsite',area:'North Boracay',distance:"8.2 km from D'Mall",cost:'₱500/tent/night',desc:'Camp right on the beach under the stars.',lat:11.9940,lng:121.9330,hours:'Check-in 3PM',tips:'Only 10 tent slots — book ahead.',img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=140&q=55'}]}};
-
-let EXPENSES=[
-  {id:'e1',icon:'✈️',type:'Flight',title:'Cebu Pacific MNL-BOR',total:12000,members:['You','Juan','Maria','Carlo'],paidBy:'You',day:-1,receipt:null},
-  {id:'e2',icon:'🏨',type:'Hotel',title:'Sand Bar Resort (2 nights)',total:4800,members:['You','Juan','Maria','Carlo'],paidBy:'Juan',day:-1,receipt:null},
-  {id:'e3',icon:'🍽️',type:'Restaurant',title:'Lunch at Real Coffee',total:1200,members:['You','Juan','Maria','Carlo'],paidBy:'Maria',day:0,receipt:null},
-  {id:'e4',icon:'🤿',type:'Tour',title:"Ariel's Point Island Hopping",total:3600,members:['You','Juan','Maria','Carlo'],paidBy:'Carlo',day:1,receipt:null},
-];
-
-/* Role definitions */
-const ROLES={
-  owner:{label:'👑 Organizer',color:'#C0392B',fg:'#FDEAEA',canEditTour:true,canEditBudget:true,canManageRoles:true},
-  co_owner:{label:'🤝 Katuwang',color:'#1A4FA0',fg:'#E6EFFC',canEditTour:true,canEditBudget:true,canManageRoles:false},
-  tour_org:{label:'🗺️ Tour Maestro',color:'#2D6A4F',fg:'#E8F5EE',canEditTour:true,canEditBudget:false,canManageRoles:false},
-  budget_mgr:{label:'💰 Kwentador',color:'#B8860B',fg:'#FEF3D0',canEditTour:false,canEditBudget:true,canManageRoles:false},
-  guest:{label:'👁️ Pasahero',color:'#7A5C4A',fg:'#FAF0D7',canEditTour:false,canEditBudget:false,canManageRoles:false},
-};
-
-let MEMBERS=[
-  {id:'m1',name:'You',role:'owner',bg:'#1A4FA0',fg:'#E6EFFC'},
-  {id:'m2',name:'Juan Santos',role:'guest',bg:'#2D6A4F',fg:'#E8F5EE'},
-  {id:'m3',name:'Maria Reyes',role:'guest',bg:'#C0392B',fg:'#FDEAEA'},
-  {id:'m4',name:'Carlo Tan',role:'guest',bg:'#F4A800',fg:'#FEF3D0'},
-];
-
-const S={
-  dest:'Boracay',destKey:'boracay',days:3,group:4,
-  budgetRange:'₱3k–5k',wizStep:0,isOwner:true,
-  tripDays:[],currentDay:0,user:null,
-  selectedET:null,editingExpId:null,
-  mapInit:false,leafMap:null,
-  roleMemberId:null,
-  budgetDayFilter:-2, /* -2=all, -1=general, 0..N=day index */
-};
-
-/* ─── KLOOK ─── */
-const KLOOK_LINKS={'boracay-hotels':'https://www.klook.com/en-PH/city/33-boracay-things-to-do/?utm_source=lakbayph','palawan-hotels':'https://www.klook.com/en-PH/city/159-el-nido-things-to-do/?utm_source=lakbayph','cebu-hotels':'https://www.klook.com/en-PH/city/6-cebu-things-to-do/?utm_source=lakbayph','siargao-hotels':'https://www.klook.com/en-PH/city/291-siargao-things-to-do/?utm_source=lakbayph','batanes-hotels':'https://www.klook.com/en-PH/search/?query=batanes&utm_source=lakbayph','manila-hotels':'https://www.klook.com/en-PH/city/3-manila-things-to-do/?utm_source=lakbayph'};
-function openKlook(k){window.open(KLOOK_LINKS[k]||'https://www.klook.com/en-PH/?utm_source=lakbayph','_blank');}
-
-/* ─── NAV ─── */
-function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
-function loadSample(){S.isOwner=true;buildTripUI();goTo('s-app');}
-
-/* ─── AUTH ─── */
-let authMode='signin';
-function openAuthModal(m){authMode=m;document.getElementById('auth-modal').classList.add('open');document.getElementById('auth-title').textContent=m==='signin'?'Welcome back':'Create account';document.getElementById('auth-sub').textContent=m==='signin'?'Sign in to save your trips':'Join LakwatseroPH — free';document.getElementById('name-field').classList.toggle('hidden',m==='signin');document.getElementById('auth-submit-btn').textContent=m==='signin'?'Sign in':'Create account';document.getElementById('auth-switch').innerHTML=m==='signin'?"Don't have an account? <span onclick='switchAuthMode()'>Sign up</span>":"Already have an account? <span onclick='switchAuthMode()'>Sign in</span>";}
-function switchAuthMode(){openAuthModal(authMode==='signin'?'signup':'signin');}
-function closeAuth(){document.getElementById('auth-modal').classList.remove('open');}
-function closeAuthOutside(e){if(e.target.id==='auth-modal')closeAuth();}
-function submitAuth(){const email=document.getElementById('auth-email').value.trim();const name=document.getElementById('auth-name').value.trim()||email.split('@')[0];if(!email)return;S.user={name,email};updateGreeting();closeAuth();}
-function updateGreeting(){const el=document.getElementById('home-greeting');const ar=document.getElementById('auth-row');if(S.user){el.innerHTML=`Hello, <strong>${S.user.name}</strong>! 👋`;ar.innerHTML=`<button class="auth-btn logout" onclick="logout()">Sign out</button>`;}else{el.textContent='Welcome to LakwatseroPH';ar.innerHTML=`<button class="auth-btn" onclick="openAuthModal('signin')">Sign in</button><button class="auth-btn primary" onclick="openAuthModal('signup')">Sign up</button>`;}}
-function logout(){S.user=null;updateGreeting();}
-
-/* ─── WIZARD ─── */
-const WIZ=[['Where to?','Pick your Philippine destination'],['How long?','How many days is your vacation?'],["Your group",'Group size and budget'],["What's your vibe?",'Pick the experiences you want'],['All set!','Review before starting']];
-function initWizard(){S.wizStep=0;renderWiz();}
-function renderWiz(){const s=S.wizStep;document.querySelectorAll('.wiz-panel').forEach((p,i)=>p.classList.toggle('active',i===s));document.querySelectorAll('.wdot').forEach((d,i)=>{d.classList.toggle('done',i<s);d.classList.toggle('active',i===s);});document.getElementById('wiz-h').textContent=WIZ[s][0];document.getElementById('wiz-s').textContent=WIZ[s][1];document.getElementById('wiz-back').classList.toggle('hidden',s===0);document.getElementById('wiz-next').textContent=s===4?'🚀 Start Planning':'Continue →';if(s===4)buildReview();}
-function wizNext(){if(S.wizStep<4){S.wizStep++;renderWiz();}else startGen();}
-function wizPrev(){if(S.wizStep>0){S.wizStep--;renderWiz();}}
-function pickDest(el){document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');S.dest=el.dataset.dest;S.destKey=S.dest.toLowerCase().replace(/\s/g,'');}
-function adjDays(d){S.days=Math.max(1,Math.min(14,S.days+d));document.getElementById('days-num').textContent=S.days;document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));}
-function setDays(n,el){S.days=n;document.getElementById('days-num').textContent=n;document.querySelectorAll('.preset').forEach(p=>p.classList.remove('active'));el.classList.add('active');}
-function setBType(t){document.getElementById('btp-tot').classList.toggle('active',t==='total');document.getElementById('btp-pp').classList.toggle('active',t==='pp');}
-function pickBud(el,r){document.querySelectorAll('.bud-opt').forEach(c=>c.classList.remove('active'));el.classList.add('active');S.budgetRange=r;}
-function buildReview(){document.getElementById('rv-t').textContent=S.dest+' Trip 🌴';document.getElementById('rv-days').textContent=S.days+' day'+(S.days>1?'s':'');document.getElementById('rv-grp').textContent=(document.getElementById('inp-grp').value||4)+' people';document.getElementById('rv-bud').textContent=S.budgetRange+' / person';const fc=document.getElementById('rv-flt');fc.innerHTML='';document.querySelectorAll('#wp3 .flt-chip.active').forEach(f=>{const b=document.createElement('span');b.style.cssText='display:inline-block;background:rgba(244,168,0,.15);color:#B8860B;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;margin:2px;';b.textContent=f.querySelector('.flt-name').textContent;fc.appendChild(b);});}
-
-/* ─── GENERATING ─── */
-function startGen(){S.group=parseInt(document.getElementById('inp-grp').value)||4;goTo('s-generating');document.getElementById('gen-lbl').textContent=`${S.dest} · ${S.days} days · ${S.group} people`;document.querySelectorAll('[id^="gs"]').forEach(el=>el.classList.remove('done','active'));let i=0;const iv=setInterval(()=>{if(i>0){const p=document.getElementById('gs'+(i-1));if(p){p.classList.remove('active');p.classList.add('done');}}if(i<5){const c=document.getElementById('gs'+i);if(c)c.classList.add('active');i++;}else{clearInterval(iv);setTimeout(()=>{S.isOwner=true;buildTripUI();goTo('s-app');},500);}},650);}
-
-/* ─── BUILD TRIP ─── */
-function buildTripUI(){document.getElementById('app-dest').textContent=S.dest.toUpperCase();document.getElementById('app-dtag').textContent=S.days+' days';document.getElementById('app-gtag').textContent=S.group+' people';document.getElementById('app-btag').textContent=S.budgetRange;document.getElementById('grp-trip-title').textContent=S.dest+' Trip 🌴';document.getElementById('grp-trip-sub').textContent=`${S.days} days · ${S.group} people · ${S.budgetRange}/person`;S.tripDays=Array.from({length:S.days},(_,i)=>({id:'d'+(i+1),num:i+1,label:'Day '+(i+1),stops:[]}));renderDayTabs();renderExpenses();renderMembers();renderBudgetStats();buildBudgetDayTabs();}
-
-function renderDayTabs(){const tr=document.getElementById('day-tabs-row');const pc=document.getElementById('day-panels');tr.innerHTML='';pc.innerHTML='';S.tripDays.forEach((day,i)=>{const tb=document.createElement('button');tb.className='day-tab-btn'+(i===0?' active':'');tb.textContent=day.label;tb.onclick=()=>switchDay(i);tr.appendChild(tb);const panel=document.createElement('div');panel.className='day-panel'+(i===0?' active':'');panel.id='dp'+i;renderDayPanel(panel,day,i);pc.appendChild(panel);});}
-
-function renderDayPanel(panel,day,idx){panel.innerHTML='';const canEdit=S.isOwner||(MEMBERS.find(m=>m.name==='You')&&ROLES[MEMBERS.find(m=>m.name==='You').role]?.canEditTour);if(day.stops.length===0){panel.innerHTML=`<div class="day-empty"><div class="day-empty-icon">🗺️</div><div class="day-empty-title">Day ${day.num} is empty</div><div class="day-empty-sub">Add beaches, restaurants, activities and more.</div>${canEdit?`<button class="add-act-btn" onclick="addActFor(${idx})">+ Add activity</button>`:''}</div>`;}else{let html=day.stops.map((stop,si)=>`<div class="stop-card"><div class="stop-top"><span class="stop-time">${stop.time||'—'}</span><span class="stop-cat" style="background:${catBg(stop.category)};color:${catColor(stop.category)}">${catLbl(stop.category)}</span></div><div class="stop-body"><div class="stop-bar" style="background:${catAccent(stop.category)};"></div><div class="stop-info"><div class="stop-name">${stop.name}</div><div class="stop-area">📍 ${stop.area} · ${stop.distance}</div><div class="stop-pills"><span class="stop-pill">💰 ${stop.cost}</span><span class="stop-pill">🕐 ${stop.hours}</span></div></div>${canEdit?`<button class="stop-del" onclick="removeStop(${idx},${si})">✕</button>`:''}</div></div>`).join('');if(canEdit)html+=`<button class="add-act-btn" onclick="addActFor(${idx})">+ Add activity</button>`;panel.innerHTML=html;}}
-
-function switchDay(i){S.currentDay=i;document.querySelectorAll('.day-tab-btn').forEach((b,j)=>b.classList.toggle('active',j===i));document.querySelectorAll('.day-panel').forEach((p,j)=>p.classList.toggle('active',j===i));}
-function removeStop(dI,sI){S.tripDays[dI].stops.splice(sI,1);renderDayPanel(document.getElementById('dp'+dI),S.tripDays[dI],dI);updateMapPins();}
-
-/* ─── PLACES ─── */
-let _addDay=0;
-function addActFor(idx){_addDay=idx;openSheet('sh-cat');}
-function openPlaces(cat){closeSheet('sh-cat');const data=(PLACES[S.destKey]||PLACES.boracay)[cat]||[];document.getElementById('places-title').textContent=catLbl(cat)+' in '+S.dest;const body=document.getElementById('places-body');body.innerHTML=data.length===0?`<div style="text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:13px;">No ${catLbl(cat).toLowerCase()} data yet for ${S.dest}.</div>`:data.map(p=>`<div class="place-card"><div class="place-thumb"><img src="${p.img}" alt="${p.name}" loading="lazy"/><div class="place-thumb-ov"></div></div><div class="place-info"><div class="place-name">${p.name}</div><div class="place-area">📍 ${p.area}</div><div class="place-pills"><span class="place-pill">🚶 ${p.distance}</span><span class="place-pill">💰 ${p.cost}</span><span class="place-pill">🕐 ${p.hours}</span></div><div class="place-tip">💡 ${p.tips}</div></div><button class="place-add-btn" onclick='addStop(${JSON.stringify(p).replace(/'/g,"&#39;")},"${cat}")'>+ Add</button></div>`).join('');openSheet('sh-places');}
-function addStop(place,cat){const day=S.tripDays[_addDay];const times=['8:00 AM','9:30 AM','11:00 AM','1:00 PM','2:30 PM','4:00 PM','6:00 PM','8:00 PM'];day.stops.push({...place,category:cat,time:times[day.stops.length]||'—'});closeSheet('sh-places');renderDayPanel(document.getElementById('dp'+_addDay),day,_addDay);updateMapPins();}
-
-/* ─── BUDGET DAY TABS ─── */
-function buildBudgetDayTabs(){const row=document.getElementById('budget-day-tabs');row.innerHTML='';const all=document.createElement('button');all.className='bdt-btn active';all.textContent='All';all.onclick=()=>filterBudgetDay(-2,all);row.appendChild(all);const gen=document.createElement('button');gen.className='bdt-btn';gen.textContent='Pre-trip';gen.onclick=()=>filterBudgetDay(-1,gen);row.appendChild(gen);S.tripDays.forEach((d,i)=>{const btn=document.createElement('button');btn.className='bdt-btn';btn.textContent=d.label;btn.onclick=()=>filterBudgetDay(i,btn);row.appendChild(btn);});}
-function filterBudgetDay(df,btn){S.budgetDayFilter=df;document.querySelectorAll('.bdt-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');const lbl=document.getElementById('budget-day-label');lbl.textContent=df===-2?'All expenses':df===-1?'Pre-trip expenses':`Day ${df+1} expenses`;renderExpenses();}
-
-/* ─── EXPENSES ─── */
-function renderExpenses(){const list=document.getElementById('exp-list');const filtered=S.budgetDayFilter===-2?EXPENSES:EXPENSES.filter(e=>e.day===S.budgetDayFilter);list.innerHTML=filtered.map(e=>{const pp=Math.round(e.total/e.members.length);const dayLbl=e.day===-1?'Pre-trip':(S.tripDays[e.day]?S.tripDays[e.day].label:'Day ?');return`<div class="exp-item" id="eitem-${e.id}"><div class="exp-item-main"><div class="exp-icon-wrap">${e.icon}</div><div class="exp-info"><div class="exp-title-txt">${e.title}</div><div class="exp-meta-txt">${e.type} · ${dayLbl} · Paid by <strong>${e.paidBy}</strong>${e.members.length>1?' · Split '+e.members.length:''}</div></div><div class="exp-amounts"><div class="exp-total-val">₱${e.total.toLocaleString()}</div><div class="exp-pp-val">₱${pp.toLocaleString()}/person</div>${e.receipt?`<img class="exp-receipt-thumb" src="${e.receipt}" onclick="viewReceipt('${e.receipt}')" title="View receipt"/>`:''}</div></div><div class="exp-actions"><button class="exp-act-btn edit" onclick="editExpense('${e.id}')">✏️ Edit</button><button class="exp-act-btn delete" onclick="deleteExpense('${e.id}')">🗑 Delete</button></div></div>`;}).join('');if(filtered.length===0)list.innerHTML='<div style="text-align:center;padding:28px;color:var(--earth-l);font-size:13px;">No expenses here yet.</div>';renderBudgetStats();renderMembers();}
-
-function renderBudgetStats(){const total=EXPENSES.reduce((s,e)=>s+e.total,0);const budgetMap={'₱3k–5k':5000,'₱5k–10k':10000,'₱10k–20k':20000,'₱20k+':30000};const budget=S.group*(budgetMap[S.budgetRange]||5000);const pct=Math.min(100,Math.round(total/budget*100));const left=budget-total;document.getElementById('bud-total').textContent='₱'+budget.toLocaleString();document.getElementById('bud-bar').style.width=pct+'%';document.getElementById('bud-pct').textContent=pct+'% spent';document.getElementById('bud-left').textContent='₱'+Math.max(0,left).toLocaleString()+' left';document.getElementById('bud-spent').textContent='₱'+total.toLocaleString();document.getElementById('bud-rem').textContent='₱'+Math.max(0,left).toLocaleString();document.getElementById('bud-pp').textContent='₱'+(Math.round(budget/S.group)).toLocaleString();}
-
-function deleteExpense(id){/* TODO: DELETE /api/expenses/:id */EXPENSES=EXPENSES.filter(e=>e.id!==id);renderExpenses();}
-
-function editExpense(id){const e=EXPENSES.find(x=>x.id===id);if(!e)return;S.editingExpId=id;openExpSheet(e);}
-
-function openExpSheet(prefill){S.editingExpId=prefill?prefill.id:null;document.getElementById('exp-sheet-title').textContent=prefill?'Edit expense':'Log an expense';document.querySelectorAll('.exp-type-chip').forEach(c=>c.classList.remove('active'));document.getElementById('exp-form').style.display='none';document.getElementById('exp-title-in').value='';document.getElementById('exp-amt-in').value='';document.getElementById('split-prev').style.display='none';document.getElementById('receipt-preview').style.display='none';S.selectedET=null;
-/* Populate paid-by dropdown */
-const paidSel=document.getElementById('exp-paid-by');paidSel.innerHTML=MEMBERS.map(m=>`<option value="${m.name}">${m.name}</option>`).join('');
-/* Populate day dropdown */
-const daySel=document.getElementById('exp-day-select');daySel.innerHTML='<option value="-1">Pre-trip / General</option>'+S.tripDays.map((d,i)=>`<option value="${i}">${d.label}</option>`).join('');
-openSheet('sh-exp');
-if(prefill){document.querySelectorAll('.exp-type-chip').forEach(c=>{if(c.querySelector('.exp-type-lbl')&&c.querySelector('.exp-type-lbl').textContent.includes(prefill.type.split('/')[0].trim())){c.classList.add('active');}});S.selectedET={icon:prefill.icon,label:prefill.type,cat:''};document.getElementById('exp-form').style.display='block';document.getElementById('exp-title-in').value=prefill.title;document.getElementById('exp-amt-in').value=prefill.total;paidSel.value=prefill.paidBy;daySel.value=prefill.day;renderMemberChecks(prefill.members);calcSplit();if(prefill.receipt){document.getElementById('receipt-preview').src=prefill.receipt;document.getElementById('receipt-preview').style.display='block';}}}
-
-function pickET(el,icon,label,cat){document.querySelectorAll('.exp-type-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');S.selectedET={icon,label,cat};document.getElementById('exp-form').style.display='block';renderMemberChecks([]);}
-
-function renderMemberChecks(presel){const con=document.getElementById('exp-mem-checks');con.innerHTML=MEMBERS.map(m=>`<div class="member-chk${(!presel||presel.length===0||presel.includes(m.name))?' active':''}" onclick="this.classList.toggle('active');calcSplit()">${m.name}</div>`).join('');}
-
-function calcSplit(){const amt=parseFloat(document.getElementById('exp-amt-in').value)||0;const sel=document.querySelectorAll('#exp-mem-checks .member-chk.active').length||1;document.getElementById('split-prev').style.display=amt>0?'flex':'none';document.getElementById('split-val').textContent='₱'+Math.round(amt/sel).toLocaleString();}
-
-function previewReceipt(input){if(input.files&&input.files[0]){const reader=new FileReader();reader.onload=e=>{document.getElementById('receipt-preview').src=e.target.result;document.getElementById('receipt-preview').style.display='block';};reader.readAsDataURL(input.files[0]);}}
-
-function viewReceipt(src){const w=window.open('','_blank');w.document.write(`<img src="${src}" style="max-width:100%;"/>`);w.document.close();}
-
-function saveExpense(){const title=document.getElementById('exp-title-in').value.trim();const amt=parseFloat(document.getElementById('exp-amt-in').value)||0;const paidBy=document.getElementById('exp-paid-by').value;const dayVal=parseInt(document.getElementById('exp-day-select').value);const selMem=[...document.querySelectorAll('#exp-mem-checks .member-chk.active')].map(el=>el.textContent);if(!title||!amt||!S.selectedET){alert('Please fill in all fields.');return;}
-const receipt=document.getElementById('receipt-preview').style.display!=='none'?document.getElementById('receipt-preview').src:null;
-/* TODO: POST or PUT /api/expenses */
-if(S.editingExpId){const idx=EXPENSES.findIndex(e=>e.id===S.editingExpId);if(idx>-1)EXPENSES[idx]={...EXPENSES[idx],icon:S.selectedET.icon,type:S.selectedET.label,title,total:amt,paidBy,day:dayVal,members:selMem,receipt};}
-else EXPENSES.push({id:'e'+Date.now(),icon:S.selectedET.icon,type:S.selectedET.label,title,total:amt,paidBy,day:dayVal,members:selMem,receipt});
-closeSheet('sh-exp');renderExpenses();S.editingExpId=null;S.selectedET=null;}
-
-/* ─── MEMBERS / ROLES ─── */
-function renderMembers(){const list=document.getElementById('members-list');const balances={};MEMBERS.forEach(m=>{balances[m.name]=0;});EXPENSES.forEach(e=>{const pp=Math.round(e.total/e.members.length);e.members.forEach(name=>{if(balances[name]!==undefined)balances[name]-=pp;});if(balances[e.paidBy]!==undefined)balances[e.paidBy]+=e.total;});list.innerHTML=MEMBERS.map(m=>{const bal=balances[m.name]||0;const initials=m.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase();const roleInfo=ROLES[m.role]||ROLES.guest;const canChangeRole=S.isOwner&&m.role!=='owner';return`<div class="member-row"><div class="member-av" style="background:${m.bg};color:${m.fg}">${initials}</div><div style="flex:1;min-width:0;"><div class="member-nm">${m.name}</div><div class="member-role-badge" style="background:${roleInfo.color}22;color:${roleInfo.color}">${roleInfo.label}</div>${canChangeRole?`<button class="role-change-btn" onclick="openRoleSheet('${m.id}')">Change role ↓</button>`:''}</div><div class="member-bal"><div class="member-bal-val" style="color:${bal>=0?'var(--green)':'var(--red)'}">${bal>=0?'+':''}₱${Math.abs(bal).toLocaleString()}</div><div class="member-bal-lbl">${bal>=0?'gets back':'owes'}</div></div></div>`;}).join('');}
-
-function openRoleSheet(memberId){S.roleMemberId=memberId;const m=MEMBERS.find(x=>x.id===memberId);if(!m)return;document.getElementById('role-sheet-title').textContent='Assign Role to '+m.name.split(' ')[0];document.getElementById('role-member-name').textContent=`Currently: ${(ROLES[m.role]||ROLES.guest).label}`;document.querySelectorAll('.role-chip').forEach(c=>c.classList.remove('active'));openSheet('sh-role');}
-
-function selectRole(role){/* TODO: PUT /api/members/:id/role */const m=MEMBERS.find(x=>x.id===S.roleMemberId);if(m){m.role=role;const ri=ROLES[role]||ROLES.guest;m.bg=ri.color;m.fg=ri.fg;}closeSheet('sh-role');renderMembers();}
-
-/* ─── MAP ─── */
-function initMap(){if(S.mapInit)return;S.mapInit=true;const CENTERS={boracay:[11.9674,121.9213],palawan:[10.1683,118.4107],cebu:[10.3157,123.8854],siargao:[9.8482,126.0458],batanes:[20.448,121.97],vigan:[17.5747,120.3869],banaue:[16.9113,121.0587],manila:[14.5995,120.9842]};const center=CENTERS[S.destKey]||CENTERS.boracay;document.getElementById('map-el').style.height=(window.innerHeight-200)+'px';const map=L.map('map-el').setView(center,14);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© <a href="https://www.openstreetmap.org/copyright">OSM</a>',maxZoom:19}).addTo(map);S.leafMap=map;updateMapPins();const fr=document.getElementById('map-filter-row');fr.innerHTML='<button class="map-f-btn active" onclick="filterMap(\'all\',this)">All days</button>';S.tripDays.forEach((d,i)=>{const btn=document.createElement('button');btn.className='map-f-btn';btn.textContent=d.label;btn.onclick=()=>filterMap(i,btn);fr.appendChild(btn);});}
-let _mapMarkers=[];
-function updateMapPins(){if(!S.leafMap)return;_mapMarkers.forEach(m=>m.remove());_mapMarkers=[];let n=1;S.tripDays.forEach((day,di)=>{day.stops.forEach(stop=>{if(!stop.lat||!stop.lng)return;const icon=L.divIcon({html:`<div style="background:${catAccent(stop.category)};color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div>`,className:'',iconSize:[26,26],iconAnchor:[13,13]});const m=L.marker([stop.lat,stop.lng],{icon}).addTo(S.leafMap);m.bindPopup(`<b>${stop.name}</b><br/>${stop.area}<br/>💰 ${stop.cost}<br/><a href="https://www.google.com/maps/search/${encodeURIComponent(stop.name)}" target="_blank">Get directions →</a>`);m._day=di;_mapMarkers.push(m);n++;});});}
-function filterMap(f,btn){document.querySelectorAll('.map-f-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');_mapMarkers.forEach(m=>{const el=m.getElement();if(el)el.style.display=(f==='all'||m._day===f)?'':'none';});}
-
-/* ─── TABS / SHEETS ─── */
-function switchTab(name,btn){document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.tab-pane').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');}
-function openSheet(id){document.getElementById(id).classList.add('open');}
-function closeSheet(id){document.getElementById(id).classList.remove('open');}
-function closeSheetOut(e,id){if(e.target.id===id)closeSheet(id);}
-
-/* ─── JOIN ─── */
-function joinTrip(skip){const name=document.getElementById('join-name').value.trim();if(!skip&&!name){document.getElementById('join-name').focus();return;}if(name&&!MEMBERS.find(m=>m.name===name))MEMBERS.push({id:'m'+Date.now(),name,role:'guest',bg:'#888780',fg:'#F1EFE8'});S.isOwner=false;loadSample();S.isOwner=false;S.tripDays.forEach((day,i)=>{const p=document.getElementById('dp'+i);if(p)renderDayPanel(p,day,i);});}
-
-/* ─── COPY ─── */
-function copyLink(){const el=document.getElementById('share-link-in');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
-function copyLink2(){const el=document.getElementById('sh-link-val');el.select();document.execCommand('copy');event.target.textContent='Copied!';setTimeout(()=>event.target.textContent='Copy',1500);}
-
-
-/* ============================================================
-   ISLAND GROUPS & DESTINATIONS DATA
-============================================================ */
-const ISLAND_GROUPS = {
-  luzon: {
-    title: 'LUZON',
-    color: 'linear-gradient(160deg,#0a3d62,#1a6fa8,#2196c4)',
-    destinations: [
-      {key:'batanes',name:'Batanes',region:'Cagayan Valley',icon:'🌾',from:'₱3,500',lat:20.448,lng:121.97},
-      {key:'baguio',name:'Baguio City',region:'Benguet, CAR',icon:'🌲',from:'₱1,200',lat:16.4023,lng:120.596},
-      {key:'vigan',name:'Vigan',region:'Ilocos Sur',icon:'🏛️',from:'₱1,800',lat:17.5747,lng:120.387},
-      {key:'sagada',name:'Sagada',region:'Mountain Province, CAR',icon:'⛰️',from:'₱900',lat:17.085,lng:120.905},
-      {key:'batangas',name:'Batangas',region:'CALABARZON',icon:'🤿',from:'₱1,100',lat:13.756,lng:121.058},
-      {key:'launion',name:'La Union',region:'Ilocos Region',icon:'🏄',from:'₱1,000',lat:16.619,lng:120.316},
-      {key:'ilocosNorte',name:'Ilocos Norte',region:'Ilocos Region',icon:'🌊',from:'₱1,500',lat:18.198,lng:120.594},
-      {key:'subic',name:'Subic Bay',region:'Zambales, Region III',icon:'⚓',from:'₱1,800',lat:14.824,lng:120.267},
-      {key:'manila',name:'Manila',region:'Metro Manila, NCR',icon:'🏙️',from:'₱1,500',lat:14.5995,lng:120.984},
-      {key:'marinduque',name:'Marinduque',region:'MIMAROPA',icon:'🥁',from:'₱1,200',lat:13.368,lng:122.065},
-    ]
-  },
-  visayas: {
-    title: 'VISAYAS',
-    color: 'linear-gradient(160deg,#1a5276,#148f77,#1abc9c)',
-    destinations: [
-      {key:'boracay',name:'Boracay',region:'Aklan, Western Visayas',icon:'🏖️',from:'₱2,500',lat:11.9674,lng:121.921},
-      {key:'cebu',name:'Cebu',region:'Central Visayas',icon:'⛪',from:'₱1,800',lat:10.3157,lng:123.885},
-      {key:'palawan',name:'Palawan / El Nido',region:'MIMAROPA',icon:'🏝️',from:'₱3,200',lat:11.183,lng:119.367},
-      {key:'bohol',name:'Bohol',region:'Central Visayas',icon:'🦎',from:'₱2,000',lat:9.85,lng:124.143},
-      {key:'iloilo',name:'Iloilo',region:'Western Visayas',icon:'🍜',from:'₱1,400',lat:10.72,lng:122.562},
-      {key:'bacolod',name:'Bacolod',region:'Western Visayas',icon:'🎭',from:'₱1,200',lat:10.676,lng:122.956},
-      {key:'dumaguete',name:'Dumaguete',region:'Negros Oriental',icon:'🌊',from:'₱1,500',lat:9.307,lng:123.307},
-      {key:'siquijor',name:'Siquijor',region:'Central Visayas',icon:'🔮',from:'₱1,800',lat:9.2,lng:123.587},
-    ]
-  },
-  mindanao: {
-    title: 'MINDANAO',
-    color: 'linear-gradient(160deg,#4a1942,#8e2060,#c0392b)',
-    destinations: [
-      {key:'siargao',name:'Siargao',region:'Surigao del Norte',icon:'🏄',from:'₱2,800',lat:9.848,lng:126.046},
-      {key:'davao',name:'Davao City',region:'Davao Region',icon:'🦅',from:'₱1,800',lat:7.0707,lng:125.613},
-      {key:'camiguin',name:'Camiguin',region:'Northern Mindanao',icon:'🌋',from:'₱1,500',lat:9.176,lng:124.73},
-      {key:'cdo',name:'Cagayan de Oro',region:'Northern Mindanao',icon:'🛶',from:'₱1,200',lat:8.4542,lng:124.64},
-      {key:'bukidnon',name:'Bukidnon',region:'Northern Mindanao',icon:'🌿',from:'₱900',lat:8.032,lng:125.09},
-      {key:'zamboanga',name:'Zamboanga City',region:'Zamboanga Peninsula',icon:'💐',from:'₱1,400',lat:6.921,lng:122.079},
-      {key:'surigao',name:'Surigao City',region:'Caraga',icon:'🌊',from:'₱1,100',lat:9.787,lng:125.496},
-      {key:'gensan',name:'General Santos',region:'SOCCSKSARGEN',icon:'🐟',from:'₱1,300',lat:6.112,lng:125.172},
+/* ─── PLACES DATA ─── */
+const PLACES = {
+  boracay: {
+    beach: [
+      {id:'b1',name:'White Beach Station 1',area:'Station 1, Boracay',distance:"0.5 km from D'Mall",cost:'Free (chair ₱150)',lat:11.9674,lng:121.9213,hours:'Open 24hrs',tips:'Best at sunrise before the crowds.',img:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=140&q=55'},
+      {id:'b2',name:'Puka Beach',area:'North Boracay',distance:"8.2 km from D'Mall",cost:'Free',lat:11.9940,lng:121.9327,hours:'Open 24hrs',tips:'Bring your own food — few vendors here.',img:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=140&q=55'},
+      {id:'b3',name:'Diniwid Beach',area:'North of Station 1',distance:"1.4 km from D'Mall",cost:'Free',lat:11.9720,lng:121.9178,hours:'Open 24hrs',tips:'Rocky entry — wear water shoes.',img:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=140&q=55'}
+    ],
+    restaurant: [
+      {id:'r1',name:"Real Coffee & Tea Café",area:'Station 2',distance:"0.2 km from D'Mall",cost:'₱200–400/person',lat:11.9645,lng:121.9241,hours:'7AM–10PM',tips:'Order the buko pie — sells out fast.',img:'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=140&q=55'},
+      {id:'r2',name:'Smoke BBQ',area:'Station 2 beachfront',distance:"0.3 km from D'Mall",cost:'₱450–700/person',lat:11.9638,lng:121.9248,hours:'11AM–11PM',tips:'Reserve a beachfront table before 6PM.',img:'https://images.unsplash.com/photo-1529516548873-9ce57c8f155e?w=140&q=55'},
+      {id:'r3',name:"Jonah's Fruit Shake",area:'Station 2',distance:"0.1 km from D'Mall",cost:'₱80–150/person',lat:11.9642,lng:121.9244,hours:'8AM–11PM',tips:'Queue can be long at sunset.',img:'https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=140&q=55'}
+    ],
+    tourist_spot: [
+      {id:'t1',name:'Mt. Luho View Deck',area:'North Boracay',distance:"5.5 km from D'Mall",cost:'₱50 entrance',lat:11.9856,lng:121.9312,hours:'7AM–5PM',tips:'Go at 5AM for sunrise.',img:'https://images.unsplash.com/photo-1516690561799-46d8f74f9abf?w=140&q=55'}
+    ],
+    shopping: [
+      {id:'s1',name:"D'Mall Boracay",area:'Station 2',distance:'0 km (reference)',cost:'Varies',lat:11.9640,lng:121.9243,hours:'9AM–11PM',tips:'Best prices on the second level.',img:'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=140&q=55'}
+    ],
+    nightlife: [
+      {id:'n1',name:'Epic Bar',area:'Station 2 beachfront',distance:"0.2 km from D'Mall",cost:'₱300 min spend',lat:11.9639,lng:121.9246,hours:'10PM–4AM',tips:'Best nights are Thursday and Saturday.',img:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=140&q=55'}
+    ],
+    water_sports: [
+      {id:'w1',name:"Ariel's Point Cliff Diving",area:'Buruanga (boat trip)',distance:'45 min by boat',cost:'₱1,800/person all incl.',lat:11.9290,lng:121.8950,hours:'Departs 9AM daily',tips:'Bring sunscreen — 6+ hours outdoors.',img:'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=140&q=55'}
+    ],
+    souvenirs: [
+      {id:'sov1',name:"Pasalubong Shops D'Mall",area:'Station 2',distance:"0.1 km from D'Mall",cost:'₱50–500',lat:11.9641,lng:121.9243,hours:'9AM–10PM',tips:'Buy dried mangoes in bulk.',img:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=140&q=55'}
+    ],
+    nature_hike: [
+      {id:'nh1',name:'Bat Cave & Forest Trail',area:'North Boracay',distance:"6.0 km from D'Mall",cost:'₱100 guide fee',lat:11.9870,lng:121.9320,hours:'4PM–7PM',tips:'Visit at 5:30PM when bats emerge.',img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=140&q=55'}
+    ],
+    camping: [
+      {id:'c1',name:'Puka Beach Campsite',area:'North Boracay',distance:"8.2 km from D'Mall",cost:'₱500/tent/night',lat:11.9940,lng:121.9330,hours:'Check-in 3PM',tips:'Only 10 tent slots — book ahead.',img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=140&q=55'}
     ]
   }
 };
 
-/* ============================================================
-   HOTEL PLACEHOLDER DATA — TODO: Replace with Neon/API
-============================================================ */
-const HOTELS_BY_DEST = {
-  boracay: [
-    {id:'h1',name:'Henann Resort Boracay',address:'Station 1, White Beach, Boracay',rooms:['Deluxe','Suite','Villa'],pricePerNight:6500,rating:9.1,reviews:2840,trending:true,tier:'luxury',tags:['Beachfront','Pool','Spa'],img:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&q=65'},
-    {id:'h2',name:'Boracay Sands Hotel',address:'Station 2, White Beach, Boracay',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.4,reviews:1200,trending:false,tier:'midrange',tags:['Beachfront','Restaurant'],img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
-    {id:'h3',name:'Puka Shell Beach Resort',address:'Puka Beach, North Boracay',rooms:['Cottage','Bungalow'],pricePerNight:1800,rating:8.0,reviews:650,trending:true,tier:'budget',tags:['Quiet','Nature'],img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
-    {id:'h4',name:'Discovery Shores Boracay',address:'Station 1, White Beach, Boracay',rooms:['Junior Suite','Premier Room'],pricePerNight:12000,rating:9.5,reviews:3200,trending:true,tier:'luxury',tags:['Luxury','Spa','Beachfront'],img:'https://images.unsplash.com/photo-1455587734955-081b22074882?w=400&q=65'},
-    {id:'h5',name:'Sand Bar Resort',address:'Station 2, Boracay',rooms:['Standard'],pricePerNight:1200,rating:7.8,reviews:420,trending:false,tier:'budget',tags:['Budget-friendly'],img:'https://images.unsplash.com/photo-1586611292717-f828b167408c?w=400&q=65'},
-  ],
-  cebu: [
-    {id:'h6',name:'Shangri-La Mactan Cebu',address:'Punta Engano Rd, Lapu-Lapu City',rooms:['Garden Room','Ocean View','Villa'],pricePerNight:14000,rating:9.4,reviews:5100,trending:true,tier:'luxury',tags:['Island Resort','Spa','Dive Center'],img:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&q=65'},
-    {id:'h7',name:'Crimson Resort and Spa',address:'Seascapes Village, Mactan',rooms:['Deluxe','Suite'],pricePerNight:8500,rating:9.0,reviews:2200,trending:false,tier:'luxury',tags:['Beachfront','Spa'],img:'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=400&q=65'},
-    {id:'h8',name:'Radisson Blu Cebu',address:'Serging Osmeña Blvd, Cebu City',rooms:['Superior','Deluxe','Suite'],pricePerNight:5200,rating:8.7,reviews:1800,trending:true,tier:'midrange',tags:['City Center','Pool'],img:'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&q=65'},
-    {id:'h9',name:'Ayala Grand Palace Hotel',address:'Ayala Center, Cebu City',rooms:['Standard','Deluxe'],pricePerNight:3200,rating:8.2,reviews:900,trending:false,tier:'midrange',tags:['Mall Access','Business'],img:'https://images.unsplash.com/photo-1543968996-ee822b8176ba?w=400&q=65'},
-  ],
-  siargao: [
-    {id:'h10',name:'Nay Palad Hideaway',address:'Siargao Island, Surigao del Norte',rooms:['Floating Cottage','Tree House'],pricePerNight:18000,rating:9.7,reviews:340,trending:true,tier:'luxury',tags:['Eco-luxury','Private Beach'],img:'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=65'},
-    {id:'h11',name:'Kermit Surf Resort',address:'General Luna, Siargao',rooms:['Dorm','Private Room'],pricePerNight:1500,rating:8.5,reviews:1200,trending:true,tier:'budget',tags:['Surfer Vibe','Restaurant'],img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&q=65'},
-    {id:'h12',name:'Bravo Beach Resort',address:'Dapa Road, General Luna',rooms:['Deluxe','Villa'],pricePerNight:5500,rating:8.9,reviews:780,trending:false,tier:'midrange',tags:['Beach Access','Pool'],img:'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=400&q=65'},
-  ],
-  palawan: [
-    {id:'h13',name:'El Nido Resorts Lagen Island',address:'Lagen Island, El Nido',rooms:['Forest Room','Watercottage'],pricePerNight:22000,rating:9.6,reviews:1100,trending:true,tier:'luxury',tags:['Island Resort','All-inclusive'],img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=65'},
-    {id:'h14',name:'Miniloc Island Resort',address:'Bacuit Bay, El Nido',rooms:['Water Cottage','Garden Room'],pricePerNight:16000,rating:9.4,reviews:890,trending:false,tier:'luxury',tags:['Overwater','Snorkeling'],img:'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=400&q=65'},
-    {id:'h15',name:'La Natura Resort',address:'El Nido Town, Palawan',rooms:['Standard','Superior'],pricePerNight:2800,rating:8.1,reviews:650,trending:false,tier:'midrange',tags:['Town Center','AC'],img:'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&q=65'},
-  ],
-  manila: [
-    {id:'h16',name:'Conrad Manila',address:'Seaside Blvd, Mall of Asia Complex',rooms:['Deluxe','Suite','Penthouse'],pricePerNight:12000,rating:9.3,reviews:4200,trending:true,tier:'luxury',tags:['Bay View','Spa','Casino'],img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&q=65'},
-    {id:'h17',name:'Okada Manila',address:'Entertainment City, Parañaque',rooms:['Deluxe','Suite'],pricePerNight:15000,rating:9.2,reviews:3100,trending:true,tier:'luxury',tags:['Casino Resort','Pool'],img:'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&q=65'},
-    {id:'h18',name:'Seda Vertis North',address:'Vertis North, Quezon City',rooms:['Deluxe','Executive'],pricePerNight:4500,rating:8.8,reviews:2100,trending:false,tier:'midrange',tags:['Business','Mall Access'],img:'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=65'},
-    {id:'h19',name:'Miramar Hotel Manila',address:'Roxas Blvd, Manila',rooms:['Standard','Superior'],pricePerNight:2200,rating:7.9,reviews:800,trending:false,tier:'budget',tags:['Bay View','Budget'],img:'https://images.unsplash.com/photo-1568495248636-6432b97bd949?w=400&q=65'},
-  ],
-  baguio: [
-    {id:'h20',name:'The Manor at Camp John Hay',address:'Camp John Hay, Baguio City',rooms:['Deluxe','Suite','Cabin'],pricePerNight:8500,rating:9.1,reviews:1900,trending:true,tier:'luxury',tags:['Pine Forest','Golf','Spa'],img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
-    {id:'h21',name:'Forest Lodge Camp John Hay',address:'Camp John Hay, Baguio City',rooms:['Studio','Deluxe'],pricePerNight:5200,rating:8.6,reviews:1100,trending:false,tier:'midrange',tags:['Nature','Cool Breeze'],img:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&q=65'},
-    {id:'h22',name:'Casa Vallejo Heritage Hotel',address:'Upper Session Road, Baguio',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.3,reviews:700,trending:true,tier:'midrange',tags:['Heritage','City Center'],img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&q=65'},
-  ],
-  davao: [
-    {id:'h23',name:'Marco Polo Davao',address:'CM Recto St, Davao City',rooms:['Deluxe','Junior Suite'],pricePerNight:6800,rating:9.0,reviews:2300,trending:true,tier:'luxury',tags:['City Center','Pool','Spa'],img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
-    {id:'h24',name:'Seda Abreeza Davao',address:'JP Laurel Ave, Davao City',rooms:['Deluxe','Suite'],pricePerNight:4200,rating:8.7,reviews:1400,trending:false,tier:'midrange',tags:['Business','Mall'],img:'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&q=65'},
-  ],
-};
-/* Default hotel set for destinations without specific data */
-const DEFAULT_HOTELS = [
-  {id:'dh1',name:'Grand Plaza Hotel',address:'Town Center',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.2,reviews:450,trending:false,tier:'midrange',tags:['AC','WiFi'],img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
-  {id:'dh2',name:'Island View Resort',address:'Beach Road',rooms:['Cottage','Suite'],pricePerNight:4500,rating:8.6,reviews:320,trending:true,tier:'resort',tags:['Beachfront','Pool'],img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
-  {id:'dh3',name:'Budget Inn & Suites',address:'Main Street',rooms:['Fan Room','AC Room'],pricePerNight:800,rating:7.5,reviews:210,trending:false,tier:'budget',tags:['Budget','Central'],img:'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=65'},
+/* ─── EXPENSES ─── */
+let EXPENSES = [
+  {id:'e1',icon:'✈️',type:'Flight',title:'Cebu Pacific MNL-BOR',total:12000,
+   splitMode:'equal',splits:[{name:'You',amount:3000},{name:'Juan',amount:3000},{name:'Maria',amount:3000},{name:'Carlo',amount:3000}],
+   paidBy:'You',day:-1,receipt:null},
+  {id:'e2',icon:'🏨',type:'Hotel',title:'Sand Bar Resort (2 nights)',total:4800,
+   splitMode:'equal',splits:[{name:'You',amount:1200},{name:'Juan',amount:1200},{name:'Maria',amount:1200},{name:'Carlo',amount:1200}],
+   paidBy:'Juan',day:-1,receipt:null},
+  {id:'e3',icon:'🍽️',type:'Restaurant',title:'Lunch at Real Coffee',total:1200,
+   splitMode:'custom',splits:[{name:'You',amount:450},{name:'Juan',amount:280},{name:'Maria',amount:320},{name:'Carlo',amount:150}],
+   paidBy:'Maria',day:0,receipt:null},
+  {id:'e4',icon:'🤿',type:'Tour',title:"Ariel's Point Island Hopping",total:3600,
+   splitMode:'equal',splits:[{name:'You',amount:900},{name:'Juan',amount:900},{name:'Maria',amount:900},{name:'Carlo',amount:900}],
+   paidBy:'Carlo',day:1,receipt:null}
 ];
 
-/* ============================================================
-   ISLAND GROUP & HOTEL FUNCTIONS
-============================================================ */
-let _currentGroup = 'luzon';
-let _currentDest = null;
-let _hotelFilter = 'all';
+/* ─── ROLES ─── */
+const ROLES = {
+  owner:      {label:'👑 Organizer',  color:'#C0392B',fg:'#FDEAEA', canEditTour:true, canEditBudget:true, canManageRoles:true},
+  co_owner:   {label:'🤝 Katuwang',   color:'#1A4FA0',fg:'#E6EFFC', canEditTour:true, canEditBudget:true, canManageRoles:false},
+  tour_org:   {label:'🗺️ Tour Maestro',color:'#2D6A4F',fg:'#E8F5EE', canEditTour:true, canEditBudget:false,canManageRoles:false},
+  budget_mgr: {label:'💰 Kwentador',  color:'#B8860B',fg:'#FEF3D0', canEditTour:false,canEditBudget:true, canManageRoles:false},
+  guest:      {label:'👁️ Pasahero',   color:'#7A5C4A',fg:'#FAF0D7', canEditTour:false,canEditBudget:false,canManageRoles:false}
+};
 
-function openIslandGroup(group){
+/* ─── MEMBERS ─── */
+let MEMBERS = [
+  {id:'m1',name:'You',   role:'owner',     bg:'#1A4FA0',fg:'#E6EFFC'},
+  {id:'m2',name:'Juan',  role:'guest',     bg:'#2D6A4F',fg:'#E8F5EE'},
+  {id:'m3',name:'Maria', role:'guest',     bg:'#C0392B',fg:'#FDEAEA'},
+  {id:'m4',name:'Carlo', role:'guest',     bg:'#F4A800',fg:'#FEF3D0'}
+];
+
+/* ─── STATE ─── */
+const S = {
+  dest:'Boracay', destKey:'boracay', days:3, group:4,
+  budgetRange:'₱3k–5k', wizStep:0, isOwner:true,
+  tripDays:[], currentDay:0, user:null,
+  selectedET:null, editingExpId:null,
+  mapInit:false, leafMap:null,
+  roleMemberId:null,
+  budgetDayFilter:-2
+};
+
+/* ─── SOLO BUDGET STATE ─── */
+let SOLO_EXPENSES = [];
+let SOLO_MEMBERS  = ['Me'];
+let _soloEditingId   = null;
+let _soloSelectedET  = null;
+
+/* ─── ISLAND GROUP DATA ─── */
+const ISLAND_GROUPS = {
+  luzon: {
+    title:'LUZON',
+    destinations:[
+      {key:'batanes',  name:'Batanes',     region:'Cagayan Valley',        icon:'🌾',from:'₱3,500'},
+      {key:'baguio',   name:'Baguio City', region:'Benguet, CAR',          icon:'🌲',from:'₱1,200'},
+      {key:'vigan',    name:'Vigan',       region:'Ilocos Sur',            icon:'🏛️',from:'₱1,800'},
+      {key:'sagada',   name:'Sagada',      region:'Mountain Province, CAR',icon:'⛰️',from:'₱900'},
+      {key:'batangas', name:'Batangas',    region:'CALABARZON',            icon:'🤿',from:'₱1,100'},
+      {key:'launion',  name:'La Union',    region:'Ilocos Region',         icon:'🏄',from:'₱1,000'},
+      {key:'ilocosNorte',name:'Ilocos Norte',region:'Ilocos Region',      icon:'🌊',from:'₱1,500'},
+      {key:'subic',    name:'Subic Bay',   region:'Zambales, Region III',  icon:'⚓',from:'₱1,800'},
+      {key:'manila',   name:'Manila',      region:'Metro Manila, NCR',     icon:'🏙️',from:'₱1,500'},
+      {key:'marinduque',name:'Marinduque', region:'MIMAROPA',              icon:'🥁',from:'₱1,200'}
+    ]
+  },
+  visayas: {
+    title:'VISAYAS',
+    destinations:[
+      {key:'boracay',  name:'Boracay',         region:'Aklan, Western Visayas',icon:'🏖️',from:'₱2,500'},
+      {key:'cebu',     name:'Cebu',            region:'Central Visayas',       icon:'⛪',from:'₱1,800'},
+      {key:'palawan',  name:'Palawan / El Nido',region:'MIMAROPA',             icon:'🏝️',from:'₱3,200'},
+      {key:'bohol',    name:'Bohol',           region:'Central Visayas',       icon:'🦎',from:'₱2,000'},
+      {key:'iloilo',   name:'Iloilo',          region:'Western Visayas',       icon:'🍜',from:'₱1,400'},
+      {key:'bacolod',  name:'Bacolod',         region:'Western Visayas',       icon:'🎭',from:'₱1,200'},
+      {key:'dumaguete',name:'Dumaguete',       region:'Negros Oriental',       icon:'🌊',from:'₱1,500'},
+      {key:'siquijor', name:'Siquijor',        region:'Central Visayas',       icon:'🔮',from:'₱1,800'}
+    ]
+  },
+  mindanao: {
+    title:'MINDANAO',
+    destinations:[
+      {key:'siargao',  name:'Siargao',         region:'Surigao del Norte',     icon:'🏄',from:'₱2,800'},
+      {key:'davao',    name:'Davao City',      region:'Davao Region',          icon:'🦅',from:'₱1,800'},
+      {key:'camiguin', name:'Camiguin',        region:'Northern Mindanao',     icon:'🌋',from:'₱1,500'},
+      {key:'cdo',      name:'Cagayan de Oro',  region:'Northern Mindanao',     icon:'🛶',from:'₱1,200'},
+      {key:'bukidnon', name:'Bukidnon',        region:'Northern Mindanao',     icon:'🌿',from:'₱900'},
+      {key:'zamboanga',name:'Zamboanga City',  region:'Zamboanga Peninsula',   icon:'💐',from:'₱1,400'},
+      {key:'surigao',  name:'Surigao City',    region:'Caraga',                icon:'🌊',from:'₱1,100'},
+      {key:'gensan',   name:'General Santos',  region:'SOCCSKSARGEN',          icon:'🐟',from:'₱1,300'}
+    ]
+  }
+};
+
+/* ─── HOTELS DATA ─── */
+const HOTELS_BY_DEST = {
+  boracay:[
+    {id:'h1',name:'Henann Resort Boracay',address:'Station 1, White Beach',rooms:['Deluxe','Suite','Villa'],pricePerNight:6500,rating:9.1,reviews:2840,trending:true, tier:'luxury', tags:['Beachfront','Pool','Spa'],   img:'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=400&q=65'},
+    {id:'h2',name:'Boracay Sands Hotel',  address:'Station 2, White Beach',rooms:['Standard','Deluxe'],    pricePerNight:2800,rating:8.4,reviews:1200,trending:false,tier:'midrange',tags:['Beachfront','Restaurant'],    img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
+    {id:'h3',name:'Puka Shell Beach Resort',address:'Puka Beach, North Boracay',rooms:['Cottage','Bungalow'],pricePerNight:1800,rating:8.0,reviews:650,trending:true,tier:'budget', tags:['Quiet','Nature'],             img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
+    {id:'h4',name:'Discovery Shores',     address:'Station 1, White Beach',rooms:['Junior Suite','Premier'],pricePerNight:12000,rating:9.5,reviews:3200,trending:true,tier:'luxury', tags:['Luxury','Spa','Beachfront'], img:'https://images.unsplash.com/photo-1455587734955-081b22074882?w=400&q=65'}
+  ],
+  cebu:[
+    {id:'h5',name:"Shangri-La Mactan",    address:'Punta Engano Rd, Lapu-Lapu',rooms:['Garden','Ocean View','Villa'],pricePerNight:14000,rating:9.4,reviews:5100,trending:true, tier:'luxury', tags:['Island Resort','Spa'],img:'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&q=65'},
+    {id:'h6',name:'Radisson Blu Cebu',    address:'Serging Osmeña Blvd, Cebu City',rooms:['Superior','Deluxe'],pricePerNight:5200,rating:8.7,reviews:1800,trending:true,tier:'midrange',tags:['City Center','Pool'],      img:'https://images.unsplash.com/photo-1590073242678-70ee3fc28e8e?w=400&q=65'}
+  ],
+  siargao:[
+    {id:'h7',name:'Nay Palad Hideaway',   address:'Siargao Island',rooms:['Floating Cottage','Tree House'],pricePerNight:18000,rating:9.7,reviews:340,trending:true, tier:'luxury', tags:['Eco-luxury','Private Beach'],img:'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=65'},
+    {id:'h8',name:'Kermit Surf Resort',   address:'General Luna, Siargao',rooms:['Dorm','Private Room'],   pricePerNight:1500, rating:8.5,reviews:1200,trending:true, tier:'budget', tags:['Surfer Vibe','Restaurant'],  img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&q=65'},
+    {id:'h9',name:'Bravo Beach Resort',   address:'Dapa Road, General Luna',rooms:['Deluxe','Villa'],       pricePerNight:5500, rating:8.9,reviews:780, trending:false,tier:'midrange',tags:['Beach Access','Pool'],       img:'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=400&q=65'}
+  ],
+  palawan:[
+    {id:'h10',name:'El Nido Resorts Lagen',address:'Lagen Island, El Nido',rooms:['Forest Room','Watercottage'],pricePerNight:22000,rating:9.6,reviews:1100,trending:true,tier:'luxury',tags:['Island Resort','All-inclusive'],img:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=65'},
+    {id:'h11',name:'La Natura Resort',    address:'El Nido Town, Palawan',rooms:['Standard','Superior'],   pricePerNight:2800, rating:8.1,reviews:650, trending:false,tier:'midrange',tags:['Town Center','AC'],             img:'https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?w=400&q=65'}
+  ],
+  manila:[
+    {id:'h12',name:'Conrad Manila',       address:'Seaside Blvd, MOA Complex',rooms:['Deluxe','Suite','Penthouse'],pricePerNight:12000,rating:9.3,reviews:4200,trending:true,tier:'luxury',tags:['Bay View','Spa','Casino'],img:'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400&q=65'},
+    {id:'h13',name:'Seda Vertis North',   address:'Vertis North, Quezon City',rooms:['Deluxe','Executive'],pricePerNight:4500, rating:8.8,reviews:2100,trending:false,tier:'midrange',tags:['Business','Mall Access'],     img:'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=65'}
+  ],
+  baguio:[
+    {id:'h14',name:'The Manor at Camp John Hay',address:'Camp John Hay, Baguio',rooms:['Deluxe','Suite','Cabin'],pricePerNight:8500,rating:9.1,reviews:1900,trending:true,tier:'luxury',tags:['Pine Forest','Golf','Spa'],img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
+    {id:'h15',name:'Casa Vallejo Heritage Hotel',address:'Upper Session Rd, Baguio',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.3,reviews:700,trending:true,tier:'midrange',tags:['Heritage','City Center'],   img:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&q=65'}
+  ],
+  davao:[
+    {id:'h16',name:'Marco Polo Davao',    address:'CM Recto St, Davao City',rooms:['Deluxe','Junior Suite'],pricePerNight:6800,rating:9.0,reviews:2300,trending:true,tier:'luxury',tags:['City Center','Pool','Spa'],      img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'}
+  ]
+};
+const DEFAULT_HOTELS = [
+  {id:'dh1',name:'Grand Plaza Hotel',    address:'Town Center',rooms:['Standard','Deluxe'],pricePerNight:2800,rating:8.2,reviews:450,trending:false,tier:'midrange',tags:['AC','WiFi'],            img:'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400&q=65'},
+  {id:'dh2',name:'Island View Resort',   address:'Beach Road',  rooms:['Cottage','Suite'], pricePerNight:4500,rating:8.6,reviews:320,trending:true, tier:'resort',  tags:['Beachfront','Pool'],     img:'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400&q=65'},
+  {id:'dh3',name:'Budget Inn & Suites',  address:'Main Street', rooms:['Fan Room','AC Room'],pricePerNight:800, rating:7.5,reviews:210,trending:false,tier:'budget',  tags:['Budget','Central'],     img:'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400&q=65'}
+];
+
+/* ─── KLOOK ─── */
+const KLOOK_LINKS = {
+  'boracay':'https://www.klook.com/en-PH/city/33-boracay-things-to-do/?utm_source=lakwatsero',
+  'palawan':'https://www.klook.com/en-PH/city/159-el-nido-things-to-do/?utm_source=lakwatsero',
+  'cebu':'https://www.klook.com/en-PH/city/6-cebu-things-to-do/?utm_source=lakwatsero',
+  'siargao':'https://www.klook.com/en-PH/city/291-siargao-things-to-do/?utm_source=lakwatsero',
+  'manila':'https://www.klook.com/en-PH/city/3-manila-things-to-do/?utm_source=lakwatsero'
+};
+
+/* ─── NAV ─── */
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ─── AUTH LANDING ─── */
+let _authFormMode = 'signup';
+
+function showAuthForm(mode) {
+  _authFormMode = mode;
+  const isSignup = mode === 'signup';
+  document.getElementById('af-name-field').style.display = isSignup ? 'block' : 'none';
+  document.getElementById('af-title').textContent     = isSignup ? 'CREATE ACCOUNT' : 'WELCOME BACK';
+  document.getElementById('af-sub').textContent       = isSignup ? 'Libre at walang bayad. Mag-sign up na!' : 'Biyahe tayo! Sign in to continue.';
+  document.getElementById('af-submit').textContent    = isSignup ? 'Create account' : 'Sign in';
+  document.getElementById('af-switch').innerHTML      = isSignup
+    ? 'Already have an account? <span onclick="toggleAuthForm()" style="color:var(--gold);cursor:pointer;font-weight:600;">Sign in</span>'
+    : 'Wala pang account? <span onclick="toggleAuthForm()" style="color:var(--gold);cursor:pointer;font-weight:600;">Sign up</span>';
+  goTo('s-auth-form');
+}
+
+function toggleAuthForm() {
+  showAuthForm(_authFormMode === 'signup' ? 'signin' : 'signup');
+}
+
+function submitAuthForm() {
+  const email = document.getElementById('af-email').value.trim();
+  const nameVal = document.getElementById('af-name').value.trim();
+  const name = nameVal || email.split('@')[0] || 'Lakwatsero';
+  if (!email) { document.getElementById('af-email').focus(); return; }
+  S.user = { name, email };
+  updateGreeting();
+  goTo('s-home');
+}
+
+function enterAsGuest() {
+  S.user = { name:'Lakwatsero', email:'', isGuest:true };
+  updateGreeting();
+  goTo('s-home');
+}
+
+function updateGreeting() {
+  const el = document.getElementById('home-greeting');
+  if (!el) return;
+  const first = S.user ? S.user.name.split(' ')[0] : 'Lakwatsero';
+  el.innerHTML = 'Kumusta, <strong>' + first + '!</strong> 👋';
+}
+
+function logout() {
+  S.user = null;
+  goTo('s-auth-landing');
+}
+
+function loadSample() {
+  S.isOwner = true;
+  buildTripUI();
+  goTo('s-app');
+}
+
+/* ─── WIZARD ─── */
+const WIZ = [
+  ['Where to?',       'Pick your Philippine destination'],
+  ['How long?',       'How many days is your vacation?'],
+  ['Your group',      'Group size and budget'],
+  ["What's your vibe?", 'Pick the experiences you want'],
+  ['All set!',        'Review before starting']
+];
+
+function initWizard() { S.wizStep = 0; renderWiz(); }
+
+function renderWiz() {
+  const s = S.wizStep;
+  document.querySelectorAll('.wiz-panel').forEach((p,i) => p.classList.toggle('active', i===s));
+  document.querySelectorAll('.wdot').forEach((d,i) => {
+    d.classList.toggle('done',   i < s);
+    d.classList.toggle('active', i === s);
+  });
+  document.getElementById('wiz-h').textContent = WIZ[s][0];
+  document.getElementById('wiz-s').textContent = WIZ[s][1];
+  document.getElementById('wiz-back').classList.toggle('hidden', s === 0);
+  document.getElementById('wiz-next').textContent = s === 4 ? '🚀 Start Planning' : 'Continue →';
+  if (s === 4) buildReview();
+}
+
+function wizNext() { if (S.wizStep < 4) { S.wizStep++; renderWiz(); } else { startGen(); } }
+function wizPrev() { if (S.wizStep > 0) { S.wizStep--; renderWiz(); } }
+
+function pickDest(el) {
+  document.querySelectorAll('.dc').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  S.dest    = el.dataset.dest;
+  S.destKey = S.dest.toLowerCase().replace(/\s/g,'');
+}
+
+function adjDays(d) {
+  S.days = Math.max(1, Math.min(14, S.days + d));
+  document.getElementById('days-num').textContent = S.days;
+  document.querySelectorAll('.preset').forEach(p => p.classList.remove('active'));
+}
+
+function setDays(n, el) {
+  S.days = n;
+  document.getElementById('days-num').textContent = n;
+  document.querySelectorAll('.preset').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function setBType(t) {
+  document.getElementById('btp-tot').classList.toggle('active', t==='total');
+  document.getElementById('btp-pp').classList.toggle('active',  t==='pp');
+}
+
+function pickBud(el, r) {
+  document.querySelectorAll('.bud-opt').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  S.budgetRange = r;
+}
+
+function buildReview() {
+  document.getElementById('rv-t').textContent    = S.dest + ' Trip 🌴';
+  document.getElementById('rv-days').textContent = S.days + ' day' + (S.days > 1 ? 's' : '');
+  document.getElementById('rv-grp').textContent  = (document.getElementById('inp-grp').value || 4) + ' people';
+  document.getElementById('rv-bud').textContent  = S.budgetRange + ' / person';
+  const fc = document.getElementById('rv-flt');
+  fc.innerHTML = '';
+  document.querySelectorAll('#wp3 .flt-chip.active').forEach(f => {
+    const b = document.createElement('span');
+    b.style.cssText = 'display:inline-block;background:rgba(244,168,0,.15);color:#B8860B;font-size:10px;font-weight:600;padding:2px 7px;border-radius:999px;margin:2px;';
+    b.textContent = f.querySelector('.flt-name').textContent;
+    fc.appendChild(b);
+  });
+}
+
+/* ─── GENERATING ─── */
+function startGen() {
+  S.group = parseInt(document.getElementById('inp-grp').value) || 4;
+  goTo('s-generating');
+  document.getElementById('gen-lbl').textContent = S.dest + ' · ' + S.days + ' days · ' + S.group + ' people';
+  document.querySelectorAll('[id^="gs"]').forEach(el => el.classList.remove('done','active'));
+  let i = 0;
+  const iv = setInterval(function() {
+    if (i > 0) {
+      const p = document.getElementById('gs' + (i-1));
+      if (p) { p.classList.remove('active'); p.classList.add('done'); }
+    }
+    if (i < 5) {
+      const c = document.getElementById('gs' + i);
+      if (c) c.classList.add('active');
+      i++;
+    } else {
+      clearInterval(iv);
+      setTimeout(function() { S.isOwner = true; buildTripUI(); goTo('s-app'); }, 500);
+    }
+  }, 650);
+}
+
+/* ─── BUILD TRIP UI ─── */
+function buildTripUI() {
+  document.getElementById('app-dest').textContent = S.dest.toUpperCase();
+  document.getElementById('app-dtag').textContent = S.days + ' days';
+  document.getElementById('app-gtag').textContent = S.group + ' people';
+  document.getElementById('app-btag').textContent = S.budgetRange;
+  document.getElementById('grp-trip-title').textContent = S.dest + ' Trip 🌴';
+  document.getElementById('grp-trip-sub').textContent   = S.days + ' days · ' + S.group + ' people · ' + S.budgetRange + '/person';
+  S.tripDays = Array.from({length:S.days}, function(_,i) {
+    return {id:'d'+(i+1), num:i+1, label:'Day '+(i+1), stops:[]};
+  });
+  renderDayTabs();
+  buildBudgetDayTabs();
+  renderExpenses();
+  renderMembers();
+  renderBudgetStats();
+}
+
+function renderDayTabs() {
+  const tr = document.getElementById('day-tabs-row');
+  const pc = document.getElementById('day-panels');
+  tr.innerHTML = '';
+  pc.innerHTML = '';
+  S.tripDays.forEach(function(day, i) {
+    const tb = document.createElement('button');
+    tb.className = 'day-tab-btn' + (i===0 ? ' active' : '');
+    tb.textContent = day.label;
+    tb.onclick = function() { switchDay(i); };
+    tr.appendChild(tb);
+    const panel = document.createElement('div');
+    panel.className = 'day-panel' + (i===0 ? ' active' : '');
+    panel.id = 'dp' + i;
+    renderDayPanel(panel, day, i);
+    pc.appendChild(panel);
+  });
+}
+
+function renderDayPanel(panel, day, idx) {
+  const meRole = MEMBERS.find(function(m){ return m.name==='You'; });
+  const canEdit = S.isOwner || (meRole && ROLES[meRole.role] && ROLES[meRole.role].canEditTour);
+  if (day.stops.length === 0) {
+    panel.innerHTML = '<div class="day-empty"><div class="day-empty-icon">🗺️</div>'
+      + '<div class="day-empty-title">Day ' + day.num + ' is empty</div>'
+      + '<div class="day-empty-sub">Add beaches, restaurants, activities and more.</div>'
+      + (canEdit ? '<button class="add-act-btn" onclick="addActFor(' + idx + ')">+ Add activity</button>' : '')
+      + '</div>';
+  } else {
+    let html = '';
+    day.stops.forEach(function(stop, si) {
+      html += '<div class="stop-card">'
+        + '<div class="stop-top"><span class="stop-time">' + (stop.time||'—') + '</span>'
+        + '<span class="stop-cat" style="background:' + catBg(stop.category) + ';color:' + catColor(stop.category) + '">' + catLbl(stop.category) + '</span></div>'
+        + '<div class="stop-body"><div class="stop-bar" style="background:' + catAccent(stop.category) + ';"></div>'
+        + '<div class="stop-info"><div class="stop-name">' + stop.name + '</div>'
+        + '<div class="stop-area">📍 ' + stop.area + ' · ' + stop.distance + '</div>'
+        + '<div class="stop-pills"><span class="stop-pill">💰 ' + stop.cost + '</span><span class="stop-pill">🕐 ' + stop.hours + '</span></div></div>'
+        + (canEdit ? '<button class="stop-del" onclick="removeStop(' + idx + ',' + si + ')">✕</button>' : '')
+        + '</div></div>';
+    });
+    if (canEdit) html += '<button class="add-act-btn" onclick="addActFor(' + idx + ')">+ Add activity</button>';
+    panel.innerHTML = html;
+  }
+}
+
+function switchDay(i) {
+  S.currentDay = i;
+  document.querySelectorAll('.day-tab-btn').forEach(function(b,j){ b.classList.toggle('active', j===i); });
+  document.querySelectorAll('.day-panel').forEach(function(p,j){ p.classList.toggle('active', j===i); });
+}
+
+function removeStop(dIdx, sIdx) {
+  S.tripDays[dIdx].stops.splice(sIdx, 1);
+  renderDayPanel(document.getElementById('dp'+dIdx), S.tripDays[dIdx], dIdx);
+  updateMapPins();
+}
+
+/* ─── PLACES FLOW ─── */
+let _addDay = 0;
+
+function addActFor(idx) { _addDay = idx; openSheet('sh-cat'); }
+
+function openPlaces(cat) {
+  closeSheet('sh-cat');
+  const data = (PLACES[S.destKey] || PLACES.boracay)[cat] || [];
+  document.getElementById('places-title').textContent = catLbl(cat) + ' in ' + S.dest;
+  const body = document.getElementById('places-body');
+  if (data.length === 0) {
+    body.innerHTML = '<div style="text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:13px;">No data yet for ' + S.dest + '.</div>';
+  } else {
+    body.innerHTML = data.map(function(p) {
+      return '<div class="place-card">'
+        + '<div class="place-thumb"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy"/><div class="place-thumb-ov"></div></div>'
+        + '<div class="place-info"><div class="place-name">' + p.name + '</div>'
+        + '<div class="place-area">📍 ' + p.area + '</div>'
+        + '<div class="place-pills"><span class="place-pill">🚶 ' + p.distance + '</span><span class="place-pill">💰 ' + p.cost + '</span><span class="place-pill">🕐 ' + p.hours + '</span></div>'
+        + '<div class="place-tip">💡 ' + p.tips + '</div></div>'
+        + '<button class="place-add-btn" onclick="addStopById(\'' + p.id + '\',\'' + cat + '\')">+ Add</button></div>';
+    }).join('');
+  }
+  openSheet('sh-places');
+}
+
+function addStopById(placeId, cat) {
+  const allPlaces = (PLACES[S.destKey] || PLACES.boracay)[cat] || [];
+  const place = allPlaces.find(function(p){ return p.id === placeId; });
+  if (!place) return;
+  const day  = S.tripDays[_addDay];
+  const times = ['8:00 AM','9:30 AM','11:00 AM','1:00 PM','2:30 PM','4:00 PM','6:00 PM','8:00 PM'];
+  day.stops.push(Object.assign({}, place, {category:cat, time:times[day.stops.length]||'—'}));
+  closeSheet('sh-places');
+  renderDayPanel(document.getElementById('dp'+_addDay), day, _addDay);
+  updateMapPins();
+}
+
+/* ─── BUDGET DAY TABS ─── */
+function buildBudgetDayTabs() {
+  const row = document.getElementById('budget-day-tabs');
+  if (!row) return;
+  row.innerHTML = '';
+  function makeBtn(label, filterVal) {
+    const btn = document.createElement('button');
+    btn.className = 'bdt-btn' + (filterVal === -2 ? ' active' : '');
+    btn.textContent = label;
+    btn.onclick = function() { filterBudgetDay(filterVal, btn); };
+    row.appendChild(btn);
+  }
+  makeBtn('All', -2);
+  makeBtn('Pre-trip', -1);
+  S.tripDays.forEach(function(d, i) { makeBtn(d.label, i); });
+}
+
+function filterBudgetDay(df, btn) {
+  S.budgetDayFilter = df;
+  document.querySelectorAll('.bdt-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  const lbl = document.getElementById('budget-day-label');
+  if (lbl) lbl.textContent = df === -2 ? 'All expenses' : df === -1 ? 'Pre-trip expenses' : 'Day ' + (df+1) + ' expenses';
+  renderExpenses();
+}
+
+/* ─── EXPENSES ─── */
+function renderExpenses() {
+  const list = document.getElementById('exp-list');
+  if (!list) return;
+  const filtered = S.budgetDayFilter === -2 ? EXPENSES : EXPENSES.filter(function(e){ return e.day === S.budgetDayFilter; });
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:28px;color:var(--earth-l);font-size:13px;">No expenses here yet.</div>';
+  } else {
+    list.innerHTML = filtered.map(function(e) {
+      const splits  = e.splits || [];
+      const myShare = splits.find(function(s){ return s.name === 'You'; });
+      const dayLbl  = e.day === -1 ? 'Pre-trip' : (S.tripDays[e.day] ? S.tripDays[e.day].label : 'Day ?');
+      const isCustom = e.splitMode === 'custom';
+
+      // Split summary line
+      var splitSummary = '';
+      if (isCustom) {
+        splitSummary = '<div class="exp-split-breakdown">'
+          + splits.map(function(s){
+              var isMe = s.name === 'You';
+              return '<span class="exp-split-chip' + (isMe ? ' me' : '') + '">' + s.name + ' ₱' + s.amount.toLocaleString() + '</span>';
+            }).join('')
+          + '</div>';
+      } else {
+        var pp = splits.length > 0 ? splits[0].amount : Math.round(e.total / splits.length);
+        splitSummary = '';
+      }
+
+      var ppLine = '';
+      if (splits.length > 0) {
+        if (isCustom && myShare) {
+          ppLine = 'Your share: ₱' + myShare.amount.toLocaleString();
+        } else if (!isCustom && splits.length > 0) {
+          ppLine = '₱' + splits[0].amount.toLocaleString() + '/person';
+        }
+      }
+
+      return '<div class="exp-item" id="eitem-' + e.id + '">'
+        + '<div class="exp-item-main">'
+        + '<div class="exp-icon-wrap">' + e.icon + '</div>'
+        + '<div class="exp-info"><div class="exp-title-txt">' + e.title + '</div>'
+        + '<div class="exp-meta-txt">' + e.type + ' · ' + dayLbl + ' · Paid by <strong>' + e.paidBy + '</strong>'
+        + ' · ' + splits.length + ' people</div></div>'
+        + '<div class="exp-amounts"><div class="exp-total-val">₱' + e.total.toLocaleString() + '</div>'
+        + '<div class="exp-pp-val">' + ppLine + '</div>'
+        + (e.receipt ? '<img class="exp-receipt-thumb" src="' + e.receipt + '" onclick="viewReceipt(this.src)" title="View receipt"/>' : '')
+        + '</div></div>'
+        + (isCustom ? splitSummary : '')
+        + '<div class="exp-actions">'
+        + '<button class="exp-act-btn edit" onclick="editExpense(\'' + e.id + '\')">✏️ Edit</button>'
+        + '<button class="exp-act-btn delete" onclick="deleteExpense(\'' + e.id + '\')">🗑 Delete</button>'
+        + '</div></div>';
+    }).join('');
+  }
+  renderBudgetStats();
+  renderMembers();
+}
+
+function renderBudgetStats() {
+  const total = EXPENSES.reduce(function(s,e){ return s+e.total; }, 0);
+  const budgetMap = {'₱3k–5k':5000,'₱5k–10k':10000,'₱10k–20k':20000,'₱20k+':30000};
+  const budget = S.group * (budgetMap[S.budgetRange] || 5000);
+  const pct    = Math.min(100, Math.round(total/budget*100));
+  const left   = budget - total;
+  const myTotal = EXPENSES.reduce(function(s,e){
+    var sp = (e.splits||[]).find(function(x){ return x.name==='You'; });
+    return s + (sp ? sp.amount : 0);
+  }, 0);
+  document.getElementById('bud-total').textContent  = '₱' + budget.toLocaleString();
+  document.getElementById('bud-bar').style.width    = pct + '%';
+  document.getElementById('bud-pct').textContent    = pct + '% spent';
+  document.getElementById('bud-left').textContent   = '₱' + Math.max(0,left).toLocaleString() + ' left';
+  document.getElementById('bud-spent').textContent  = '₱' + total.toLocaleString();
+  document.getElementById('bud-rem').textContent    = '₱' + Math.max(0,left).toLocaleString();
+  document.getElementById('bud-pp').textContent     = '₱' + myTotal.toLocaleString();
+  var ppLbl = document.querySelector('#tab-budget .bud-stat .bud-stat-lbl');
+  if (ppLbl) ppLbl.textContent = 'My share';
+}
+
+function deleteExpense(id) {
+  EXPENSES = EXPENSES.filter(function(e){ return e.id !== id; });
+  renderExpenses();
+}
+
+function editExpense(id) {
+  const e = EXPENSES.find(function(x){ return x.id === id; });
+  if (!e) return;
+  S.editingExpId = id;
+  openExpSheet(e);
+}
+
+function openExpSheet(prefill) {
+  S.editingExpId = prefill ? prefill.id : null;
+  document.getElementById('exp-sheet-title').textContent = prefill ? 'Edit expense' : 'Log an expense';
+  document.querySelectorAll('.exp-type-chip').forEach(function(c){ c.classList.remove('active'); });
+  document.getElementById('exp-form').style.display      = 'none';
+  document.getElementById('exp-title-in').value          = '';
+  document.getElementById('exp-amt-in').value            = '';
+  document.getElementById('receipt-preview').style.display = 'none';
+  S.selectedET   = null;
+  S._splitMode   = 'equal';
+
+  const paidSel = document.getElementById('exp-paid-by');
+  paidSel.innerHTML = MEMBERS.map(function(m){ return '<option value="' + m.name + '">' + m.name + '</option>'; }).join('');
+
+  const daySel = document.getElementById('exp-day-select');
+  daySel.innerHTML = '<option value="-1">Pre-trip / General</option>'
+    + S.tripDays.map(function(d,i){ return '<option value="' + i + '">' + d.label + '</option>'; }).join('');
+
+  setSplitMode('equal');
+  document.querySelector('.btn-save-exp').onclick = saveExpense;
+  openSheet('sh-exp');
+
+  if (prefill) {
+    document.querySelectorAll('.exp-type-chip').forEach(function(c) {
+      var lbl = c.querySelector('.exp-type-lbl');
+      if (lbl && lbl.textContent.trim() === prefill.type.split('/')[0].trim()) c.classList.add('active');
+    });
+    S.selectedET = {icon:prefill.icon, label:prefill.type, cat:''};
+    document.getElementById('exp-form').style.display = 'block';
+    document.getElementById('exp-title-in').value     = prefill.title;
+    document.getElementById('exp-amt-in').value       = prefill.total;
+    paidSel.value = prefill.paidBy;
+    daySel.value  = prefill.day;
+
+    var mode = prefill.splitMode || 'equal';
+    setSplitMode(mode);
+    if (mode === 'equal') {
+      var selNames = (prefill.splits||[]).map(function(s){ return s.name; });
+      renderMemberChecks(selNames);
+      calcSplit();
+    } else {
+      renderCustomSplitInputs(prefill.splits||[]);
+      updateSplitBalance();
+    }
+    if (prefill.receipt) {
+      document.getElementById('receipt-preview').src           = prefill.receipt;
+      document.getElementById('receipt-preview').style.display = 'block';
+    }
+  }
+}
+
+function setSplitMode(mode) {
+  S._splitMode = mode;
+  document.getElementById('split-mode-equal').classList.toggle('active', mode === 'equal');
+  document.getElementById('split-mode-custom').classList.toggle('active', mode === 'custom');
+  document.getElementById('split-equal-section').style.display  = mode === 'equal'  ? 'block' : 'none';
+  document.getElementById('split-custom-section').style.display = mode === 'custom' ? 'block' : 'none';
+
+  if (mode === 'equal') {
+    renderMemberChecks([]);
+    calcSplit();
+  } else {
+    // Pre-populate custom inputs from current equal selection or prefill
+    var amt   = parseFloat(document.getElementById('exp-amt-in').value) || 0;
+    var names = Array.from(document.querySelectorAll('#exp-mem-checks .member-chk.active')).map(function(el){ return el.textContent; });
+    if (names.length === 0) names = MEMBERS.map(function(m){ return m.name; });
+    var pp = names.length > 0 ? Math.round(amt / names.length) : 0;
+    renderCustomSplitInputs(names.map(function(n){ return {name:n, amount:pp}; }));
+    updateSplitBalance();
+  }
+}
+
+function renderMemberChecks(presel) {
+  var con = document.getElementById('exp-mem-checks');
+  var membersToUse = document.getElementById('s-solo-budget').classList.contains('active') ? SOLO_MEMBERS.map(function(n){ return {name:n}; }) : MEMBERS;
+  con.innerHTML = membersToUse.map(function(m) {
+    var name   = typeof m === 'string' ? m : m.name;
+    var active = (!presel || presel.length === 0 || presel.indexOf(name) !== -1) ? ' active' : '';
+    return '<div class="member-chk' + active + '" onclick="this.classList.toggle(\'active\');calcSplit()">' + name + '</div>';
+  }).join('');
+}
+
+function calcSplit() {
+  var amt = parseFloat(document.getElementById('exp-amt-in').value) || 0;
+  var sel = document.querySelectorAll('#exp-mem-checks .member-chk.active').length || 1;
+  var prev = document.getElementById('split-prev');
+  if (prev) {
+    prev.style.display = amt > 0 ? 'flex' : 'none';
+    document.getElementById('split-val').textContent = '₱' + Math.round(amt/sel).toLocaleString();
+  }
+  // If custom mode is open, refresh custom inputs too
+  if (S._splitMode === 'custom') {
+    var names = Array.from(document.querySelectorAll('#exp-mem-checks .member-chk.active')).map(function(el){ return el.textContent; });
+    var pp = names.length > 0 ? Math.round(amt / names.length) : 0;
+    renderCustomSplitInputs(names.map(function(n){ return {name:n, amount:pp}; }));
+    updateSplitBalance();
+  }
+}
+
+function renderCustomSplitInputs(splits) {
+  var list = document.getElementById('custom-split-list');
+  list.innerHTML = splits.map(function(s, i) {
+    return '<div class="custom-split-row">'
+      + '<span class="csr-name">' + s.name + '</span>'
+      + '<span style="font-size:12px;color:rgba(255,255,255,.4);flex-shrink:0;">₱</span>'
+      + '<input class="csr-input" type="number" min="0" value="' + (s.amount||'') + '" placeholder="0"'
+      + ' data-name="' + s.name + '" oninput="updateSplitBalance()" />'
+      + '</div>';
+  }).join('');
+  document.getElementById('split-balance').style.display = splits.length > 0 ? 'block' : 'none';
+}
+
+function updateSplitBalance() {
+  var total    = parseFloat(document.getElementById('exp-amt-in').value) || 0;
+  var inputs   = document.querySelectorAll('#custom-split-list .csr-input');
+  var assigned = 0;
+  inputs.forEach(function(inp){ assigned += parseFloat(inp.value)||0; });
+  var diff     = total - assigned;
+  var pct      = total > 0 ? Math.min(100, Math.round(assigned/total*100)) : 0;
+  var bar      = document.getElementById('split-balance-bar');
+  var note     = document.getElementById('split-balance-note');
+  var valEl    = document.getElementById('split-balance-val');
+  if (!bar) return;
+  valEl.textContent = '₱' + assigned.toLocaleString();
+  bar.style.width = pct + '%';
+  if (Math.abs(diff) < 1) {
+    bar.style.background = 'var(--green)';
+    note.innerHTML = '<span style="color:var(--green)">✓ Balanced!</span>';
+  } else if (diff > 0) {
+    bar.style.background = 'var(--gold)';
+    note.innerHTML = '<span style="color:var(--gold)">₱' + diff.toLocaleString() + ' unassigned</span>';
+  } else {
+    bar.style.background = 'var(--red)';
+    note.innerHTML = '<span style="color:#f08b80">₱' + Math.abs(diff).toLocaleString() + ' over total</span>';
+  }
+}
+
+function fillRemaining() {
+  var total  = parseFloat(document.getElementById('exp-amt-in').value) || 0;
+  var inputs = Array.from(document.querySelectorAll('#custom-split-list .csr-input'));
+  if (inputs.length === 0) return;
+  // Sum all except last
+  var sumExceptLast = inputs.slice(0,-1).reduce(function(s,inp){ return s + (parseFloat(inp.value)||0); }, 0);
+  var remaining = total - sumExceptLast;
+  inputs[inputs.length-1].value = remaining > 0 ? remaining : 0;
+  updateSplitBalance();
+}
+
+function saveExpense() {
+  var title  = document.getElementById('exp-title-in').value.trim();
+  var amt    = parseFloat(document.getElementById('exp-amt-in').value) || 0;
+  var paidBy = document.getElementById('exp-paid-by').value;
+  var dayVal = parseInt(document.getElementById('exp-day-select').value);
+  if (!title || !amt || !S.selectedET) { alert('Please fill in all fields.'); return; }
+
+  var splits = [];
+  if (S._splitMode === 'custom') {
+    // Read custom inputs
+    var inputs = document.querySelectorAll('#custom-split-list .csr-input');
+    var total  = 0;
+    inputs.forEach(function(inp){
+      var a = parseFloat(inp.value)||0;
+      total += a;
+      splits.push({name: inp.dataset.name, amount: a});
+    });
+    // Validate
+    if (Math.abs(total - amt) > 1) {
+      var diff = amt - total;
+      if (!confirm('Split amounts are ₱' + Math.abs(diff).toLocaleString() + (diff>0?' short':' over') + '. Save anyway?')) return;
+    }
+  } else {
+    // Equal split from member checkboxes
+    var selNames = Array.from(document.querySelectorAll('#exp-mem-checks .member-chk.active')).map(function(el){ return el.textContent; });
+    if (selNames.length === 0) { alert('Select at least one person.'); return; }
+    var pp = Math.round(amt / selNames.length);
+    splits = selNames.map(function(n){ return {name:n, amount:pp}; });
+  }
+
+  var receiptEl = document.getElementById('receipt-preview');
+  var receipt   = receiptEl.style.display !== 'none' ? receiptEl.src : null;
+  var expData   = {
+    icon: S.selectedET.icon, type: S.selectedET.label, title: title,
+    total: amt, paidBy: paidBy, day: dayVal,
+    splitMode: S._splitMode, splits: splits, receipt: receipt
+  };
+
+  if (S.editingExpId) {
+    var idx = EXPENSES.findIndex(function(e){ return e.id === S.editingExpId; });
+    if (idx > -1) EXPENSES[idx] = Object.assign({}, EXPENSES[idx], expData);
+  } else {
+    EXPENSES.push(Object.assign({id:'e'+Date.now()}, expData));
+  }
+  closeSheet('sh-exp');
+  renderExpenses();
+  S.editingExpId = null;
+  S.selectedET   = null;
+  S._splitMode   = 'equal';
+}
+
+function pickET(el, icon, label, cat) {
+  document.querySelectorAll('.exp-type-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  var isSolo = document.getElementById('s-solo-budget').classList.contains('active');
+  if (isSolo) {
+    _soloSelectedET = {icon:icon, label:label, cat:cat};
+    // In solo mode, switch to correct member checks
+    renderSoloMemberChecks([]);
+  } else {
+    S.selectedET = {icon:icon, label:label, cat:cat};
+    renderMemberChecks([]);
+  }
+  document.getElementById('exp-form').style.display = 'block';
+  // Reset to equal split by default when picking a new type
+  setSplitMode(S._splitMode || 'equal');
+}
+
+function previewReceipt(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('receipt-preview').src           = e.target.result;
+      document.getElementById('receipt-preview').style.display = 'block';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function viewReceipt(src) {
+  var w = window.open('','_blank');
+  w.document.write('<img src="' + src + '" style="max-width:100%;"/>');
+  w.document.close();
+}
+function renderMembers() {
+  const list = document.getElementById('members-list');
+  if (!list) return;
+  const balances = {};
+  MEMBERS.forEach(function(m){ balances[m.name] = 0; });
+  EXPENSES.forEach(function(e) {
+    // Each person owes their specific split amount
+    (e.splits||[]).forEach(function(s){
+      if (balances[s.name] !== undefined) balances[s.name] -= s.amount;
+    });
+    // The payer gets credited the full total
+    if (balances[e.paidBy] !== undefined) balances[e.paidBy] += e.total;
+  });
+  list.innerHTML = MEMBERS.map(function(m) {
+    const bal      = balances[m.name] || 0;
+    const initials = m.name.split(' ').map(function(n){ return n[0]; }).join('').slice(0,2).toUpperCase();
+    const roleInfo = ROLES[m.role] || ROLES.guest;
+    const canChange = S.isOwner && m.role !== 'owner';
+    return '<div class="member-row">'
+      + '<div class="member-av" style="background:' + m.bg + ';color:' + m.fg + '">' + initials + '</div>'
+      + '<div style="flex:1;min-width:0;">'
+      + '<div class="member-nm">' + m.name + '</div>'
+      + '<div class="member-role-badge" style="background:' + roleInfo.color + '22;color:' + roleInfo.color + '">' + roleInfo.label + '</div>'
+      + (canChange ? '<button class="role-change-btn" onclick="openRoleSheet(\'' + m.id + '\')">Change role ↓</button>' : '')
+      + '</div>'
+      + '<div class="member-bal">'
+      + '<div class="member-bal-val" style="color:' + (bal>=0 ? 'var(--green)' : 'var(--red)') + '">' + (bal>=0?'+':'') + '₱' + Math.abs(bal).toLocaleString() + '</div>'
+      + '<div class="member-bal-lbl">' + (bal>=0 ? 'gets back' : 'owes') + '</div>'
+      + '</div></div>';
+  }).join('');
+}
+
+function openRoleSheet(memberId) {
+  S.roleMemberId = memberId;
+  const m = MEMBERS.find(function(x){ return x.id === memberId; });
+  if (!m) return;
+  document.getElementById('role-sheet-title').textContent = 'Assign Role to ' + m.name.split(' ')[0];
+  document.getElementById('role-member-name').textContent = 'Currently: ' + (ROLES[m.role]||ROLES.guest).label;
+  openSheet('sh-role');
+}
+
+function selectRole(role) {
+  const m = MEMBERS.find(function(x){ return x.id === S.roleMemberId; });
+  if (m) {
+    m.role = role;
+    const ri = ROLES[role] || ROLES.guest;
+    m.bg = ri.color;
+    m.fg = ri.fg;
+  }
+  closeSheet('sh-role');
+  renderMembers();
+}
+
+/* ─── MAP ─── */
+function initMap() {
+  if (S.mapInit) return;
+  S.mapInit = true;
+  const CENTERS = {boracay:[11.9674,121.9213],palawan:[10.1683,118.4107],cebu:[10.3157,123.8854],siargao:[9.8482,126.0458],batanes:[20.448,121.97],vigan:[17.5747,120.387],banaue:[16.9113,121.0587],manila:[14.5995,120.984]};
+  const center = CENTERS[S.destKey] || CENTERS.boracay;
+  document.getElementById('map-el').style.height = (window.innerHeight - 200) + 'px';
+  const map = L.map('map-el').setView(center, 14);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© <a href="https://www.openstreetmap.org/copyright">OSM</a>', maxZoom:19}).addTo(map);
+  S.leafMap = map;
+  updateMapPins();
+  const fr = document.getElementById('map-filter-row');
+  fr.innerHTML = '<button class="map-f-btn active" onclick="filterMap(\'all\',this)">All days</button>';
+  S.tripDays.forEach(function(d, i) {
+    const btn = document.createElement('button');
+    btn.className   = 'map-f-btn';
+    btn.textContent = d.label;
+    btn.onclick = function() { filterMap(i, btn); };
+    fr.appendChild(btn);
+  });
+}
+
+let _mapMarkers = [];
+function updateMapPins() {
+  if (!S.leafMap) return;
+  _mapMarkers.forEach(function(m){ m.remove(); });
+  _mapMarkers = [];
+  let n = 1;
+  S.tripDays.forEach(function(day, di) {
+    day.stops.forEach(function(stop) {
+      if (!stop.lat || !stop.lng) return;
+      const icon = L.divIcon({html:'<div style="background:'+catAccent(stop.category)+';color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)">'+n+'</div>', className:'', iconSize:[26,26], iconAnchor:[13,13]});
+      const marker = L.marker([stop.lat, stop.lng], {icon:icon}).addTo(S.leafMap);
+      marker.bindPopup('<b>'+stop.name+'</b><br/>'+stop.area+'<br/>💰 '+stop.cost+'<br/><a href="https://www.google.com/maps/search/'+encodeURIComponent(stop.name)+'" target="_blank">Get directions →</a>');
+      marker._day = di;
+      _mapMarkers.push(marker);
+      n++;
+    });
+  });
+}
+
+function filterMap(f, btn) {
+  document.querySelectorAll('.map-f-btn').forEach(function(b){ b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  _mapMarkers.forEach(function(m) {
+    const el = m.getElement();
+    if (el) el.style.display = (f === 'all' || m._day === f) ? '' : 'none';
+  });
+}
+
+/* ─── TABS / SHEETS ─── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(function(t){ t.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+function openSheet(id)  { document.getElementById(id).classList.add('open'); }
+function closeSheet(id) { document.getElementById(id).classList.remove('open'); }
+function closeSheetOut(e, id) { if (e.target.id === id) closeSheet(id); }
+
+/* ─── JOIN ─── */
+function joinTrip(skip) {
+  const name = document.getElementById('join-name').value.trim();
+  if (!skip && !name) { document.getElementById('join-name').focus(); return; }
+  if (name && !MEMBERS.find(function(m){ return m.name === name; })) {
+    MEMBERS.push({id:'m'+Date.now(), name:name, role:'guest', bg:'#888780', fg:'#F1EFE8'});
+  }
+  S.isOwner = false;
+  loadSample();
+  S.tripDays.forEach(function(day, i) {
+    const p = document.getElementById('dp'+i);
+    if (p) renderDayPanel(p, day, i);
+  });
+}
+
+/* ─── COPY ─── */
+function copyLink() {
+  const el = document.getElementById('share-link-in');
+  el.select();
+  document.execCommand('copy');
+  event.target.textContent = 'Copied!';
+  setTimeout(function(){ event.target.textContent = 'Copy'; }, 1500);
+}
+function copyLink2() {
+  const el = document.getElementById('sh-link-val');
+  el.select();
+  document.execCommand('copy');
+  event.target.textContent = 'Copied!';
+  setTimeout(function(){ event.target.textContent = 'Copy'; }, 1500);
+}
+
+/* ─── ISLAND GROUP & HOTELS ─── */
+let _currentGroup = 'luzon';
+let _currentDest  = null;
+let _hotelFilter  = 'all';
+
+function openIslandGroup(group) {
   _currentGroup = group;
   const g = ISLAND_GROUPS[group];
-  document.getElementById('island-group-title').innerHTML = g.title.slice(0,4)+'<span style="color:var(--gold)">'+g.title.slice(4)+'</span>';
+  const titleEl = document.getElementById('island-group-title');
+  titleEl.innerHTML = g.title.slice(0,4) + '<span style="color:var(--gold)">' + g.title.slice(4) + '</span>';
   document.getElementById('island-group-sub').textContent = g.destinations.length + ' destinations — tap a place to see hotels';
   const list = document.getElementById('island-dest-list');
-  list.innerHTML = g.destinations.map(d => `
-    <div class="dest-item" onclick="openHotels('${d.key}','${d.name}','${d.region}')">
-      <div class="dest-item-left">
-        <div class="dest-item-icon">${d.icon}</div>
-        <div>
-          <div class="dest-item-name">${d.name}</div>
-          <div class="dest-item-region">${d.region}</div>
-        </div>
-      </div>
-      <div class="dest-item-right">
-        <div class="dest-item-from">${d.from}/night</div>
-        <div class="dest-item-arrow">›</div>
-      </div>
-    </div>`).join('');
+  list.innerHTML = g.destinations.map(function(d) {
+    return '<div class="dest-item" onclick="openHotels(\'' + d.key + '\',\'' + d.name + '\',\'' + d.region + '\')">'
+      + '<div class="dest-item-left"><div class="dest-item-icon">' + d.icon + '</div>'
+      + '<div><div class="dest-item-name">' + d.name + '</div><div class="dest-item-region">' + d.region + '</div></div></div>'
+      + '<div class="dest-item-right"><div class="dest-item-from">' + d.from + '/night</div>'
+      + '<div class="dest-item-arrow">›</div></div></div>';
+  }).join('');
   goTo('s-island');
 }
 
-function openHotels(destKey, destName, destRegion){
+function openHotels(destKey, destName, destRegion) {
   _currentDest = destKey;
   _hotelFilter = 'all';
   document.getElementById('hotels-dest-title').textContent = destName.toUpperCase();
-  document.getElementById('hotels-dest-sub').textContent = destRegion + ' · Hotels & Resorts';
-  document.getElementById('hotels-search-input').value = '';
-  document.querySelectorAll('.hf-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector('.hf-btn').classList.add('active');
+  document.getElementById('hotels-dest-sub').textContent   = destRegion + ' · Hotels & Resorts';
+  document.getElementById('hotels-search-input').value     = '';
+  document.querySelectorAll('.hf-btn').forEach(function(b){ b.classList.remove('active'); });
+  const firstBtn = document.querySelector('.hf-btn');
+  if (firstBtn) firstBtn.classList.add('active');
   renderHotels();
   goTo('s-hotels');
 }
 
-function setHotelFilter(f, btn){
+function setHotelFilter(f, btn) {
   _hotelFilter = f;
-  document.querySelectorAll('.hf-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.hf-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
   renderHotels();
 }
 
-function filterHotels(){
-  renderHotels();
-}
+function filterHotels() { renderHotels(); }
 
-function renderHotels(){
-  const raw = HOTELS_BY_DEST[_currentDest] || DEFAULT_HOTELS;
-  const query = (document.getElementById('hotels-search-input').value||'').toLowerCase();
-  let hotels = raw.filter(h => {
-    const matchSearch = !query || h.name.toLowerCase().includes(query) || h.address.toLowerCase().includes(query);
+function renderHotels() {
+  const raw   = HOTELS_BY_DEST[_currentDest] || DEFAULT_HOTELS;
+  const query = (document.getElementById('hotels-search-input').value || '').toLowerCase();
+  const hotels = raw.filter(function(h) {
+    const matchSearch = !query || h.name.toLowerCase().indexOf(query) !== -1 || h.address.toLowerCase().indexOf(query) !== -1;
     const matchFilter = _hotelFilter === 'all' || h.tier === _hotelFilter || (_hotelFilter === 'trending' && h.trending);
     return matchSearch && matchFilter;
   });
   const body = document.getElementById('hotels-body');
-  if(hotels.length === 0){
-    body.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--earth-l);font-size:13px;">No hotels match your search. Try a different keyword.</div>';
+  if (hotels.length === 0) {
+    body.innerHTML = '<div style="text-align:center;padding:48px 20px;color:var(--earth-l);font-size:13px;">No hotels match. Try a different search.</div>';
     return;
   }
-  body.innerHTML = hotels.map(h => {
+  body.innerHTML = hotels.map(function(h) {
     const stars = '★'.repeat(Math.round(h.rating/2));
-    const trendBadge = h.trending ? '<div class="hotel-trending-badge">🔥 Trending</div>' : '';
-    const tierColors = {luxury:'#8B6914',midrange:'#1A4FA0',budget:'#2D6A4F',resort:'#C0392B'};
-    return `
-    <div class="hotel-card">
-      <div class="hotel-card-img" style="background-image:url('${h.img}')">
-        <div class="hotel-card-img-overlay"></div>
-        ${trendBadge}
-        <div class="hotel-price-badge">₱${h.pricePerNight.toLocaleString()}/night</div>
-      </div>
-      <div class="hotel-card-body">
-        <div class="hotel-card-top">
-          <div class="hotel-name">${h.name}</div>
-          <div class="hotel-stars">${stars}</div>
-        </div>
-        <div class="hotel-address">📍 ${h.address}</div>
-        <div class="hotel-meta-row">
-          ${h.rooms.map(r=>`<span class="hotel-meta-pill">🛏 ${r}</span>`).join('')}
-          ${h.tags.map(t=>`<span class="hotel-meta-pill">${t}</span>`).join('')}
-        </div>
-        <div class="hotel-rating-row">
-          <div class="hotel-rating-badge">${h.rating.toFixed(1)}</div>
-          <div class="hotel-rating-count">${h.reviews.toLocaleString()} reviews</div>
-          <button class="hotel-book-btn" onclick="bookHotel('${h.id}','${h.name}')">Book on Klook →</button>
-        </div>
-      </div>
-    </div>`;
+    const trend = h.trending ? '<div class="hotel-trending-badge">🔥 Trending</div>' : '';
+    return '<div class="hotel-card">'
+      + '<div class="hotel-card-img" style="background-image:url(\'' + h.img + '\')">'
+      + '<div class="hotel-card-img-overlay"></div>' + trend
+      + '<div class="hotel-price-badge">₱' + h.pricePerNight.toLocaleString() + '/night</div></div>'
+      + '<div class="hotel-card-body">'
+      + '<div class="hotel-card-top"><div class="hotel-name">' + h.name + '</div><div class="hotel-stars">' + stars + '</div></div>'
+      + '<div class="hotel-address">📍 ' + h.address + '</div>'
+      + '<div class="hotel-meta-row">'
+      + h.rooms.map(function(r){ return '<span class="hotel-meta-pill">🛏 ' + r + '</span>'; }).join('')
+      + h.tags.map(function(t){ return '<span class="hotel-meta-pill">' + t + '</span>'; }).join('')
+      + '</div>'
+      + '<div class="hotel-rating-row">'
+      + '<div class="hotel-rating-badge">' + h.rating.toFixed(1) + '</div>'
+      + '<div class="hotel-rating-count">' + h.reviews.toLocaleString() + ' reviews</div>'
+      + '<button class="hotel-book-btn" onclick="bookHotel(\'' + h.id + '\',\'' + h.name + '\')">Book on Klook →</button>'
+      + '</div></div></div>';
   }).join('');
 }
 
-function bookHotel(id, name){
-  /* TODO: Replace with real Klook affiliate deep-link per hotel */
-  const url = `https://www.klook.com/en-PH/search/?query=${encodeURIComponent(name+' hotel '+_currentDest)}&utm_source=lakwatsero`;
+function bookHotel(id, name) {
+  const url = 'https://www.klook.com/en-PH/search/?query=' + encodeURIComponent(name + ' ' + (_currentDest||'')) + '&utm_source=lakwatsero';
   window.open(url, '_blank');
 }
 
-/* ============================================================
-   STANDALONE BUDGET — KWENTADOR
-============================================================ */
-let SOLO_EXPENSES=[];
-let SOLO_MEMBERS=["Me"];
-let _soloEditingId=null;
-let _soloSelectedET=null;
-function openSoloBudget(){renderSoloMembers();renderSoloExpenses();goTo("s-solo-budget");}
-function addSoloMember(){const inp=document.getElementById("solo-member-input");const name=inp.value.trim();if(!name||SOLO_MEMBERS.includes(name))return;SOLO_MEMBERS.push(name);inp.value="";renderSoloMembers();renderSoloExpenses();}
-function removeSoloMember(name){if(name==="Me")return;SOLO_MEMBERS=SOLO_MEMBERS.filter(m=>m!==name);renderSoloMembers();renderSoloExpenses();}
-function renderSoloMembers(){const el=document.getElementById("solo-members-list");el.innerHTML=SOLO_MEMBERS.map(m=>`<div style="display:flex;align-items:center;gap:5px;background:var(--cream);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-pill);padding:4px 10px;"><span style="font-size:12px;font-weight:600;color:var(--earth-m);">${m}</span>${m!=="Me"?`<span onclick="removeSoloMember('${m}')" style="font-size:10px;color:var(--red);cursor:pointer;margin-left:4px;">✕</span>":""}</div>`).join("");document.getElementById("solo-bud-members-count").textContent=SOLO_MEMBERS.length+" people";}
-function renderSoloExpenses(){const list=document.getElementById("solo-exp-list");const total=SOLO_EXPENSES.reduce((s,e)=>s+e.total,0);document.getElementById("solo-bud-total").textContent="₱"+total.toLocaleString();document.getElementById("solo-bud-pct").textContent=SOLO_EXPENSES.length+" expense"+(SOLO_EXPENSES.length!==1?"s":"");const maxBudget=Math.max(total*1.3,5000);document.getElementById("solo-bud-bar").style.width=Math.min(100,Math.round(total/maxBudget*100))+"%";list.innerHTML=SOLO_EXPENSES.map(e=>{const pp=Math.round(e.total/(e.members.length||1));return`<div class="exp-item"><div class="exp-item-main"><div class="exp-icon-wrap">${e.icon}</div><div class="exp-info"><div class="exp-title-txt">${e.title}</div><div class="exp-meta-txt">${e.type} · Paid by <strong>${e.paidBy}</strong>${e.members.length>1?" · Split "+e.members.length:""}</div></div><div class="exp-amounts"><div class="exp-total-val">₱${e.total.toLocaleString()}</div><div class="exp-pp-val">₱${pp.toLocaleString()}/person</div>${e.receipt?`<img class="exp-receipt-thumb" src="${e.receipt}" onclick="viewReceipt('${e.receipt}')" title="View receipt"/>`:"" }</div></div><div class="exp-actions"><button class="exp-act-btn edit" onclick="openSoloExpSheet('${e.id}')">✏️ Edit</button><button class="exp-act-btn delete" onclick="deleteSoloExpense('${e.id}')">🗑 Delete</button></div></div>`;}).join("")||"<div style="text-align:center;padding:28px;color:var(--earth-l);font-size:13px;">Wala pang gastos. Mag-log ka na! 💸</div>";}
-function deleteSoloExpense(id){SOLO_EXPENSES=SOLO_EXPENSES.filter(e=>e.id!==id);renderSoloExpenses();}
-function openSoloExpSheet(idOrNull){_soloEditingId=idOrNull;const prefill=idOrNull?SOLO_EXPENSES.find(e=>e.id===idOrNull):null;document.getElementById("exp-sheet-title").textContent=prefill?"Edit expense":"Log expense";document.querySelectorAll(".exp-type-chip").forEach(c=>c.classList.remove("active"));document.getElementById("exp-form").style.display="none";document.getElementById("exp-title-in").value="";document.getElementById("exp-amt-in").value="";document.getElementById("split-prev").style.display="none";document.getElementById("receipt-preview").style.display="none";_soloSelectedET=null;const paidSel=document.getElementById("exp-paid-by");paidSel.innerHTML=SOLO_MEMBERS.map(m=>`<option value="${m}">${m}</option>`).join("");const daySel=document.getElementById("exp-day-select");daySel.innerHTML=`<option value="-1">General</option>`;document.querySelector(".btn-save-exp").onclick=saveSoloExpense;if(prefill){document.querySelectorAll(".exp-type-chip").forEach(c=>{if(c.querySelector(".exp-type-lbl")?.textContent.includes(prefill.type.split("/")[0].trim()))c.classList.add("active");});_soloSelectedET={icon:prefill.icon,label:prefill.type,cat:""};document.getElementById("exp-form").style.display="block";document.getElementById("exp-title-in").value=prefill.title;document.getElementById("exp-amt-in").value=prefill.total;paidSel.value=prefill.paidBy;renderSoloMemberChecks(prefill.members);calcSoloSplit();if(prefill.receipt){document.getElementById("receipt-preview").src=prefill.receipt;document.getElementById("receipt-preview").style.display="block";}}openSheet("sh-exp");}
-function renderSoloMemberChecks(presel){const con=document.getElementById("exp-mem-checks");con.innerHTML=SOLO_MEMBERS.map(m=>`<div class="member-chk${(!presel||presel.length===0||presel.includes(m))?" active":""}" onclick="this.classList.toggle('active');calcSoloSplit()">${m}</div>`).join("");}
-function calcSoloSplit(){const amt=parseFloat(document.getElementById("exp-amt-in").value)||0;const sel=document.querySelectorAll("#exp-mem-checks .member-chk.active").length||1;document.getElementById("split-prev").style.display=amt>0?"flex":"none";document.getElementById("split-val").textContent="₱"+Math.round(amt/sel).toLocaleString();}
-function saveSoloExpense(){const title=document.getElementById("exp-title-in").value.trim();const amt=parseFloat(document.getElementById("exp-amt-in").value)||0;const paidBy=document.getElementById("exp-paid-by").value;const selMem=[...document.querySelectorAll("#exp-mem-checks .member-chk.active")].map(el=>el.textContent);const et=_soloSelectedET;if(!title||!amt||!et){alert("Please fill in all fields.");return;}const receipt=document.getElementById("receipt-preview").style.display!=="none"?document.getElementById("receipt-preview").src:null;if(_soloEditingId){const idx=SOLO_EXPENSES.findIndex(e=>e.id===_soloEditingId);if(idx>-1)SOLO_EXPENSES[idx]={...SOLO_EXPENSES[idx],icon:et.icon,type:et.label,title,total:amt,paidBy,members:selMem,receipt};}else SOLO_EXPENSES.push({id:"se"+Date.now(),icon:et.icon,type:et.label,title,total:amt,paidBy,day:-1,members:selMem,receipt});closeSheet("sh-exp");renderSoloExpenses();_soloEditingId=null;_soloSelectedET=null;document.querySelector(".btn-save-exp").onclick=saveExpense;}
-function generateReport(){if(SOLO_EXPENSES.length===0){alert("Wala pang expenses! Mag-log muna ng gastos.");return;}const total=SOLO_EXPENSES.reduce((s,e)=>s+e.total,0);const now=new Date().toLocaleDateString("en-PH",{year:"numeric",month:"long",day:"numeric"});const balances={};SOLO_MEMBERS.forEach(m=>balances[m]=0);SOLO_EXPENSES.forEach(e=>{const pp=Math.round(e.total/(e.members.length||1));e.members.forEach(name=>{if(balances[name]!==undefined)balances[name]-=pp;});if(balances[e.paidBy]!==undefined)balances[e.paidBy]+=e.total;});const catTotals={};SOLO_EXPENSES.forEach(e=>{catTotals[e.type]=(catTotals[e.type]||0)+e.total;});const expRows=SOLO_EXPENSES.map(e=>{const pp=Math.round(e.total/(e.members.length||1));const recEl=e.receipt?`<div><img src="${e.receipt}" class="report-receipt" onclick="window.open('${e.receipt}','_blank')"/></div>`:"";return`<div class="report-item"><div class="report-item-left"><div class="report-item-name">${e.icon} ${e.title}</div><div class="report-item-meta">${e.type} · Paid by ${e.paidBy} · Split: ${e.members.join(", ")}</div>${recEl}</div><div><div class="report-item-amount">₱${e.total.toLocaleString()}</div><div class="report-item-pp">₱${pp.toLocaleString()}/person</div></div></div>`;}).join("");const catRows=Object.entries(catTotals).map(([cat,amt])=>`<div class="report-item"><div class="report-item-left"><div class="report-item-name">${cat}</div></div><div class="report-item-amount">₱${amt.toLocaleString()}</div></div>`).join("");const balRows=SOLO_MEMBERS.map(m=>{const b=balances[m]||0;return`<div class="report-item"><div class="report-item-left"><div class="report-item-name">${m}</div></div><div class="report-item-amount" style="color:${b>=0?"var(--green)":"var(--red)"}">${b>=0?"+":""}₱${Math.abs(b).toLocaleString()}<div style="font-size:10px;color:#888">${b>=0?"gets back":"owes"}</div></div></div>`;}).join("");document.getElementById("report-content").innerHTML=`<div class="report-header"><div class="report-brand">LAKWAT<span>SERO</span>PH</div><div class="report-title">💰 Expense Report · Kwentador</div><div class="report-date">Generated: ${now}</div></div><div class="report-section-title">All Expenses</div>${expRows}<div class="report-total-row"><span>Grand Total</span><span>₱${total.toLocaleString()}</span></div><div class="report-section-title">By Category</div>${catRows}<div class="report-section-title">Who Owes What</div>${balRows}<div class="report-footer">Generated by LakwatseroPH · Saan tayo? 🇵🇭</div>`;goTo("s-report");}
+/* ─── STANDALONE BUDGET (KWENTADOR) ─── */
+function openSoloBudget() {
+  renderSoloMembers();
+  renderSoloExpenses();
+  goTo('s-solo-budget');
+}
 
-function catLbl(c){return{beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'}[c]||c;}
-function catBg(c){return{beach:'rgba(0,134,179,.1)',restaurant:'rgba(232,81,42,.1)',tourist_spot:'rgba(26,79,160,.1)',shopping:'rgba(244,168,0,.15)',nightlife:'rgba(61,43,31,.1)',camping:'rgba(45,106,79,.1)',nature_hike:'rgba(45,106,79,.1)',water_sports:'rgba(0,134,179,.1)'}[c]||'rgba(28,16,8,.08)';}
-function catColor(c){return{beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#B8860B',nightlife:'#3D2B1F',camping:'#1B4332',nature_hike:'#1B4332',water_sports:'#0086B3'}[c]||'#3D2B1F';}
-function catAccent(c){return{beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'}[c]||'#888';}
+function addSoloMember() {
+  const inp  = document.getElementById('solo-member-input');
+  const name = inp.value.trim();
+  if (!name || SOLO_MEMBERS.indexOf(name) !== -1) return;
+  SOLO_MEMBERS.push(name);
+  inp.value = '';
+  renderSoloMembers();
+  renderSoloExpenses();
+}
+
+function removeSoloMember(name) {
+  if (name === 'Me') return;
+  SOLO_MEMBERS = SOLO_MEMBERS.filter(function(m){ return m !== name; });
+  renderSoloMembers();
+  renderSoloExpenses();
+}
+
+function renderSoloMembers() {
+  const el = document.getElementById('solo-members-list');
+  if (!el) return;
+  el.innerHTML = SOLO_MEMBERS.map(function(m) {
+    var removeBtn = m !== 'Me'
+      ? '<span onclick="removeSoloMember(\'' + m + '\')" style="font-size:10px;color:var(--red);cursor:pointer;margin-left:4px;">✕</span>'
+      : '';
+    return '<div style="display:flex;align-items:center;gap:5px;background:var(--cream);border:1px solid rgba(28,16,8,.1);border-radius:var(--r-pill);padding:4px 10px;">'
+      + '<span style="font-size:12px;font-weight:600;color:var(--earth-m);">' + m + '</span>' + removeBtn + '</div>';
+  }).join('');
+  const countEl = document.getElementById('solo-bud-members-count');
+  if (countEl) countEl.textContent = SOLO_MEMBERS.length + ' people';
+}
+
+function renderSoloExpenses() {
+  var list = document.getElementById('solo-exp-list');
+  if (!list) return;
+  var total = SOLO_EXPENSES.reduce(function(s,e){ return s+e.total; }, 0);
+  var totalEl = document.getElementById('solo-bud-total');
+  if (totalEl) totalEl.textContent = '₱' + total.toLocaleString();
+  var pctEl = document.getElementById('solo-bud-pct');
+  if (pctEl) pctEl.textContent = SOLO_EXPENSES.length + ' expense' + (SOLO_EXPENSES.length !== 1 ? 's' : '');
+  var barEl = document.getElementById('solo-bud-bar');
+  if (barEl) barEl.style.width = Math.min(100, Math.round(total / Math.max(total*1.3, 5000) * 100)) + '%';
+  if (SOLO_EXPENSES.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:28px;color:var(--earth-l);font-size:13px;">Wala pang gastos. Mag-log ka na!</div>';
+    return;
+  }
+  list.innerHTML = SOLO_EXPENSES.map(function(e) {
+    var splits = e.splits || [];
+    var isCustom = e.splitMode === 'custom';
+    var myShare = splits.find(function(s){ return s.name === 'Me'; });
+    var ppLine = '';
+    if (isCustom && myShare) ppLine = 'My share: ₱' + myShare.amount.toLocaleString();
+    else if (!isCustom && splits.length > 0) ppLine = '₱' + splits[0].amount.toLocaleString() + '/person';
+    var breakdown = isCustom ? '<div class="exp-split-breakdown">' + splits.map(function(s){ return '<span class="exp-split-chip' + (s.name==='Me'?' me':'') + '">' + s.name + ' ₱' + s.amount.toLocaleString() + '</span>'; }).join('') + '</div>' : '';
+    return '<div class="exp-item">'
+      + '<div class="exp-item-main"><div class="exp-icon-wrap">' + e.icon + '</div>'
+      + '<div class="exp-info"><div class="exp-title-txt">' + e.title + '</div>'
+      + '<div class="exp-meta-txt">' + e.type + ' · Paid by <strong>' + e.paidBy + '</strong> · ' + splits.length + ' people</div></div>'
+      + '<div class="exp-amounts"><div class="exp-total-val">₱' + e.total.toLocaleString() + '</div>'
+      + '<div class="exp-pp-val">' + ppLine + '</div>'
+      + (e.receipt ? '<img class="exp-receipt-thumb" src="' + e.receipt + '" onclick="viewReceipt(this.src)"/>' : '')
+      + '</div></div>' + breakdown
+      + '<div class="exp-actions">'
+      + '<button class="exp-act-btn edit" onclick="openSoloExpSheet(\'' + e.id + '\')">&#9999; Edit</button>'
+      + '<button class="exp-act-btn delete" onclick="deleteSoloExpense(\'' + e.id + '\')">&#128465; Delete</button>'
+      + '</div></div>';
+  }).join('');
+}
+
+function deleteSoloExpense(id) {
+  SOLO_EXPENSES = SOLO_EXPENSES.filter(function(e){ return e.id !== id; });
+  renderSoloExpenses();
+}
+
+function openSoloExpSheet(idOrNull) {
+  _soloEditingId = idOrNull;
+  var prefill = idOrNull ? SOLO_EXPENSES.find(function(e){ return e.id === idOrNull; }) : null;
+  document.getElementById('exp-sheet-title').textContent = prefill ? 'Edit expense' : 'Log expense';
+  document.querySelectorAll('.exp-type-chip').forEach(function(c){ c.classList.remove('active'); });
+  document.getElementById('exp-form').style.display = 'none';
+  document.getElementById('exp-title-in').value = '';
+  document.getElementById('exp-amt-in').value = '';
+  document.getElementById('receipt-preview').style.display = 'none';
+  _soloSelectedET = null;
+  S._splitMode = 'equal';
+  var paidSel = document.getElementById('exp-paid-by');
+  paidSel.innerHTML = SOLO_MEMBERS.map(function(m){ return '<option value="' + m + '">' + m + '</option>'; }).join('');
+  var daySel = document.getElementById('exp-day-select');
+  daySel.innerHTML = '<option value="-1">General</option>';
+  setSplitMode('equal');
+  document.querySelector('.btn-save-exp').onclick = saveSoloExpense;
+  openSheet('sh-exp');
+  if (prefill) {
+    document.querySelectorAll('.exp-type-chip').forEach(function(c) {
+      var lbl = c.querySelector('.exp-type-lbl');
+      if (lbl && lbl.textContent.trim() === prefill.type.split('/')[0].trim()) c.classList.add('active');
+    });
+    _soloSelectedET = {icon:prefill.icon, label:prefill.type, cat:''};
+    document.getElementById('exp-form').style.display = 'block';
+    document.getElementById('exp-title-in').value = prefill.title;
+    document.getElementById('exp-amt-in').value = prefill.total;
+    paidSel.value = prefill.paidBy;
+    var mode = prefill.splitMode || 'equal';
+    setSplitMode(mode);
+    if (mode === 'equal') {
+      renderSoloMemberChecks((prefill.splits||[]).map(function(s){ return s.name; }));
+      calcSplit();
+    } else {
+      renderCustomSplitInputs(prefill.splits||[]);
+      updateSplitBalance();
+    }
+    if (prefill.receipt) {
+      document.getElementById('receipt-preview').src = prefill.receipt;
+      document.getElementById('receipt-preview').style.display = 'block';
+    }
+  }
+}
+
+function renderSoloMemberChecks(presel) {
+  var con = document.getElementById('exp-mem-checks');
+  con.innerHTML = SOLO_MEMBERS.map(function(m) {
+    var active = (!presel || presel.length === 0 || presel.indexOf(m) !== -1) ? ' active' : '';
+    return '<div class="member-chk' + active + '" onclick="this.classList.toggle(\'active\');calcSplit()">' + m + '</div>';
+  }).join('');
+}
+
+function saveSoloExpense() {
+  var title = document.getElementById('exp-title-in').value.trim();
+  var amt = parseFloat(document.getElementById('exp-amt-in').value) || 0;
+  var paidBy = document.getElementById('exp-paid-by').value;
+  if (!title || !amt || !_soloSelectedET) { alert('Please fill in all fields.'); return; }
+  var splits = [];
+  if (S._splitMode === 'custom') {
+    var inputs = document.querySelectorAll('#custom-split-list .csr-input');
+    var total = 0;
+    inputs.forEach(function(inp){ var a = parseFloat(inp.value)||0; total += a; splits.push({name:inp.dataset.name, amount:a}); });
+    if (Math.abs(total - amt) > 1 && !confirm('Split amounts do not match total. Save anyway?')) return;
+  } else {
+    var selNames = Array.from(document.querySelectorAll('#exp-mem-checks .member-chk.active')).map(function(el){ return el.textContent; });
+    if (selNames.length === 0) { alert('Select at least one person.'); return; }
+    var pp = Math.round(amt / selNames.length);
+    splits = selNames.map(function(n){ return {name:n, amount:pp}; });
+  }
+  var receiptEl = document.getElementById('receipt-preview');
+  var receipt = receiptEl.style.display !== 'none' ? receiptEl.src : null;
+  var expData = {icon:_soloSelectedET.icon, type:_soloSelectedET.label, title:title, total:amt, paidBy:paidBy, day:-1, splitMode:S._splitMode, splits:splits, receipt:receipt};
+  if (_soloEditingId) {
+    var idx = SOLO_EXPENSES.findIndex(function(e){ return e.id === _soloEditingId; });
+    if (idx > -1) SOLO_EXPENSES[idx] = Object.assign({}, SOLO_EXPENSES[idx], expData);
+  } else {
+    SOLO_EXPENSES.push(Object.assign({id:'se'+Date.now()}, expData));
+  }
+  closeSheet('sh-exp');
+  renderSoloExpenses();
+  _soloEditingId = null;
+  _soloSelectedET = null;
+  S._splitMode = 'equal';
+  document.querySelector('.btn-save-exp').onclick = saveExpense;
+}
+
+
+/* ─── REPORT GENERATOR ─── */
+function generateReport() {
+  if (SOLO_EXPENSES.length === 0) { alert('Wala pang expenses! Mag-log muna ng gastos.'); return; }
+  const total = SOLO_EXPENSES.reduce(function(s,e){ return s+e.total; }, 0);
+  const now   = new Date().toLocaleDateString('en-PH', {year:'numeric', month:'long', day:'numeric'});
+
+  const balances = {};
+  SOLO_MEMBERS.forEach(function(m){ balances[m] = 0; });
+  SOLO_EXPENSES.forEach(function(e) {
+    (e.splits||[]).forEach(function(s){ if (balances[s.name] !== undefined) balances[s.name] -= s.amount; });
+    if (balances[e.paidBy] !== undefined) balances[e.paidBy] += e.total;
+  });
+
+  const catTotals = {};
+  SOLO_EXPENSES.forEach(function(e){ catTotals[e.type] = (catTotals[e.type]||0) + e.total; });
+
+  const expRows = SOLO_EXPENSES.map(function(e) {
+    var splits   = e.splits || [];
+    var isCustom = e.splitMode === 'custom';
+    var splitStr = isCustom
+      ? splits.map(function(s){ return s.name + ' ₱' + s.amount.toLocaleString(); }).join(' · ')
+      : (splits.length > 0 ? splits.map(function(s){ return s.name; }).join(', ') + ' (₱' + splits[0].amount.toLocaleString() + ' each)' : '');
+    var recEl = e.receipt ? '<div><img src="' + e.receipt + '" class="report-receipt" onclick="window.open(this.src,\'_blank\')"/></div>' : '';
+    return '<div class="report-item">'
+      + '<div class="report-item-left">'
+      + '<div class="report-item-name">' + e.icon + ' ' + e.title + '</div>'
+      + '<div class="report-item-meta">' + e.type + ' · Paid by ' + e.paidBy + '</div>'
+      + '<div class="report-item-meta" style="margin-top:2px;color:#666;">' + splitStr + '</div>'
+      + recEl + '</div>'
+      + '<div><div class="report-item-amount">₱' + e.total.toLocaleString() + '</div></div></div>';
+  }).join('');
+
+  const catRows = Object.entries(catTotals).map(function(entry) {
+    return '<div class="report-item"><div class="report-item-left"><div class="report-item-name">' + entry[0] + '</div></div>'
+      + '<div class="report-item-amount">₱' + entry[1].toLocaleString() + '</div></div>';
+  }).join('');
+
+  const balRows = SOLO_MEMBERS.map(function(m) {
+    const b = balances[m] || 0;
+    return '<div class="report-item"><div class="report-item-left"><div class="report-item-name">' + m + '</div></div>'
+      + '<div class="report-item-amount" style="color:' + (b>=0 ? 'var(--green)' : 'var(--red)') + '">'
+      + (b>=0?'+':'') + '₱' + Math.abs(b).toLocaleString()
+      + '<div style="font-size:10px;color:#888">' + (b>=0 ? 'gets back' : 'owes') + '</div></div></div>';
+  }).join('');
+
+  document.getElementById('report-content').innerHTML =
+    '<div class="report-header">'
+    + '<div class="report-brand">LAKWAT<span>SERO</span>PH</div>'
+    + '<div class="report-title">💰 Expense Report · Kwentador</div>'
+    + '<div class="report-date">Generated: ' + now + '</div></div>'
+    + '<div class="report-section-title">All Expenses</div>' + expRows
+    + '<div class="report-total-row"><span>Grand Total</span><span>₱' + total.toLocaleString() + '</span></div>'
+    + '<div class="report-section-title">By Category</div>' + catRows
+    + '<div class="report-section-title">Who Owes What</div>' + balRows
+    + '<div class="report-footer">Generated by LakwatseroPH · Saan tayo? 🇵🇭</div>';
+  goTo('s-report');
+}
+
+/* ─── HELPERS ─── */
+function catLbl(c) {
+  const m = {beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'};
+  return m[c] || c;
+}
+function catBg(c) {
+  const m = {beach:'rgba(0,134,179,.1)',restaurant:'rgba(232,81,42,.1)',tourist_spot:'rgba(26,79,160,.1)',shopping:'rgba(244,168,0,.15)',nightlife:'rgba(61,43,31,.1)',camping:'rgba(45,106,79,.1)',nature_hike:'rgba(45,106,79,.1)',water_sports:'rgba(0,134,179,.1)'};
+  return m[c] || 'rgba(28,16,8,.08)';
+}
+function catColor(c) {
+  const m = {beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#B8860B',nightlife:'#3D2B1F',camping:'#1B4332',nature_hike:'#1B4332',water_sports:'#0086B3'};
+  return m[c] || '#3D2B1F';
+}
+function catAccent(c) {
+  const m = {beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'};
+  return m[c] || '#888';
+}
 </script>
 </body>
 </html>
