@@ -713,6 +713,73 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   font-family:var(--ff-b);font-size:13px;color:var(--earth-m);cursor:pointer;
 }
 
+/* ── PERSISTENT HOME BAR ── */
+.home-bar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;
+  background:rgba(10,22,40,.92);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  flex-shrink:0;
+}
+.home-bar-user{
+  font-size:12px;color:rgba(255,255,255,.55);font-weight:500;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:160px;
+}
+.home-bar-user strong{color:var(--gold);font-weight:700;}
+.home-bar-btn{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 11px;border-radius:var(--r-pill);
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.65);font-family:var(--ff-b);font-size:11px;font-weight:600;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.home-bar-btn:hover{background:rgba(255,255,255,.18);color:var(--white);}
+/* Light variant for light-bg screens */
+.home-bar.light{
+  background:rgba(253,246,227,.95);
+  border-bottom:1px solid rgba(28,16,8,.08);
+}
+.home-bar.light .home-bar-user{color:var(--earth-l);}
+.home-bar.light .home-bar-user strong{color:var(--gold-d);}
+.home-bar.light .home-bar-btn{
+  background:rgba(28,16,8,.06);border-color:rgba(28,16,8,.14);
+  color:var(--earth-m);
+}
+.home-bar.light .home-bar-btn:hover{background:rgba(28,16,8,.12);}
+
+/* ── TRIP REPORT BUTTONS ── */
+.trip-report-row{
+  background:var(--white);border-radius:var(--r-md);
+  padding:11px 12px;margin-bottom:12px;
+  border:1px solid rgba(28,16,8,.06);
+}
+.trip-report-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:8px;}
+.trip-report-btns{display:flex;gap:6px;}
+.trip-report-btn{
+  flex:1;padding:9px 6px;border-radius:var(--r-sm);
+  border:1.5px solid rgba(28,16,8,.12);background:var(--cream);
+  font-family:var(--ff-b);font-size:11px;font-weight:600;color:var(--earth-m);
+  cursor:pointer;transition:all .15s;text-align:center;
+}
+.trip-report-btn:hover{background:var(--blue);border-color:var(--blue);color:var(--white);}
+/* Per-person report button in group tab */
+.person-report-btn{
+  width:100%;padding:9px 12px;margin-bottom:7px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border:1px solid rgba(28,16,8,.06);
+  border-radius:var(--r-md);cursor:pointer;transition:all .15s;
+  font-family:var(--ff-b);
+}
+.person-report-btn:hover{border-color:var(--blue);background:var(--blue-l);}
+.prb-left{display:flex;align-items:center;gap:10px;}
+.prb-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
+.prb-name{font-size:13px;font-weight:600;color:var(--earth);}
+.prb-share{font-size:11px;color:var(--earth-l);margin-top:1px;}
+.prb-arrow{font-size:13px;color:var(--earth-l);}
+
 /* ── SPLIT TOGGLE ── */
 .split-mode-toggle{
   display:flex;gap:0;margin-bottom:12px;
@@ -794,16 +861,16 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       <div class="al-flag">🇵🇭</div>
       <div class="al-eyebrow">Philippine Travel Planner</div>
       <div class="al-title">LAKWAT<span class="accent">SERO</span><br/>PH</div>
-      <div class="al-tagline">Ano tara? — I-plan ang susunod mong lakwatsa</div>
+      <div class="al-tagline">Where to next? — Plan your Philippine adventure</div>
     </div>
     <div class="al-features">
       <div class="al-feat">
         <div class="al-feat-icon">🗺️</div>
-        <div class="al-feat-text"><strong>Mag-plano ng trip</strong> — day-by-day itinerary kasama ang barkada</div>
+        <div class="al-feat-text"><strong>Plan your trip</strong> — build a day-by-day itinerary with your crew</div>
       </div>
       <div class="al-feat">
         <div class="al-feat-icon">💰</div>
-        <div class="al-feat-text"><strong>I-split ang gastos</strong> — track expenses, who owes who</div>
+        <div class="al-feat-text"><strong>Split the bill</strong> — track every expense, see who owes who</div>
       </div>
       <div class="al-feat">
         <div class="al-feat-icon">🏝️</div>
@@ -811,10 +878,10 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       </div>
     </div>
     <div class="al-actions">
-      <button class="btn-al-signup" onclick="showAuthForm('signup')">Gumawa ng account — libre!</button>
-      <button class="btn-al-signin" onclick="showAuthForm('signin')">Mag-sign in na</button>
+      <button class="btn-al-signup" onclick="showAuthForm('signup')">Create a free account</button>
+      <button class="btn-al-signin" onclick="showAuthForm('signin')">Sign in</button>
       <div class="al-guest-link">
-        <span onclick="enterAsGuest()">o mag-browse muna bilang bisita →</span>
+        <span onclick="enterAsGuest()">or browse as a guest →</span>
       </div>
     </div>
   </div>
@@ -833,15 +900,15 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:24px;" id="af-sub">Libre at walang bayad. Mag-sign up na!</div>
 
       <div id="af-name-field" style="margin-bottom:14px;">
-        <label class="auth-label">Your name</label>
+        <label class="auth-label" style="color:rgba(255,255,255,.75);">Your name</label>
         <input class="auth-input" type="text" id="af-name" placeholder="e.g. Juan dela Cruz"/>
       </div>
       <div style="margin-bottom:14px;">
-        <label class="auth-label">Email address</label>
+        <label class="auth-label" style="color:rgba(255,255,255,.75);">Email address</label>
         <input class="auth-input" type="email" id="af-email" placeholder="you@email.com"/>
       </div>
       <div style="margin-bottom:6px;">
-        <label class="auth-label">Password</label>
+        <label class="auth-label" style="color:rgba(255,255,255,.75);">Password</label>
         <input class="auth-input" type="password" id="af-pass" placeholder="••••••••"/>
       </div>
 
@@ -866,33 +933,33 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   <div class="home-content">
 
     <div class="home-topbar">
-      <div class="home-greeting" id="home-greeting">Kumusta, <strong>Lakwatsero!</strong> 👋</div>
+      <div class="home-greeting" id="home-greeting">Hey, <strong>Lakwatsero!</strong> 👋</div>
       <button class="logout-btn" onclick="logout()" title="Sign out">⏻</button>
     </div>
 
     <div class="home-title-wrap">
       <div class="home-eyebrow">🇵🇭 Philippine Travel Planner</div>
       <div class="home-title">LAKWAT<span>SERO</span><br/>PH</div>
-      <div class="home-subtitle">Saan tayo? — Plan your next lakwatsa</div>
+      <div class="home-subtitle">Where to? — Plan your next adventure</div>
     </div>
 
     <div class="home-taglines">
       <div class="tagline-row">
-        <span class="tagline-chip">📋 Mag-plano ng trip</span>
-        <span class="tagline-chip">💰 I-split ang gastos</span>
-        <span class="tagline-chip">🏝️ Puntahan ang PH</span>
+        <span class="tagline-chip">📋 Plan a trip</span>
+        <span class="tagline-chip">💰 Split the bill</span>
+        <span class="tagline-chip">🏝️ Explore the PH</span>
       </div>
     </div>
 
     <div class="home-cta">
       <button class="btn-plan" onclick="goTo('s-wizard');initWizard()">
-        🗺️ Mag-plano ng Trip kasama ang Barkada!
+        🗺️ Plan a Trip with Your Crew!
       </button>
       <button class="btn-budget-solo" onclick="openSoloBudget()">
-        💸 I-kwenta ang Gastos ng Lakwatsa!
+        💸 Track Your Trip Budget!
       </button>
       <div class="sample-trip-link">
-        <span onclick="loadSample()">o subukan ang sample trip →</span>
+        <span onclick="loadSample()">or try a sample trip →</span>
       </div>
     </div>
 
@@ -953,10 +1020,13 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 
 <!-- ═══ STANDALONE BUDGET SCREEN ═══ -->
 <div id="s-solo-budget" class="screen">
+  <div class="home-bar light">
+    <div class="home-bar-user" id="solo-bar-user" style="color:var(--earth-l);">Budget Tracker</div>
+    <button class="home-bar-btn" style="background:rgba(28,16,8,.06);border-color:rgba(28,16,8,.14);color:var(--earth-m);" onclick="goTo('s-home')">🏠 Home</button>
+  </div>
   <div class="solo-bud-header">
-    <button class="solo-bud-back" onclick="goTo('s-home')">← Back to Home</button>
     <div class="solo-bud-title">KWENTA<span style="color:var(--white)">DOR</span></div>
-    <div class="solo-bud-sub">💰 I-organize ang gastos ng iyong barkada · Personal use only</div>
+    <div class="solo-bud-sub">💰 Track personal and group expenses · Not shared</div>
     <button class="btn-export-report" onclick="generateReport()">📄 Generate Expense Report</button>
   </div>
   <div style="padding:16px;">
@@ -972,7 +1042,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
     </div>
     <!-- Member management -->
     <div style="background:var(--white);border-radius:var(--r-md);padding:12px;margin-bottom:12px;border:1px solid rgba(28,16,8,.06);">
-      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:8px;">Your Lakwatseros</div>
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:8px;">Your People</div>
       <div id="solo-members-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
       <div style="display:flex;gap:6px;">
         <input class="finp" type="text" id="solo-member-input" placeholder="Add person's name..." style="flex:1;padding:9px 12px;font-size:13px;"/>
@@ -988,7 +1058,11 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 
 <!-- ═══ EXPENSE REPORT SCREEN ═══ -->
 <div id="s-report" class="screen">
-  <div style="padding:16px 20px;background:var(--white);border-bottom:1px solid #eee;position:sticky;top:0;z-index:10;display:flex;gap:8px;">
+  <div class="home-bar light">
+    <div class="home-bar-user" style="color:var(--earth-l);">Kwentador Report</div>
+    <button class="home-bar-btn" style="background:rgba(28,16,8,.06);border-color:rgba(28,16,8,.14);color:var(--earth-m);" onclick="goTo('s-home')">🏠 Home</button>
+  </div>
+  <div style="padding:12px 16px;background:var(--white);border-bottom:1px solid #eee;display:flex;gap:8px;">
     <button class="btn-close-report" style="flex:0 0 auto;padding:10px 14px;" onclick="goTo('s-solo-budget')">← Back</button>
     <button class="btn-print" style="margin-bottom:0;flex:1;" onclick="window.print()">🖨️ Print / Save PDF</button>
   </div>
@@ -999,8 +1073,12 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 
 <!-- ═══ ISLAND GROUP SCREEN ═══ -->
 <div id="s-island" class="screen">
+  <div class="home-bar" id="island-home-bar">
+    <div class="home-bar-user" id="island-bar-user">Hotels &amp; Destinations</div>
+    <button class="home-bar-btn" onclick="goTo('s-home')">🏠 Home</button>
+  </div>
   <div class="island-header">
-    <button class="island-back" onclick="goTo('s-home')">← Back to LakwatseroPH</button>
+    <button class="island-back" onclick="goTo('s-home')">← Back</button>
     <div class="island-title" id="island-group-title">LUZON</div>
     <div class="island-subtitle" id="island-group-sub">10 destinations — tap a place to see hotels</div>
   </div>
@@ -1011,6 +1089,10 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 
 <!-- ═══ HOTELS SCREEN ═══ -->
 <div id="s-hotels" class="screen">
+  <div class="home-bar" id="hotels-home-bar">
+    <div class="home-bar-user" id="hotels-bar-user">Hotels</div>
+    <button class="home-bar-btn" onclick="goTo('s-home')">🏠 Home</button>
+  </div>
   <div class="hotels-header">
     <button class="hotels-back" onclick="goTo('s-island')">← Back</button>
     <div class="hotels-dest-title" id="hotels-dest-title">BORACAY</div>
@@ -1053,6 +1135,10 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 
 <!-- ═══ WIZARD ═══ -->
 <div id="s-wizard" class="screen">
+  <div class="home-bar light" id="wiz-home-bar">
+    <div class="home-bar-user" id="wiz-bar-user" style="color:var(--earth-l);">Plan a new trip</div>
+    <button class="home-bar-btn" style="background:rgba(28,16,8,.06);border-color:rgba(28,16,8,.14);color:var(--earth-m);" onclick="goTo('s-home')">🏠 Home</button>
+  </div>
   <div class="wiz-hdr">
     <div class="wiz-prog">
       <div class="wdot active" id="wd0"></div><div class="wdot" id="wd1"></div>
@@ -1195,6 +1281,10 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 
 <!-- ═══ MAIN APP ═══ -->
 <div id="s-app" class="screen">
+  <div class="home-bar" id="app-home-bar">
+    <div class="home-bar-user" id="app-bar-user">Hey, <strong>Lakwatsero</strong> 👋</div>
+    <button class="home-bar-btn" onclick="goTo('s-home')">🏠 Home</button>
+  </div>
   <div class="app-hdr">
     <div class="app-hdr-row">
       <div>
@@ -1233,9 +1323,18 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
         <div class="bud-bar-lbls"><span class="bud-bar-lbl" id="bud-pct">42% spent</span><span class="bud-bar-lbl" id="bud-left">₱11,580 left</span></div>
       </div>
       <div class="bud-stats">
-        <div class="bud-stat"><div class="bud-stat-lbl">Per person</div><div class="bud-stat-val" id="bud-pp">₱5,000</div></div>
+        <div class="bud-stat"><div class="bud-stat-lbl">My share</div><div class="bud-stat-val" id="bud-pp">₱5,000</div></div>
         <div class="bud-stat"><div class="bud-stat-lbl">Spent</div><div class="bud-stat-val" id="bud-spent">₱8,420</div></div>
         <div class="bud-stat hi"><div class="bud-stat-lbl">Remaining</div><div class="bud-stat-val" id="bud-rem">₱11,580</div></div>
+      </div>
+      <!-- Report buttons -->
+      <div class="trip-report-row">
+        <div class="trip-report-lbl">📄 Generate report</div>
+        <div class="trip-report-btns">
+          <button class="trip-report-btn" onclick="generateTripReport('all')">Whole trip</button>
+          <button class="trip-report-btn" onclick="openDayReportPicker()">By day</button>
+          <button class="trip-report-btn" onclick="openItemReportPicker()">By expense</button>
+        </div>
       </div>
       <!-- Day filter tabs for budget -->
       <div class="budget-day-tabs" id="budget-day-tabs"></div>
@@ -1268,9 +1367,27 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       </div>
       <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:9px;">Members & Roles</div>
       <div id="members-list"></div>
+      <!-- Per-person report -->
+      <div style="margin-top:16px;">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--earth-l);margin-bottom:9px;">📄 Individual expense reports</div>
+        <div id="per-person-report-list"></div>
+      </div>
     </div>
 
   </div>
+</div>
+
+<!-- ═══ TRIP REPORT SCREEN ═══ -->
+<div id="s-trip-report" class="screen" style="background:#f5f5f0;overflow-y:auto;">
+  <div class="home-bar light">
+    <div class="home-bar-user" id="report-bar-user" style="color:var(--earth-l);">Expense Report</div>
+    <button class="home-bar-btn" style="background:rgba(28,16,8,.06);border-color:rgba(28,16,8,.14);color:var(--earth-m);" onclick="goTo('s-home')">🏠 Home</button>
+  </div>
+  <div style="padding:12px 16px;background:var(--white);border-bottom:1px solid #eee;display:flex;gap:8px;">
+    <button style="flex:0 0 auto;padding:10px 14px;background:transparent;border:1.5px solid rgba(28,16,8,.15);border-radius:var(--r-md);font-family:var(--ff-b);font-size:13px;color:var(--earth-m);cursor:pointer;" onclick="goTo('s-app')">← Back to trip</button>
+    <button style="margin-bottom:0;flex:1;width:100%;padding:14px;background:var(--green);color:var(--white);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;font-weight:700;cursor:pointer;" onclick="window.print()">🖨️ Print / Save PDF</button>
+  </div>
+  <div class="report-page" id="trip-report-content"></div>
 </div>
 
 <!-- ═══ GLASS SHEETS ═══ -->
@@ -1678,11 +1795,11 @@ function showAuthForm(mode) {
   const isSignup = mode === 'signup';
   document.getElementById('af-name-field').style.display = isSignup ? 'block' : 'none';
   document.getElementById('af-title').textContent     = isSignup ? 'CREATE ACCOUNT' : 'WELCOME BACK';
-  document.getElementById('af-sub').textContent       = isSignup ? 'Libre at walang bayad. Mag-sign up na!' : 'Biyahe tayo! Sign in to continue.';
+  document.getElementById('af-sub').textContent       = isSignup ? 'Free and takes 30 seconds!' : 'Welcome back! Sign in to continue.';
   document.getElementById('af-submit').textContent    = isSignup ? 'Create account' : 'Sign in';
   document.getElementById('af-switch').innerHTML      = isSignup
     ? 'Already have an account? <span onclick="toggleAuthForm()" style="color:var(--gold);cursor:pointer;font-weight:600;">Sign in</span>'
-    : 'Wala pang account? <span onclick="toggleAuthForm()" style="color:var(--gold);cursor:pointer;font-weight:600;">Sign up</span>';
+    : 'New here? <span onclick="toggleAuthForm()" style="color:var(--gold);cursor:pointer;font-weight:600;">Create account</span>';
   goTo('s-auth-form');
 }
 
@@ -1710,7 +1827,16 @@ function updateGreeting() {
   const el = document.getElementById('home-greeting');
   if (!el) return;
   const first = S.user ? S.user.name.split(' ')[0] : 'Lakwatsero';
-  el.innerHTML = 'Kumusta, <strong>' + first + '!</strong> 👋';
+  el.innerHTML = 'Hey, <strong>' + first + '!</strong> 👋';
+  // Refresh all home-bar user labels across screens
+  ['app-bar-user','island-bar-user','hotels-bar-user'].forEach(function(id) {
+    var b = document.getElementById(id);
+    if (b) b.innerHTML = '<strong>' + first + '</strong>';
+  });
+  var soloBar = document.getElementById('solo-bar-user');
+  if (soloBar) soloBar.innerHTML = '<strong>' + first + "</strong>'s Budget";
+  var wizBar = document.getElementById('wiz-bar-user');
+  if (wizBar) wizBar.textContent = first + "'s trip";
 }
 
 function logout() {
@@ -2314,6 +2440,7 @@ function renderMembers() {
       + '<div class="member-bal-lbl">' + (bal>=0 ? 'gets back' : 'owes') + '</div>'
       + '</div></div>';
   }).join('');
+  renderPerPersonReportList();
 }
 
 function openRoleSheet(memberId) {
@@ -2563,7 +2690,7 @@ function renderSoloExpenses() {
   var barEl = document.getElementById('solo-bud-bar');
   if (barEl) barEl.style.width = Math.min(100, Math.round(total / Math.max(total*1.3, 5000) * 100)) + '%';
   if (SOLO_EXPENSES.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:28px;color:var(--earth-l);font-size:13px;">Wala pang gastos. Mag-log ka na!</div>';
+    list.innerHTML = '<div style="text-align:center;padding:28px;color:var(--earth-l);font-size:13px;">No expenses yet — add one below! 💸</div>';
     return;
   }
   list.innerHTML = SOLO_EXPENSES.map(function(e) {
@@ -2683,7 +2810,7 @@ function saveSoloExpense() {
 
 /* ─── REPORT GENERATOR ─── */
 function generateReport() {
-  if (SOLO_EXPENSES.length === 0) { alert('Wala pang expenses! Mag-log muna ng gastos.'); return; }
+  if (SOLO_EXPENSES.length === 0) { alert('No expenses yet! Add some expenses first.'); return; }
   const total = SOLO_EXPENSES.reduce(function(s,e){ return s+e.total; }, 0);
   const now   = new Date().toLocaleDateString('en-PH', {year:'numeric', month:'long', day:'numeric'});
 
@@ -2735,8 +2862,220 @@ function generateReport() {
     + '<div class="report-total-row"><span>Grand Total</span><span>₱' + total.toLocaleString() + '</span></div>'
     + '<div class="report-section-title">By Category</div>' + catRows
     + '<div class="report-section-title">Who Owes What</div>' + balRows
-    + '<div class="report-footer">Generated by LakwatseroPH · Saan tayo? 🇵🇭</div>';
+    + '<div class="report-footer">Generated by LakwatseroPH 🇵🇭</div>';
   goTo('s-report');
+}
+
+/* ─── TRIP EXPENSE REPORTS ─── */
+
+function generateTripReport(mode, dayIndex, expenseId, personName) {
+  var now = new Date().toLocaleDateString('en-PH', {year:'numeric', month:'long', day:'numeric'});
+  var filteredExp, reportTitle, reportSub;
+  if (mode === 'all') {
+    filteredExp = EXPENSES;
+    reportTitle = S.dest + ' Trip — Full Expense Report';
+    reportSub   = S.days + ' days · ' + S.group + ' people · ' + S.budgetRange + '/person';
+  } else if (mode === 'day') {
+    filteredExp = EXPENSES.filter(function(e){ return e.day === dayIndex; });
+    var dayLabel = dayIndex === -1 ? 'Pre-trip expenses' : (S.tripDays[dayIndex] ? S.tripDays[dayIndex].label : 'Day '+(dayIndex+1));
+    reportTitle = S.dest + ' Trip — ' + dayLabel;
+    reportSub   = 'Expenses for ' + dayLabel;
+  } else if (mode === 'item') {
+    var single = EXPENSES.find(function(e){ return e.id === expenseId; });
+    filteredExp = single ? [single] : [];
+    reportTitle = S.dest + ' Trip — ' + (single ? single.title : 'Expense') + ' breakdown';
+    reportSub   = single ? (single.icon + ' ' + single.type) : '';
+  } else if (mode === 'person') {
+    filteredExp = EXPENSES.filter(function(e){ return (e.splits||[]).some(function(s){ return s.name === personName; }); });
+    reportTitle = personName + "'s Expenses";
+    reportSub   = S.dest + ' Trip — Personal breakdown';
+  }
+  var grandTotal = filteredExp.reduce(function(s,e){ return s+e.total; }, 0);
+  // Full balances
+  var allNames = {};
+  filteredExp.forEach(function(e){
+    (e.splits||[]).forEach(function(s){ allNames[s.name]=true; });
+    if (e.paidBy) allNames[e.paidBy]=true;
+  });
+  var balances = {};
+  Object.keys(allNames).forEach(function(n){ balances[n]=0; });
+  filteredExp.forEach(function(e){
+    (e.splits||[]).forEach(function(s){ if(balances[s.name]!==undefined) balances[s.name]-=s.amount; });
+    if(balances[e.paidBy]!==undefined) balances[e.paidBy]+=e.total;
+  });
+  // Category totals
+  var catTotals = {};
+  filteredExp.forEach(function(e){ catTotals[e.type]=(catTotals[e.type]||0)+e.total; });
+  // Expense rows
+  var expRows = filteredExp.length===0
+    ? '<div style="text-align:center;padding:24px;color:#aaa;font-size:13px;">No expenses in this selection.</div>'
+    : filteredExp.map(function(e) {
+        var splits=e.splits||[];
+        var isCustom=e.splitMode==='custom';
+        var splitStr=isCustom
+          ? splits.map(function(s){ return s.name+' ₱'+s.amount.toLocaleString(); }).join(' · ')
+          : (splits.length>0 ? splits.map(function(s){ return s.name; }).join(', ')+'  (₱'+splits[0].amount.toLocaleString()+' each)' : '');
+        var dayLbl=e.day===-1?'Pre-trip':(S.tripDays[e.day]?S.tripDays[e.day].label:'');
+        var recEl=e.receipt?'<div><img src="'+e.receipt+'" class="report-receipt" onclick="window.open(this.src,\'_blank\')"/></div>':'';
+        var personShareEl='';
+        if(mode==='person'){
+          var sp=splits.find(function(s){ return s.name===personName; });
+          if(sp) personShareEl='<div style="font-size:11px;font-weight:700;color:#1A4FA0;margin-top:3px;">'
+            +personName+"'s share: ₱"+sp.amount.toLocaleString()
+            +(e.paidBy===personName?' <span style="color:#2D6A4F;">(they paid)</span>':'')
+            +'</div>';
+        }
+        return '<div class="report-item">'
+          +'<div class="report-item-left">'
+          +'<div class="report-item-name">'+e.icon+' '+e.title+'</div>'
+          +'<div class="report-item-meta">'+e.type+(dayLbl?' · '+dayLbl:'')+' · Paid by '+e.paidBy+'</div>'
+          +'<div class="report-item-meta" style="margin-top:1px;color:#777;">'+splitStr+'</div>'
+          +personShareEl+recEl+'</div>'
+          +'<div><div class="report-item-amount">₱'+e.total.toLocaleString()+'</div></div></div>';
+      }).join('');
+  // Balance rows with math breakdown
+  var namesToShow = mode==='person' ? [personName] : Object.keys(balances);
+  var balRows = namesToShow.map(function(name) {
+    var b = balances[name]||0;
+    var paid = filteredExp.reduce(function(s,e){ return s+(e.paidBy===name?e.total:0); },0);
+    var owes = filteredExp.reduce(function(s,e){ var sp=(e.splits||[]).find(function(x){ return x.name===name; }); return s+(sp?sp.amount:0); },0);
+    var mathDetail='';
+    if(mode==='person'&&filteredExp.length>0){
+      var rows=filteredExp.map(function(e){
+        var sp=(e.splits||[]).find(function(x){ return x.name===name; });
+        if(!sp) return '';
+        var isPayer=e.paidBy===name;
+        var net=isPayer?(e.total-sp.amount):(-sp.amount);
+        return '<tr>'
+          +'<td style="padding:4px 8px 4px 0;font-size:11px;color:#555;">'+e.icon+' '+e.title+'</td>'
+          +'<td style="padding:4px 8px;font-size:11px;text-align:center;">'+(isPayer?'<span style="color:#2D6A4F;">paid ₱'+e.total.toLocaleString()+'</span>':'—')+'</td>'
+          +'<td style="padding:4px 0 4px 8px;font-size:11px;color:#C0392B;text-align:right;">−₱'+sp.amount.toLocaleString()+' share</td>'
+          +'<td style="padding:4px 0 4px 12px;font-size:11px;font-weight:600;text-align:right;color:'+(net>=0?'#2D6A4F':'#C0392B')+';">'+(net>=0?'+':'')+'₱'+Math.abs(net).toLocaleString()+'</td>'
+          +'</tr>';
+      }).filter(Boolean).join('');
+      mathDetail='<table style="width:100%;border-collapse:collapse;margin:8px 0 4px;">'
+        +'<tr><th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:left;padding:0 8px 6px 0;" colspan="2">Expense</th>'
+        +'<th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:right;padding:0 0 6px 8px;">Share</th>'
+        +'<th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:right;padding:0 0 6px 12px;">Net</th></tr>'
+        +rows
+        +'<tr><td colspan="4"><div style="height:1px;background:#ddd;margin:4px 0;"></div></td></tr>'
+        +'<tr><td colspan="2" style="font-size:11px;color:#555;padding:4px 0;">Total paid out</td>'
+        +'<td colspan="2" style="font-size:11px;font-weight:700;text-align:right;color:#2D6A4F;">+₱'+paid.toLocaleString()+'</td></tr>'
+        +'<tr><td colspan="2" style="font-size:11px;color:#555;padding:2px 0 6px;">Total share owed</td>'
+        +'<td colspan="2" style="font-size:11px;font-weight:700;text-align:right;color:#C0392B;">−₱'+owes.toLocaleString()+'</td></tr>'
+        +'</table>';
+    }
+    return '<div style="padding:12px 0;border-bottom:1px solid #eee;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
+      +'<div><div style="font-weight:600;font-size:14px;color:#222;">'+name+'</div>'
+      +(mode!=='person'?'<div style="font-size:11px;color:#888;margin-top:1px;">Paid: ₱'+paid.toLocaleString()+' · Share: ₱'+owes.toLocaleString()+'</div>':'')
+      +'</div>'
+      +'<div style="text-align:right;">'
+      +'<div style="font-size:18px;font-weight:700;color:'+(b>=0?'#2D6A4F':'#C0392B')+';">'+(b>=0?'+':'')+'₱'+Math.abs(b).toLocaleString()+'</div>'
+      +'<div style="font-size:11px;color:#888;">'+(b>=0?'← gets back':'→ owes')+'</div>'
+      +'</div></div>'
+      +mathDetail+'</div>';
+  }).join('');
+  // Settlement suggestion
+  var settlementNote='';
+  if(mode!=='item'&&Object.keys(balances).length>1){
+    var debtors=Object.keys(balances).filter(function(n){ return balances[n]<-0.5; });
+    var creditors=Object.keys(balances).filter(function(n){ return balances[n]>0.5; });
+    if(debtors.length>0&&creditors.length>0){
+      var lines=debtors.map(function(d){
+        return creditors.map(function(c){
+          var settle=Math.min(Math.abs(balances[d]),balances[c]);
+          if(settle<1) return '';
+          return '<div style="font-size:12px;color:#333;padding:6px 0;border-bottom:1px solid #eee;">'
+            +'<strong>'+d+'</strong> pays <strong>'+c+'</strong> — <span style="color:#C0392B;font-weight:700;">₱'+Math.round(settle).toLocaleString()+'</span></div>';
+        }).join('');
+      }).join('');
+      if(lines.trim()){
+        settlementNote='<div class="report-section-title">How to Settle Up</div>'
+          +'<div style="background:#fff8f0;border:1px solid #f4c07a;border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:11px;color:#888;">Transfer these amounts to balance everything out:</div>'
+          +lines;
+      }
+    }
+  }
+  // Category rows
+  var catRows = mode==='item' ? '' :
+    '<div class="report-section-title">By Category</div>'
+    +Object.entries(catTotals).map(function(entry){
+      return '<div class="report-item"><div class="report-item-left"><div class="report-item-name">'+entry[0]+'</div></div>'
+        +'<div class="report-item-amount">₱'+entry[1].toLocaleString()+'</div></div>';
+    }).join('');
+  document.getElementById('trip-report-content').innerHTML=
+    '<div class="report-header">'
+    +'<div class="report-brand">LAKWAT<span>SERO</span>PH</div>'
+    +'<div class="report-title">'+reportTitle+'</div>'
+    +'<div class="report-date">'+reportSub+' · Generated: '+now+'</div></div>'
+    +'<div class="report-section-title">Expenses</div>'
+    +expRows
+    +(filteredExp.length>0?'<div class="report-total-row"><span>Total</span><span>₱'+grandTotal.toLocaleString()+'</span></div>':'')
+    +catRows
+    +(namesToShow.length>0&&mode!=='item'?'<div class="report-section-title">'+(mode==='person'?'Balance Breakdown':'Who Owes What')+'</div>'+balRows:'')
+    +settlementNote
+    +'<div class="report-footer">Generated by LakwatseroPH 🇵🇭</div>';
+  goTo('s-trip-report');
+}
+
+function openDayReportPicker() {
+  var body = document.getElementById('day-report-body');
+  // Pre-trip + each day
+  var items = [{label:'Pre-trip expenses', day:-1}];
+  S.tripDays.forEach(function(d, i){ items.push({label:d.label, day:i}); });
+  items.push({label:'Whole trip (all days)', day:'all'});
+  body.innerHTML = items.map(function(item) {
+    var expCount = item.day === 'all'
+      ? EXPENSES.length
+      : EXPENSES.filter(function(e){ return e.day === item.day; }).length;
+    var onclick = item.day === 'all'
+      ? "closeSheet('sh-day-report');generateTripReport('all')"
+      : "closeSheet('sh-day-report');generateTripReport('day'," + item.day + ")";
+    return '<div class="dest-item" onclick="' + onclick + '">'
+      + '<div class="dest-item-left">'
+      + '<div class="dest-item-icon">📅</div>'
+      + '<div><div class="dest-item-name">' + item.label + '</div>'
+      + '<div class="dest-item-region">' + expCount + ' expense' + (expCount!==1?'s':'') + '</div></div></div>'
+      + '<div class="dest-item-arrow">›</div></div>';
+  }).join('');
+  openSheet('sh-day-report');
+}
+
+function openItemReportPicker() {
+  var body = document.getElementById('item-report-body');
+  if (EXPENSES.length === 0) {
+    body.innerHTML = '<div style="text-align:center;padding:32px;color:rgba(255,255,255,.35);font-size:13px;">No expenses logged yet.</div>';
+  } else {
+    body.innerHTML = EXPENSES.map(function(e) {
+      var dayLbl = e.day === -1 ? 'Pre-trip' : (S.tripDays[e.day] ? S.tripDays[e.day].label : 'Day ?');
+      return '<div class="dest-item" onclick="closeSheet(\'sh-item-report\');generateTripReport(\'item\',-1,\'' + e.id + '\')">'
+        + '<div class="dest-item-left">'
+        + '<div class="dest-item-icon">' + e.icon + '</div>'
+        + '<div><div class="dest-item-name">' + e.title + '</div>'
+        + '<div class="dest-item-region">' + dayLbl + ' · ₱' + e.total.toLocaleString() + ' · ' + e.splits.length + ' people</div></div></div>'
+        + '<div class="dest-item-arrow">›</div></div>';
+    }).join('');
+  }
+  openSheet('sh-item-report');
+}
+
+function renderPerPersonReportList() {
+  var el = document.getElementById('per-person-report-list');
+  if (!el) return;
+  el.innerHTML = MEMBERS.map(function(m) {
+    var initials = m.name.split(' ').map(function(n){ return n[0]; }).join('').slice(0,2).toUpperCase();
+    var myTotal = EXPENSES.reduce(function(s,e){
+      var sp = (e.splits||[]).find(function(x){ return x.name === m.name; });
+      return s + (sp ? sp.amount : 0);
+    }, 0);
+    return '<div class="person-report-btn" onclick="generateTripReport(\'person\',-1,null,\'' + m.name + '\')">'
+      + '<div class="prb-left">'
+      + '<div class="prb-av" style="background:' + m.bg + ';color:' + m.fg + '">' + initials + '</div>'
+      + '<div><div class="prb-name">' + m.name + '</div>'
+      + '<div class="prb-share">Total share: ₱' + myTotal.toLocaleString() + '</div></div></div>'
+      + '<div class="prb-arrow">📄 →</div></div>';
+  }).join('');
 }
 
 /* ─── HELPERS ─── */
@@ -2756,6 +3095,23 @@ function catAccent(c) {
   const m = {beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'};
   return m[c] || '#888';
 }
-</script>
+</script><!-- Day report picker -->
+<div class="overlay" id="sh-day-report" onclick="closeSheetOut(event,'sh-day-report')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-hdr"><div class="sheet-title">Report for which day?</div><button class="sheet-close" onclick="closeSheet('sh-day-report')">✕</button></div>
+    <div class="sheet-body" id="day-report-body"></div>
+  </div>
+</div>
+
+<!-- Item report picker -->
+<div class="overlay" id="sh-item-report" onclick="closeSheetOut(event,'sh-item-report')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-hdr"><div class="sheet-title">Report for which expense?</div><button class="sheet-close" onclick="closeSheet('sh-item-report')">✕</button></div>
+    <div class="sheet-body" id="item-report-body"></div>
+  </div>
+</div>
+
 </body>
 </html>
