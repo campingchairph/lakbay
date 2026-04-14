@@ -282,34 +282,37 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .wdot.done{background:var(--gold);}.wdot.active{background:var(--white);}
 .wiz-h{font-family:var(--ff-h);font-size:23px;font-weight:700;color:var(--white);}
 .wiz-s{font-size:12px;color:rgba(255,255,255,.55);margin-top:2px;}
-.wiz-body{flex:1;overflow-y:auto;padding:22px 20px 8px;}
+/* When region picker is active, body fills and footer hides */
+.wiz-body{flex:1;overflow-y:auto;padding:16px 16px 8px;}
+.wiz-body.region-mode{overflow:hidden;padding:12px 14px 0;}
 .wiz-panel{display:none;}.wiz-panel.active{display:block;}
 .wiz-foot{padding:12px 20px 28px;display:flex;gap:8px;}
 .btn-wb{padding:12px 16px;background:transparent;border:1.5px solid rgba(28,16,8,.14);border-radius:var(--r-md);font-family:var(--ff-b);font-size:13px;color:var(--earth-m);cursor:pointer;}
 .btn-wn{flex:1;padding:13px;background:var(--red);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;font-weight:600;color:var(--white);cursor:pointer;}
 .btn-wn:hover{background:var(--red-d);}
 
-/* Wizard island group cards */
+/* Wizard island group cards — column layout filling screen */
 .wiz-island-row{
-  display:flex;gap:8px;
-  max-width:400px;margin:0 auto;
+  display:flex;flex-direction:column;gap:10px;
+  height:calc(100vh - 200px);/* fill below wizard header + home bar */
 }
 .wiz-icard{
   flex:1;border-radius:var(--r-lg);overflow:hidden;cursor:pointer;
-  transition:transform .15s;position:relative;aspect-ratio:1/1.45;min-width:0;
+  transition:transform .15s;position:relative;min-height:0;
+  /* no fixed aspect-ratio — grow to fill */
 }
-.wiz-icard:active{transform:scale(.96);}
+.wiz-icard:active{transform:scale(.98);}
 .wiz-icard-bg{position:absolute;inset:0;}
 .wiz-icard-svg{position:absolute;bottom:0;left:0;right:0;height:68%;opacity:.3;}
 .wiz-icard-overlay{position:absolute;inset:0;}
 .wiz-icard-content{
-  position:absolute;inset:0;padding:9px 9px 11px;
+  position:absolute;inset:0;padding:12px 14px 14px;
   display:flex;flex-direction:column;justify-content:space-between;
 }
-.wiz-icard-label{font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);}
-.wiz-icard-name{font-family:var(--ff-d);font-size:clamp(16px,4.5vw,22px);letter-spacing:.04em;color:var(--white);line-height:1;margin-top:2px;}
-.wiz-icard-count{font-size:clamp(14px,3.5vw,18px);font-weight:700;color:var(--white);line-height:1.1;}
-.wiz-icard-sub{font-size:8px;color:rgba(255,255,255,.48);font-weight:500;}
+.wiz-icard-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);}
+.wiz-icard-name{font-family:var(--ff-d);font-size:clamp(22px,6vw,32px);letter-spacing:.04em;color:var(--white);line-height:1;margin-top:2px;}
+.wiz-icard-count{font-size:clamp(16px,4vw,22px);font-weight:700;color:var(--white);line-height:1.1;}
+.wiz-icard-sub{font-size:9px;color:rgba(255,255,255,.5);font-weight:500;}
 /* Region back button */
 .wiz-region-back{
   display:inline-flex;align-items:center;gap:5px;
@@ -1764,6 +1767,21 @@ let MEMBERS = [
   {id:'m3',name:'Maria', role:'guest',     bg:'#C0392B',fg:'#FDEAEA'},
   {id:'m4',name:'Carlo', role:'guest',     bg:'#F4A800',fg:'#FEF3D0'}
 ];
+/* Keep MEMBERS[0].name in sync with the logged-in user */
+function syncMyName() {
+  var n = myName();
+  var me = MEMBERS.find(function(m){ return m.id === 'm1'; });
+  if (!me) return;
+  var oldName = me.name;
+  if (oldName === n) return;
+  me.name = n;
+  // Update any sample expense splits that referenced old name
+  EXPENSES.forEach(function(e){
+    (e.splits||[]).forEach(function(s){ if(s.name===oldName) s.name=n; });
+    if(e.paidBy===oldName) e.paidBy=n;
+  });
+  SOLO_MEMBERS = SOLO_MEMBERS.map(function(m){ return m==='Me'?n:m; });
+}
 
 /* ─── STATE ─── */
 const S = {
@@ -1775,6 +1793,12 @@ const S = {
   roleMemberId:null,
   budgetDayFilter:-2
 };
+
+
+/* ─── USER NAME HELPER ─── */
+function myName() {
+  return S.user && S.user.name ? S.user.name.split(' ')[0] : 'You';
+}
 
 /* ─── SOLO BUDGET STATE ─── */
 let SOLO_EXPENSES = [];
@@ -1907,12 +1931,14 @@ function submitAuthForm() {
   const name = nameVal || email.split('@')[0] || 'Lakwatsero';
   if (!email) { document.getElementById('af-email').focus(); return; }
   S.user = { name, email };
+  syncMyName();
   updateGreeting();
   goTo('s-home');
 }
 
 function enterAsGuest() {
   S.user = { name:'Lakwatsero', email:'', isGuest:true };
+  syncMyName();
   updateGreeting();
   goTo('s-home');
 }
@@ -2013,11 +2039,13 @@ function wizPickRegion(regionKey) {
   // Pre-select first
   var first = grid.querySelector('.dc');
   if (first) pickDest(first);
+  updateWizFooter();
 }
 
 function wizBackToRegion() {
   document.getElementById('wiz-region-pick').style.display = 'block';
   document.getElementById('wiz-dest-pick').style.display = 'none';
+  updateWizFooter();
 }
 
 /* ─── WIZARD ─── */
@@ -2048,10 +2076,31 @@ function renderWiz() {
   });
   document.getElementById('wiz-h').textContent = WIZ[s][0];
   document.getElementById('wiz-s').textContent = WIZ[s][1];
-  // Back button: on step 0 hide entirely, but if we're in dest sub-step let wizBackToRegion handle it
   document.getElementById('wiz-back').classList.toggle('hidden', s === 0);
   document.getElementById('wiz-next').textContent = s === 4 ? '🚀 Start Planning' : 'Continue →';
+  // Hide Continue when on step 0 AND still showing region picker (not dest list yet)
+  updateWizFooter();
   if (s === 4) buildReview();
+}
+
+function updateWizFooter() {
+  var nextBtn  = document.getElementById('wiz-next');
+  var wizFoot  = document.querySelector('.wiz-foot');
+  var wizBody  = document.querySelector('.wiz-body');
+  if (!nextBtn) return;
+  var onRegionPicker = S.wizStep === 0 &&
+    document.getElementById('wiz-region-pick') &&
+    document.getElementById('wiz-region-pick').style.display !== 'none';
+
+  if (onRegionPicker) {
+    nextBtn.style.display = 'none';
+    if (wizFoot) wizFoot.style.display = 'none';
+    if (wizBody) { wizBody.classList.add('region-mode'); }
+  } else {
+    nextBtn.style.display = '';
+    if (wizFoot) wizFoot.style.display = '';
+    if (wizBody) { wizBody.classList.remove('region-mode'); }
+  }
 }
 
 function wizNext() {
@@ -2158,6 +2207,7 @@ function startGen() {
 
 /* ─── BUILD TRIP UI ─── */
 function buildTripUI() {
+  syncMyName();
   document.getElementById('app-dest').textContent = S.dest.toUpperCase();
   document.getElementById('app-dtag').textContent = S.days + ' days';
   document.getElementById('app-gtag').textContent = S.group + ' people';
@@ -2315,7 +2365,7 @@ function renderExpenses() {
       if (isCustom) {
         splitSummary = '<div class="exp-split-breakdown">'
           + splits.map(function(s){
-              var isMe = s.name === 'You';
+              var isMe = s.name === myName() || s.name === 'You';
               return '<span class="exp-split-chip' + (isMe ? ' me' : '') + '">' + s.name + ' ₱' + s.amount.toLocaleString() + '</span>';
             }).join('')
           + '</div>';
@@ -2327,7 +2377,7 @@ function renderExpenses() {
       var ppLine = '';
       if (splits.length > 0) {
         if (isCustom && myShare) {
-          ppLine = 'You: ₱' + myShare.amount.toLocaleString();
+          ppLine = myName() + ': ₱' + myShare.amount.toLocaleString();
         } else if (!isCustom && splits.length > 0) {
           ppLine = '₱' + splits[0].amount.toLocaleString() + '/person';
         }
@@ -2361,7 +2411,7 @@ function renderBudgetStats() {
   const pct    = Math.min(100, Math.round(total/budget*100));
   const left   = budget - total;
   const myTotal = EXPENSES.reduce(function(s,e){
-    var sp = (e.splits||[]).find(function(x){ return x.name==='You'; });
+    var sp = (e.splits||[]).find(function(x){ return x.name===myName()||x.name==='You'; });
     return s + (sp ? sp.amount : 0);
   }, 0);
   document.getElementById('bud-total').textContent  = '₱' + budget.toLocaleString();
@@ -2677,10 +2727,39 @@ function selectRole(role) {
 function initMap() {
   if (S.mapInit) return;
   S.mapInit = true;
-  const CENTERS = {boracay:[11.9674,121.9213],palawan:[10.1683,118.4107],cebu:[10.3157,123.8854],siargao:[9.8482,126.0458],batanes:[20.448,121.97],vigan:[17.5747,120.387],banaue:[16.9113,121.0587],manila:[14.5995,120.984]};
-  const center = CENTERS[S.destKey] || CENTERS.boracay;
+  const CENTERS = {
+    boracay:[11.9674,121.9213],
+    palawan:[10.1917,119.0067],
+    cebu:[10.3157,123.8854],
+    siargao:[9.8482,126.0458],
+    batanes:[20.448,121.97],
+    vigan:[17.5747,120.387],
+    banaue:[16.9113,121.0587],
+    manila:[14.5995,120.984],
+    baguio:[16.4023,120.596],
+    sagada:[17.085,120.905],
+    batangas:[13.7565,121.0583],
+    launion:[16.619,120.316],
+    ilocosNorte:[18.198,120.594],
+    subic:[14.824,120.267],
+    marinduque:[13.368,122.065],
+    bohol:[9.6500,124.1532],
+    iloilo:[10.7202,122.5621],
+    bacolod:[10.6765,122.9562],
+    dumaguete:[9.3068,123.3054],
+    siquijor:[9.2,123.587],
+    davao:[7.0707,125.6087],
+    camiguin:[9.176,124.73],
+    cdo:[8.4542,124.6319],
+    bukidnon:[8.032,125.09],
+    zamboanga:[6.9214,122.079],
+    surigao:[9.7872,125.4961],
+    gensan:[6.1128,125.1717]
+  };
+  const center = CENTERS[S.destKey] || CENTERS.manila;
+  var zoom = {batanes:11,banaue:12,sagada:12,bukidnon:11,marinduque:11,ilocosNorte:11,batangas:12,launion:12}[S.destKey] || 13;
   document.getElementById('map-el').style.height = (window.innerHeight - 200) + 'px';
-  const map = L.map('map-el').setView(center, 14);
+  const map = L.map('map-el').setView(center, zoom);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© <a href="https://www.openstreetmap.org/copyright">OSM</a>', maxZoom:19}).addTo(map);
   S.leafMap = map;
   updateMapPins();
