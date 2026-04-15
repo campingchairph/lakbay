@@ -284,47 +284,81 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .wiz-s{font-size:12px;color:rgba(255,255,255,.55);margin-top:2px;}
 /* When region picker is active, body fills and footer hides */
 .wiz-body{flex:1;overflow-y:auto;padding:16px 16px 8px;}
-.wiz-body.region-mode{overflow:hidden;padding:12px 14px 0;}
 .wiz-panel{display:none;}.wiz-panel.active{display:block;}
 .wiz-foot{padding:12px 20px 28px;display:flex;gap:8px;}
 .btn-wb{padding:12px 16px;background:transparent;border:1.5px solid rgba(28,16,8,.14);border-radius:var(--r-md);font-family:var(--ff-b);font-size:13px;color:var(--earth-m);cursor:pointer;}
 .btn-wn{flex:1;padding:13px;background:var(--red);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:14px;font-weight:600;color:var(--white);cursor:pointer;}
 .btn-wn:hover{background:var(--red-d);}
 
-/* Wizard island group cards — column layout filling screen */
-.wiz-island-row{
-  display:flex;flex-direction:column;gap:10px;
-  height:calc(100vh - 200px);/* fill below wizard header + home bar */
+/* Search box */
+.dest-search-wrap{
+  position:relative;margin-bottom:10px;
 }
-.wiz-icard{
-  flex:1;border-radius:var(--r-lg);overflow:hidden;cursor:pointer;
-  transition:transform .15s;position:relative;min-height:0;
-  /* no fixed aspect-ratio — grow to fill */
+.dest-search-icon{
+  position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;
 }
-.wiz-icard:active{transform:scale(.98);}
-.wiz-icard-bg{position:absolute;inset:0;}
-.wiz-icard-svg{position:absolute;bottom:0;left:0;right:0;height:68%;opacity:.3;}
-.wiz-icard-overlay{position:absolute;inset:0;}
-.wiz-icard-content{
-  position:absolute;inset:0;padding:12px 14px 14px;
-  display:flex;flex-direction:column;justify-content:space-between;
+.dest-search-input{
+  width:100%;padding:10px 12px 10px 34px;
+  background:var(--white);border:1.5px solid rgba(28,16,8,.12);
+  border-radius:var(--r-pill);font-family:var(--ff-b);font-size:13px;
+  color:var(--earth);outline:none;transition:border-color .2s;
 }
-.wiz-icard-label{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55);}
-.wiz-icard-name{font-family:var(--ff-d);font-size:clamp(22px,6vw,32px);letter-spacing:.04em;color:var(--white);line-height:1;margin-top:2px;}
-.wiz-icard-count{font-size:clamp(16px,4vw,22px);font-weight:700;color:var(--white);line-height:1.1;}
-.wiz-icard-sub{font-size:9px;color:rgba(255,255,255,.5);font-weight:500;}
-/* Region back button */
-.wiz-region-back{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:12px;color:var(--red);cursor:pointer;margin-bottom:10px;
-  font-weight:600;text-decoration:none;
+.dest-search-input:focus{border-color:var(--red);}
+.dest-search-input::placeholder{color:rgba(28,16,8,.3);}
+
+/* Vibe filter chip row */
+.vibe-filters{
+  display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
 }
-.wiz-region-back:hover{color:var(--red-d);}
-.wiz-region-label{
-  font-family:var(--ff-d);font-size:28px;letter-spacing:.04em;color:var(--earth);
-  margin-bottom:12px;line-height:1;
-  display:flex;align-items:center;gap:8px;
+.vibe-filters::-webkit-scrollbar{display:none;}
+.vibe-chip{
+  flex-shrink:0;padding:6px 12px;border-radius:var(--r-pill);
+  font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;
+  background:rgba(28,16,8,.06);border:1.5px solid rgba(28,16,8,.1);
+  color:var(--earth-m);white-space:nowrap;
 }
+.vibe-chip.active{
+  background:var(--red);border-color:var(--red);color:var(--white);
+}
+
+/* 3-column destination grid */
+.dest-grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+.dest-no-results{
+  text-align:center;padding:32px 20px;
+  font-size:13px;color:var(--earth-l);line-height:1.6;
+}
+
+/* Destination card — same design, smaller for 3-col */
+.dc{
+  position:relative;border-radius:var(--r-md);overflow:hidden;cursor:pointer;
+  border:2px solid transparent;transition:border-color .15s,transform .1s;
+  aspect-ratio:2/3;
+}
+.dc:active{transform:scale(.96);}
+.dc.sel{border-color:var(--gold);}
+.dc-photo{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+}
+.dc-grad{position:absolute;inset:0;}
+.dc-chk{
+  position:absolute;top:5px;right:5px;
+  background:var(--gold);color:var(--earth);
+  font-size:8px;font-weight:700;padding:2px 6px;
+  border-radius:var(--r-pill);display:none;
+}
+.dc.sel .dc-chk{display:block;}
+.dc-lbl{position:absolute;bottom:7px;left:8px;right:8px;}
+.dc-name{font-family:var(--ff-h);font-size:12px;font-weight:700;color:var(--white);line-height:1.2;}
+.dc-reg{font-size:8px;color:rgba(255,255,255,.55);margin-top:1px;}
+
+/* Wiz body scrolls freely now — no region mode needed */
+.wiz-body{flex:1;overflow-y:auto;padding:14px 14px 8px;}
 /* Destination hero on vibe step */
 .wiz-dest-hero{
   position:relative;height:140px;border-radius:var(--r-lg);overflow:hidden;
@@ -357,8 +391,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;
 }
 
-/* Dest grid — with real photos under gradient */
-.dest-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .dc{
   border-radius:var(--r-md);overflow:hidden;border:2.5px solid transparent;
   cursor:pointer;transition:all .2s;position:relative;aspect-ratio:4/3;
@@ -1217,70 +1249,37 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   </div>
   <div class="wiz-body">
 
-    <!-- STEP 0: Region picker → Destination list -->
+    <!-- STEP 0: Search + vibe filters + flat 3-col destination grid -->
     <div class="wiz-panel active" id="wp0">
 
-      <!-- Sub-step 0a: Pick island group -->
-      <div id="wiz-region-pick">
-        <div style="font-size:12px;color:var(--earth-l);margin-bottom:12px;">Which part of the Philippines?</div>
-        <div class="wiz-island-row">
-
-          <!-- LUZON — RED -->
-          <div class="wiz-icard" onclick="wizPickRegion('luzon')">
-            <div class="wiz-icard-bg" style="background:linear-gradient(170deg,#7b0d0d 0%,#c0392b 45%,#e74c3c 100%);"></div>
-            <svg class="wiz-icard-svg" viewBox="0 0 100 130" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.45)">
-              <path d="M50,5 Q58,8 64,14 Q70,22 68,30 Q72,36 76,40 Q80,48 78,56 Q82,62 80,70 Q76,78 70,82 Q66,88 62,94 Q56,100 50,104 Q44,100 38,94 Q32,88 30,82 Q24,78 20,70 Q18,62 22,56 Q20,48 24,40 Q28,36 32,30 Q30,22 36,14 Q42,8 50,5Z"/>
-              <ellipse cx="52" cy="0" rx="4" ry="3"/><ellipse cx="48" cy="3" rx="3" ry="2"/>
-              <path d="M18,72 Q12,80 8,90 Q6,98 8,106 Q10,110 12,108 Q16,100 18,90 Q20,82 18,72Z"/>
-            </svg>
-            <div class="wiz-icard-overlay" style="background:linear-gradient(to top,rgba(100,5,5,.88) 0%,rgba(150,20,20,.3) 55%,transparent 100%);"></div>
-            <div class="wiz-icard-content">
-              <div><div class="wiz-icard-label">Explore</div><div class="wiz-icard-name">LUZON</div></div>
-              <div><div class="wiz-icard-count">10</div><div class="wiz-icard-sub">destinations</div></div>
-            </div>
-          </div>
-
-          <!-- VISAYAS — GOLD -->
-          <div class="wiz-icard" onclick="wizPickRegion('visayas')">
-            <div class="wiz-icard-bg" style="background:linear-gradient(170deg,#6b4800 0%,#c17f00 45%,#f4a800 100%);"></div>
-            <svg class="wiz-icard-svg" viewBox="0 0 120 100" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.45)">
-              <path d="M80,10 Q90,14 92,22 Q94,30 90,38 Q86,44 80,46 Q74,48 70,44 Q66,38 68,30 Q70,20 80,10Z"/>
-              <path d="M78,46 Q80,54 76,62 Q72,68 70,64 Q68,58 70,50 Q74,46 78,46Z"/>
-              <path d="M54,30 Q58,34 58,42 Q58,52 56,60 Q54,66 50,66 Q46,66 44,60 Q42,52 42,42 Q42,34 46,30 Q50,26 54,30Z"/>
-              <path d="M30,40 Q36,44 36,54 Q34,62 30,66 Q26,68 22,64 Q18,58 20,48 Q22,40 28,38 Q30,38 30,40Z"/>
-              <path d="M20,14 Q30,10 38,14 Q44,20 40,28 Q34,32 26,30 Q18,28 16,20 Q16,16 20,14Z"/>
-              <path d="M62,70 Q68,70 70,76 Q70,82 64,84 Q58,84 56,78 Q56,72 62,70Z"/>
-            </svg>
-            <div class="wiz-icard-overlay" style="background:linear-gradient(to top,rgba(80,50,0,.9) 0%,rgba(120,80,0,.3) 55%,transparent 100%);"></div>
-            <div class="wiz-icard-content">
-              <div><div class="wiz-icard-label">Explore</div><div class="wiz-icard-name">VISAYAS</div></div>
-              <div><div class="wiz-icard-count">8</div><div class="wiz-icard-sub">destinations</div></div>
-            </div>
-          </div>
-
-          <!-- MINDANAO — BLUE -->
-          <div class="wiz-icard" onclick="wizPickRegion('mindanao')">
-            <div class="wiz-icard-bg" style="background:linear-gradient(170deg,#05285e 0%,#1a4fa0 45%,#2980b9 100%);"></div>
-            <svg class="wiz-icard-svg" viewBox="0 0 120 110" preserveAspectRatio="xMidYMid meet" fill="rgba(255,255,255,0.45)">
-              <path d="M60,8 Q72,10 80,16 Q88,22 92,32 Q96,42 94,52 Q98,60 96,70 Q92,78 84,84 Q76,90 66,92 Q56,94 46,90 Q36,86 28,78 Q20,70 18,60 Q14,52 16,42 Q18,32 26,24 Q34,16 44,10 Q52,6 60,8Z"/>
-              <ellipse cx="70" cy="3" rx="5" ry="3.5"/><ellipse cx="30" cy="98" rx="7" ry="4"/><ellipse cx="100" cy="28" rx="6" ry="4"/>
-            </svg>
-            <div class="wiz-icard-overlay" style="background:linear-gradient(to top,rgba(5,20,70,.9) 0%,rgba(10,40,100,.3) 55%,transparent 100%);"></div>
-            <div class="wiz-icard-content">
-              <div><div class="wiz-icard-label">Explore</div><div class="wiz-icard-name">MINDANAO</div></div>
-              <div><div class="wiz-icard-count">8</div><div class="wiz-icard-sub">destinations</div></div>
-            </div>
-          </div>
-
-        </div>
+      <!-- Search bar -->
+      <div class="dest-search-wrap">
+        <span class="dest-search-icon">🔍</span>
+        <input class="dest-search-input" id="dest-search" type="text"
+          placeholder="Search destinations..."
+          oninput="filterDestGrid()"/>
       </div>
 
-      <!-- Sub-step 0b: Pick destination from region -->
-      <div id="wiz-dest-pick" style="display:none;">
-        <div class="wiz-region-back" onclick="wizBackToRegion()">← All regions</div>
-        <div class="wiz-region-label" id="wiz-region-label">Luzon</div>
-        <div class="dest-grid" id="wiz-dest-grid"></div>
+      <!-- Vibe filter chips -->
+      <div class="vibe-filters" id="vibe-filters">
+        <div class="vibe-chip active" data-vibe="all"    onclick="setVibe(this)">✨ All</div>
+        <div class="vibe-chip" data-vibe="summer"        onclick="setVibe(this)">☀️ Summer Escape</div>
+        <div class="vibe-chip" data-vibe="barkada"       onclick="setVibe(this)">🏄 Barkada Gala</div>
+        <div class="vibe-chip" data-vibe="chill"         onclick="setVibe(this)">🌿 Chill &amp; Slow</div>
+        <div class="vibe-chip" data-vibe="island"        onclick="setVibe(this)">🌊 Island Hopping</div>
+        <div class="vibe-chip" data-vibe="adventure"     onclick="setVibe(this)">🤿 Adventure</div>
+        <div class="vibe-chip" data-vibe="food"          onclick="setVibe(this)">🍜 Food Trip</div>
+        <div class="vibe-chip" data-vibe="culture"       onclick="setVibe(this)">🏛️ Culture Trip</div>
+        <div class="vibe-chip" data-vibe="christmas"     onclick="setVibe(this)">🎄 Christmas</div>
+        <div class="vibe-chip" data-vibe="holyweek"      onclick="setVibe(this)">🕯️ Holy Week</div>
+        <div class="vibe-chip" data-vibe="honeymoon"     onclick="setVibe(this)">🌅 Honeymoon</div>
+        <div class="vibe-chip" data-vibe="budget"        onclick="setVibe(this)">💸 Budget Trip</div>
+        <div class="vibe-chip" data-vibe="solo"          onclick="setVibe(this)">🧘 Solo Travel</div>
       </div>
+
+      <!-- 3-col destination grid -->
+      <div class="dest-grid-3" id="dest-grid-3"></div>
+      <div class="dest-no-results" id="dest-no-results" style="display:none;">No destinations match. Try a different search or filter.</div>
 
     </div>
 
@@ -1971,106 +1970,225 @@ function loadSample() {
 }
 
 /* ─── WIZARD REGION → DESTINATION DATA ─── */
-const WIZ_REGIONS = {
-  luzon: {
-    label: 'Luzon',
-    color: 'linear-gradient(170deg,#7b0d0d,#c0392b,#e74c3c)',
-    destinations: [
-      {dest:'Batanes',   region:'Cagayan Valley',        photo:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=320&q=60', grad:'rgba(44,82,130,.75),rgba(15,35,65,.88)', heroPhoto:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=70'},
-      {dest:'Baguio',    region:'Benguet, CAR',          photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60', grad:'rgba(27,67,50,.75),rgba(10,30,20,.88)',  heroPhoto:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70'},
-      {dest:'Vigan',     region:'Ilocos Sur',            photo:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=320&q=60', grad:'rgba(74,35,90,.75),rgba(30,10,40,.88)',  heroPhoto:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=70'},
-      {dest:'Sagada',    region:'Mountain Province, CAR', photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60', grad:'rgba(45,80,60,.75),rgba(15,40,25,.88)', heroPhoto:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70'},
-      {dest:'Batangas',  region:'CALABARZON',            photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60', grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',  heroPhoto:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70'},
-      {dest:'La Union',  region:'Ilocos Region',         photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60', grad:'rgba(20,80,100,.75),rgba(8,40,55,.88)',  heroPhoto:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70'},
-      {dest:'Ilocos Norte',region:'Ilocos Region',       photo:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=320&q=60', grad:'rgba(44,82,130,.75),rgba(15,35,65,.88)', heroPhoto:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=70'},
-      {dest:'Subic',     region:'Zambales, Region III',  photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60', grad:'rgba(13,80,22,.75),rgba(5,40,15,.88)',   heroPhoto:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70'},
-      {dest:'Manila',    region:'Metro Manila, NCR',     photo:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=320&q=60', grad:'rgba(28,40,51,.75),rgba(10,15,22,.88)', heroPhoto:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=70'},
-      {dest:'Marinduque',region:'MIMAROPA',              photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60', grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',  heroPhoto:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70'}
-    ]
-  },
-  visayas: {
-    label: 'Visayas',
-    color: 'linear-gradient(170deg,#6b4800,#c17f00,#f4a800)',
-    destinations: [
-      {dest:'Boracay',   region:'Aklan, Western Visayas',photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60', grad:'rgba(0,105,148,.75),rgba(0,40,80,.88)',  heroPhoto:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70'},
-      {dest:'Cebu',      region:'Central Visayas',       photo:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=320&q=60', grad:'rgba(123,63,0,.75),rgba(60,20,0,.88)',   heroPhoto:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=600&q=70'},
-      {dest:'Palawan',   region:'MIMAROPA',              photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60', grad:'rgba(13,80,22,.75),rgba(5,40,15,.88)',   heroPhoto:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70'},
-      {dest:'Bohol',     region:'Central Visayas',       photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60', grad:'rgba(100,60,0,.75),rgba(50,25,0,.88)',   heroPhoto:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70'},
-      {dest:'Iloilo',    region:'Western Visayas',       photo:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=320&q=60', grad:'rgba(74,35,90,.75),rgba(30,10,40,.88)', heroPhoto:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=70'},
-      {dest:'Bacolod',   region:'Western Visayas',       photo:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=320&q=60', grad:'rgba(28,40,51,.75),rgba(10,15,22,.88)', heroPhoto:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=70'},
-      {dest:'Dumaguete', region:'Negros Oriental',       photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60', grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',  heroPhoto:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70'},
-      {dest:'Siquijor',  region:'Central Visayas',       photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60', grad:'rgba(50,0,80,.75),rgba(20,0,40,.88)',   heroPhoto:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70'}
-    ]
-  },
-  mindanao: {
-    label: 'Mindanao',
-    color: 'linear-gradient(170deg,#05285e,#1a4fa0,#2980b9)',
-    destinations: [
-      {dest:'Siargao',   region:'Surigao del Norte',     photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60', grad:'rgba(20,80,100,.75),rgba(8,40,55,.88)',  heroPhoto:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70'},
-      {dest:'Davao City',region:'Davao Region',          photo:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=320&q=60', grad:'rgba(28,40,51,.75),rgba(10,15,22,.88)', heroPhoto:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=70'},
-      {dest:'Camiguin',  region:'Northern Mindanao',     photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60', grad:'rgba(50,100,20,.75),rgba(20,50,5,.88)',  heroPhoto:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70'},
-      {dest:'Cagayan de Oro',region:'Northern Mindanao', photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60', grad:'rgba(27,67,50,.75),rgba(10,30,20,.88)', heroPhoto:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70'},
-      {dest:'Bukidnon',  region:'Northern Mindanao',     photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60', grad:'rgba(27,67,50,.75),rgba(10,30,20,.88)', heroPhoto:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70'},
-      {dest:'Zamboanga City',region:'Zamboanga Peninsula',photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60',grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',  heroPhoto:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70'},
-      {dest:'Surigao City',region:'Caraga',              photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60', grad:'rgba(20,80,100,.75),rgba(8,40,55,.88)',  heroPhoto:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70'},
-      {dest:'General Santos',region:'SOCCSKSARGEN',      photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60', grad:'rgba(13,80,22,.75),rgba(5,40,15,.88)',   heroPhoto:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70'}
-    ]
-  }
-};
+/* ─── ALL DESTINATIONS FLAT LIST WITH VIBES ─── */
+const ALL_DESTS = [
+  // LUZON
+  {dest:'Batanes',      region:'Cagayan Valley',         island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=70',
+   grad:'rgba(44,82,130,.75),rgba(15,35,65,.88)',
+   vibes:['chill','holyweek','solo','culture']},
+  {dest:'Baguio',       region:'Benguet, CAR',            island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70',
+   grad:'rgba(27,67,50,.75),rgba(10,30,20,.88)',
+   vibes:['chill','christmas','budget','culture']},
+  {dest:'Vigan',        region:'Ilocos Sur',              island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=70',
+   grad:'rgba(74,35,90,.75),rgba(30,10,40,.88)',
+   vibes:['culture','christmas','holyweek','food']},
+  {dest:'Sagada',       region:'Mountain Province, CAR',  island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70',
+   grad:'rgba(45,80,60,.75),rgba(15,40,25,.88)',
+   vibes:['chill','holyweek','solo','adventure']},
+  {dest:'Batangas',     region:'CALABARZON',              island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70',
+   grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',
+   vibes:['summer','barkada','adventure','budget','island']},
+  {dest:'La Union',     region:'Ilocos Region',           island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70',
+   grad:'rgba(20,80,100,.75),rgba(8,40,55,.88)',
+   vibes:['summer','barkada','budget','adventure']},
+  {dest:'Ilocos Norte', region:'Ilocos Region',           island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=70',
+   grad:'rgba(44,82,130,.75),rgba(15,35,65,.88)',
+   vibes:['culture','food','christmas','barkada']},
+  {dest:'Subic',        region:'Zambales, Region III',    island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70',
+   grad:'rgba(13,80,22,.75),rgba(5,40,15,.88)',
+   vibes:['adventure','barkada','budget','island']},
+  {dest:'Manila',       region:'Metro Manila, NCR',       island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=70',
+   grad:'rgba(28,40,51,.75),rgba(10,15,22,.88)',
+   vibes:['food','culture','christmas','barkada']},
+  {dest:'Marinduque',   region:'MIMAROPA',                island:'Luzon',
+   photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70',
+   grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',
+   vibes:['holyweek','culture','chill','solo']},
+  // VISAYAS
+  {dest:'Boracay',      region:'Aklan, Western Visayas',  island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70',
+   grad:'rgba(0,105,148,.75),rgba(0,40,80,.88)',
+   vibes:['summer','barkada','honeymoon','island','adventure']},
+  {dest:'Cebu',         region:'Central Visayas',         island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1573790387438-4da905039392?w=600&q=70',
+   grad:'rgba(123,63,0,.75),rgba(60,20,0,.88)',
+   vibes:['food','culture','adventure','christmas','barkada']},
+  {dest:'Palawan',      region:'MIMAROPA',                island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70',
+   grad:'rgba(13,80,22,.75),rgba(5,40,15,.88)',
+   vibes:['honeymoon','island','chill','solo','adventure','summer']},
+  {dest:'Bohol',        region:'Central Visayas',         island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70',
+   grad:'rgba(100,60,0,.75),rgba(50,25,0,.88)',
+   vibes:['culture','island','chill','honeymoon','barkada']},
+  {dest:'Iloilo',       region:'Western Visayas',         island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=70',
+   grad:'rgba(74,35,90,.75),rgba(30,10,40,.88)',
+   vibes:['food','culture','christmas','barkada']},
+  {dest:'Bacolod',      region:'Western Visayas',         island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=70',
+   grad:'rgba(28,40,51,.75),rgba(10,15,22,.88)',
+   vibes:['food','culture','christmas','budget']},
+  {dest:'Dumaguete',    region:'Negros Oriental',         island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70',
+   grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',
+   vibes:['solo','chill','island','budget','adventure']},
+  {dest:'Siquijor',     region:'Central Visayas',         island:'Visayas',
+   photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70',
+   grad:'rgba(50,0,80,.75),rgba(20,0,40,.88)',
+   vibes:['honeymoon','chill','solo','holyweek','island']},
+  // MINDANAO
+  {dest:'Siargao',      region:'Surigao del Norte',       island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70',
+   grad:'rgba(20,80,100,.75),rgba(8,40,55,.88)',
+   vibes:['summer','barkada','adventure','island','honeymoon']},
+  {dest:'Davao City',   region:'Davao Region',            island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=70',
+   grad:'rgba(28,40,51,.75),rgba(10,15,22,.88)',
+   vibes:['food','culture','adventure','barkada']},
+  {dest:'Camiguin',     region:'Northern Mindanao',       island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70',
+   grad:'rgba(50,100,20,.75),rgba(20,50,5,.88)',
+   vibes:['holyweek','solo','chill','island','adventure']},
+  {dest:'Cagayan de Oro',region:'Northern Mindanao',      island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70',
+   grad:'rgba(27,67,50,.75),rgba(10,30,20,.88)',
+   vibes:['adventure','barkada','budget','food']},
+  {dest:'Bukidnon',     region:'Northern Mindanao',       island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&q=70',
+   grad:'rgba(27,67,50,.75),rgba(10,30,20,.88)',
+   vibes:['chill','adventure','solo','christmas']},
+  {dest:'Zamboanga City',region:'Zamboanga Peninsula',    island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=600&q=70',
+   grad:'rgba(0,80,120,.75),rgba(0,30,60,.88)',
+   vibes:['culture','island','food']},
+  {dest:'Surigao City', region:'Caraga',                  island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1562602833-0f4ab2fc46e5?w=600&q=70',
+   grad:'rgba(20,80,100,.75),rgba(8,40,55,.88)',
+   vibes:['island','adventure','budget']},
+  {dest:'General Santos',region:'SOCCSKSARGEN',           island:'Mindanao',
+   photo:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=320&q=60',
+   hero:'https://images.unsplash.com/photo-1559666126-84f389727b9a?w=600&q=70',
+   grad:'rgba(13,80,22,.75),rgba(5,40,15,.88)',
+   vibes:['food','adventure','culture']}
+];
 
-function wizPickRegion(regionKey) {
-  var region = WIZ_REGIONS[regionKey];
-  if (!region) return;
-  document.getElementById('wiz-region-pick').style.display = 'none';
-  document.getElementById('wiz-dest-pick').style.display = 'block';
-  document.getElementById('wiz-region-label').textContent = region.label;
-  var grid = document.getElementById('wiz-dest-grid');
-  grid.innerHTML = region.destinations.map(function(d) {
-    var gradParts = d.grad.split(',');
-    var gradFrom = gradParts[0].trim();
-    var gradTo   = gradParts[1].trim();
-    return '<div class="dc" data-dest="' + d.dest + '" data-hero="' + d.heroPhoto + '" data-region="' + d.region + '" onclick="pickDest(this)">'
-      + '<div class="dc-photo" style="background-image:url(\'' + d.photo + '\');"></div>'
-      + '<div class="dc-grad" style="background:linear-gradient(160deg,' + gradFrom + ' 0%,' + gradFrom.replace('.75','.35') + ' 40%,' + gradTo + ' 100%);"></div>'
-      + '<div class="dc-chk">✓</div>'
-      + '<div class="dc-lbl"><div class="dc-name">' + d.dest + '</div><div class="dc-reg">' + d.region + '</div></div>'
-      + '</div>';
+var _activeVibe = 'all';
+
+function buildDestGrid() {
+  var grid = document.getElementById('dest-grid-3');
+  if (!grid) return;
+  grid.innerHTML = ALL_DESTS.map(function(d) {
+    var gp = d.grad.split(',');
+    var g1 = gp[0].trim(), g2 = gp[1].trim();
+    var g135 = g1.replace('.75','.35');
+    return '<div class="dc" data-dest="'+d.dest+'" data-hero="'+d.hero
+      +'" data-region="'+d.region+'" data-island="'+d.island
+      +'" data-vibes="'+d.vibes.join(',')+'" onclick="pickDest(this)">'
+      +'<div class="dc-photo" style="background-image:url(\''+d.photo+'\');"></div>'
+      +'<div class="dc-grad" style="background:linear-gradient(160deg,'+g1+' 0%,'+g135+' 40%,'+g2+' 100%);"></div>'
+      +'<div class="dc-chk">✓</div>'
+      +'<div class="dc-lbl"><div class="dc-name">'+d.dest+'</div><div class="dc-reg">'+d.region+'</div></div>'
+      +'</div>';
   }).join('');
-  // Pre-select first
+  // Auto-select first visible card
   var first = grid.querySelector('.dc');
   if (first) pickDest(first);
-  updateWizFooter();
+  filterDestGrid();
 }
 
-function wizBackToRegion() {
-  document.getElementById('wiz-region-pick').style.display = 'block';
-  document.getElementById('wiz-dest-pick').style.display = 'none';
+function setVibe(el) {
+  document.querySelectorAll('.vibe-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  _activeVibe = el.dataset.vibe;
+  filterDestGrid();
+}
+
+function filterDestGrid() {
+  var query = (document.getElementById('dest-search').value || '').toLowerCase().trim();
+  var cards  = document.querySelectorAll('#dest-grid-3 .dc');
+  var visible = 0;
+  cards.forEach(function(card) {
+    var name   = (card.dataset.dest   || '').toLowerCase();
+    var region = (card.dataset.region || '').toLowerCase();
+    var island = (card.dataset.island || '').toLowerCase();
+    var vibes  = (card.dataset.vibes  || '').split(',');
+    var matchSearch = !query || name.indexOf(query) !== -1 || region.indexOf(query) !== -1 || island.indexOf(query) !== -1;
+    var matchVibe   = _activeVibe === 'all' || vibes.indexOf(_activeVibe) !== -1;
+    var show = matchSearch && matchVibe;
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  var noRes = document.getElementById('dest-no-results');
+  if (noRes) noRes.style.display = visible === 0 ? 'block' : 'none';
+  // If currently selected card is hidden, select first visible
+  var sel = document.querySelector('#dest-grid-3 .dc.sel');
+  if (sel && sel.style.display === 'none') {
+    var firstVisible = document.querySelector('#dest-grid-3 .dc:not([style*="none"])');
+    if (firstVisible) pickDest(firstVisible);
+  }
   updateWizFooter();
 }
 
 /* ─── WIZARD ─── */
 const WIZ = [
-  ['Where to?',       'Pick your Philippine destination'],
-  ['How long?',       'How many days is your vacation?'],
-  ['Your group',      'Group size and budget'],
+  ['Where to?',         'Pick your Philippine destination'],
+  ['How long?',         'How many days is your vacation?'],
+  ['Your group',        'Group size and budget'],
   ["What's your vibe?", 'Pick the experiences you want'],
-  ['All set!',        'Review before starting']
+  ['All set!',          'Review before starting']
 ];
 
 function initWizard() {
-  S.wizStep = 0;
-  // Reset to region picker view
-  var rp = document.getElementById('wiz-region-pick');
-  var dp = document.getElementById('wiz-dest-pick');
-  if (rp) rp.style.display = 'block';
-  if (dp) dp.style.display = 'none';
+  S.wizStep  = 0;
+  _activeVibe = 'all';
+  var searchEl = document.getElementById('dest-search');
+  if (searchEl) searchEl.value = '';
+  document.querySelectorAll('.vibe-chip').forEach(function(c){
+    c.classList.toggle('active', c.dataset.vibe === 'all');
+  });
+  buildDestGrid();
   renderWiz();
 }
 
 function renderWiz() {
-  const s = S.wizStep;
-  document.querySelectorAll('.wiz-panel').forEach((p,i) => p.classList.toggle('active', i===s));
-  document.querySelectorAll('.wdot').forEach((d,i) => {
+  var s = S.wizStep;
+  document.querySelectorAll('.wiz-panel').forEach(function(p,i){ p.classList.toggle('active', i===s); });
+  document.querySelectorAll('.wdot').forEach(function(d,i){
     d.classList.toggle('done',   i < s);
     d.classList.toggle('active', i === s);
   });
@@ -2078,69 +2196,55 @@ function renderWiz() {
   document.getElementById('wiz-s').textContent = WIZ[s][1];
   document.getElementById('wiz-back').classList.toggle('hidden', s === 0);
   document.getElementById('wiz-next').textContent = s === 4 ? '🚀 Start Planning' : 'Continue →';
-  // Hide Continue when on step 0 AND still showing region picker (not dest list yet)
   updateWizFooter();
   if (s === 4) buildReview();
 }
 
 function updateWizFooter() {
-  var nextBtn  = document.getElementById('wiz-next');
-  var wizFoot  = document.querySelector('.wiz-foot');
-  var wizBody  = document.querySelector('.wiz-body');
+  var nextBtn = document.getElementById('wiz-next');
+  var wizFoot = document.querySelector('.wiz-foot');
   if (!nextBtn) return;
-  var onRegionPicker = S.wizStep === 0 &&
-    document.getElementById('wiz-region-pick') &&
-    document.getElementById('wiz-region-pick').style.display !== 'none';
-
-  if (onRegionPicker) {
+  // Hide Continue only if on step 0 AND no destination selected yet
+  var hasDest = !!S.dest;
+  if (S.wizStep === 0 && !hasDest) {
     nextBtn.style.display = 'none';
     if (wizFoot) wizFoot.style.display = 'none';
-    if (wizBody) { wizBody.classList.add('region-mode'); }
   } else {
     nextBtn.style.display = '';
     if (wizFoot) wizFoot.style.display = '';
-    if (wizBody) { wizBody.classList.remove('region-mode'); }
   }
 }
 
 function wizNext() {
-  // On step 0, only advance if a destination has been picked
-  if (S.wizStep === 0 && !S.dest) {
-    var regionPickVisible = document.getElementById('wiz-region-pick').style.display !== 'none';
-    if (regionPickVisible) { alert('Please pick a region first!'); return; }
-    alert('Please pick a destination!');
-    return;
-  }
+  if (S.wizStep === 0 && !S.dest) { return; }
   if (S.wizStep < 4) { S.wizStep++; renderWiz(); } else { startGen(); }
 }
 function wizPrev() { if (S.wizStep > 0) { S.wizStep--; renderWiz(); } }
 
 function pickDest(el) {
-  document.querySelectorAll('.dc').forEach(c => c.classList.remove('sel'));
+  document.querySelectorAll('.dc').forEach(function(c){ c.classList.remove('sel'); });
   el.classList.add('sel');
-  S.dest    = el.dataset.dest;
-  // Build destKey: match to PLACES keys where possible
+  S.dest = el.dataset.dest;
   var keyMap = {
     'boracay':'boracay','palawan':'palawan','cebu':'cebu','siargao':'siargao',
     'batanes':'batanes','vigan':'vigan','banaue':'banaue','manila':'manila',
-    'baguio':'baguio','batangas':'batangas','launion':'launion','ilocosnorte':'ilocosNorte',
-    'subic':'subic','marinduque':'marinduque','bohol':'bohol','iloilo':'iloilo',
-    'bacolod':'bacolod','dumaguete':'dumaguete','siquijor':'siquijor',
-    'davaocity':'davao','camiguin':'camiguin','cagayande':'cdo','bukidnon':'bukidnon',
+    'baguio':'baguio','batangas':'batangas','launion':'launion',
+    'ilocosnorte':'ilocosNorte','subic':'subic','marinduque':'marinduque',
+    'bohol':'bohol','iloilo':'iloilo','bacolod':'bacolod',
+    'dumaguete':'dumaguete','siquijor':'siquijor','davaocity':'davao',
+    'camiguin':'camiguin','cagayande':'cdo','bukidnon':'bukidnon',
     'zamboangacity':'zamboanga','surigaocity':'surigao','generalsantos':'gensan'
   };
   var raw = S.dest.toLowerCase().replace(/\s+/g,'').replace(/[^a-z]/g,'');
   S.destKey = keyMap[raw] || raw;
-  // Update hero image on vibe step (step 3)
-  var heroUrl = el.dataset.hero || el.querySelector('.dc-photo') ?
-    (el.dataset.hero || el.querySelector('.dc-photo').style.backgroundImage.replace(/url\(['"]?|['"]?\)/g,''))
-    : '';
+  // Update hero on vibe step
   var heroImg    = document.getElementById('wiz-dest-hero-img');
   var heroName   = document.getElementById('wiz-dest-hero-name');
   var heroRegion = document.getElementById('wiz-dest-hero-region');
   if (heroImg && el.dataset.hero) heroImg.style.backgroundImage = 'url(\'' + el.dataset.hero + '\')';
   if (heroName)   heroName.textContent   = S.dest;
-  if (heroRegion) heroRegion.textContent = el.dataset.region || el.querySelector('.dc-reg')?.textContent || '';
+  if (heroRegion) heroRegion.textContent = el.dataset.region || '';
+  updateWizFooter();
 }
 
 function adjDays(d) {
