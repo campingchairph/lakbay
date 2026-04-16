@@ -613,8 +613,8 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .bd-item-row input:focus{border-color:var(--gold);}
 .bd-item-row input::placeholder{color:rgba(255,255,255,.25);}
 .bd-item-row input[type=number]{text-align:right;}
-.bd-item-del{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:14px;padding:0;line-height:1;display:flex;align-items:center;justify-content:center;}
-.bd-item-del:hover{color:#f08b80;}
+.bd-item-del{background:none;border:none;color:rgba(255,255,255,.28);cursor:pointer;font-size:13px;padding:0;line-height:1;display:flex;align-items:center;justify-content:center;transition:color .15s;}
+.bd-item-del:hover{color:var(--gold);}
 .bd-col-hdr{display:grid;grid-template-columns:1fr 52px 72px 24px;gap:6px;padding:0 0 4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.3);}
 .breakdown-footer{padding:10px 14px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px;flex-shrink:0;}
 .btn-bd-add{flex:1;padding:10px;border-radius:var(--r-md);background:rgba(244,168,0,.15);border:1px solid rgba(244,168,0,.3);color:var(--gold);font-family:var(--ff-b);font-size:12px;font-weight:600;cursor:pointer;}
@@ -974,8 +974,8 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
 }
 .split-balance-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-.split-balance-lbl{font-size:11px;color:rgba(255,255,255,.4);}
-.split-balance-val{font-family:var(--ff-h);font-size:18px;font-weight:700;}
+.split-balance-lbl{font-size:11px;color:rgba(255,255,255,.55);}
+.split-balance-val{font-family:var(--ff-h);font-size:18px;font-weight:700;color:var(--gold);}
 .split-balance-bar-wrap{height:4px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;margin-bottom:6px;}
 .split-balance-bar{height:100%;border-radius:2px;transition:width .2s,background .2s;}
 .split-balance-note{font-size:11px;text-align:right;}
@@ -2556,7 +2556,7 @@ function renderExpenses() {
         + (isCustom ? splitSummary : '')
         + '<div class="exp-actions">'
         + '<button class="exp-act-btn edit" onclick="editExpense(\'' + e.id + '\')">✏️ Edit</button>'
-        + '<button class="exp-act-btn receipt" onclick="viewExpenseReceipt(\'' + e.id + '\',' + "'\"trip\"'" + ')">🧾 Receipt</button>'
+        + '<button class="exp-act-btn receipt" data-id="' + e.id + '" onclick="viewExpenseReceipt(this.dataset.id,&quot;trip&quot;)">🧾 Receipt</button>'
         + '<button class="exp-act-btn delete" onclick="deleteExpense(\'' + e.id + '\')">🗑 Delete</button>'
         + '</div></div>';
     }).join('');
@@ -3175,7 +3175,7 @@ function renderSoloExpenses() {
       + '</div></div>' + breakdown
       + '<div class="exp-actions">'
       + '<button class="exp-act-btn edit" onclick="openSoloExpSheet(\'' + e.id + '\')">✏️ Edit</button>'
-      + '<button class="exp-act-btn receipt" onclick="viewExpenseReceipt(\'' + e.id + '\',' + "'\"solo\"'" + ')">🧾 Receipt</button>'
+      + '<button class="exp-act-btn receipt" data-id="' + e.id + '" onclick="viewExpenseReceipt(this.dataset.id,&quot;solo&quot;)">🧾 Receipt</button>'
       + '<button class="exp-act-btn delete" onclick="deleteSoloExpense(\'' + e.id + '\')">🗑 Delete</button>'
       + '</div></div>';
   }).join('');
@@ -3381,84 +3381,91 @@ function generateTripReport(mode, dayIndex, expenseId, personName) {
           ? splits.map(function(s){ return s.name+' ₱'+s.amount.toLocaleString(); }).join(' · ')
           : (splits.length>0 ? splits.map(function(s){ return s.name; }).join(', ')+'  (₱'+splits[0].amount.toLocaleString()+' each)' : '');
         var dayLbl=e.day===-1?'Pre-trip':(S.tripDays[e.day]?S.tripDays[e.day].label:'');
-        var recEl=e.receipt?'<div><img src="'+e.receipt+'" class="report-receipt" onclick="window.open(this.src,\'_blank\')"/></div>':'';
+        var recEl=e.receipt?'<div style="margin-top:8px;"><img src="'+e.receipt+'" class="report-receipt" onclick="window.open(this.src,\'_blank\')"/></div>':'';
         var personShareEl='';
         if(mode==='person'){
           var sp=splits.find(function(s){ return s.name===personName; });
           if(sp) personShareEl='<div style="font-size:11px;font-weight:700;color:#1A4FA0;margin-top:3px;">'
             +personName+': ₱'+sp.amount.toLocaleString()+'</div>';
         }
-        // In item mode: show per-person breakdown table if any person has itemized rows
-        var bdTable = '';
-        if (mode==='item') {
-          var hasAnyBd = splits.some(function(s){ return s.breakdown && s.breakdown.length > 0; });
-          if (hasAnyBd) {
-            bdTable = '<div style="margin-top:10px;border-top:1px solid #eee;padding-top:8px;">'
-              + '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;margin-bottom:6px;">Itemized breakdown</div>';
-            splits.forEach(function(s) {
-              if (!s.breakdown || s.breakdown.length === 0) return;
-              bdTable += '<div style="margin-bottom:8px;">'
-                + '<div style="font-size:11px;font-weight:700;color:#333;margin-bottom:3px;">' + s.name + ' — ₱' + s.amount.toLocaleString() + '</div>'
-                + '<table style="width:100%;border-collapse:collapse;font-size:11px;">'
-                + '<tr style="color:#aaa;"><td style="padding:2px 6px 2px 0;">Item</td><td style="text-align:center;padding:2px 6px;">Qty</td><td style="text-align:right;padding:2px 0 2px 6px;">Each</td><td style="text-align:right;padding:2px 0 2px 6px;">Subtotal</td></tr>';
-              s.breakdown.forEach(function(r) {
-                var sub = Math.round((r.qty||1)*(r.price||0));
-                bdTable += '<tr style="border-top:1px solid #f0f0f0;">'
-                  + '<td style="padding:3px 6px 3px 0;color:#444;">' + (r.name||'—') + '</td>'
-                  + '<td style="text-align:center;padding:3px 6px;color:#666;">' + (r.qty||1) + '</td>'
-                  + '<td style="text-align:right;padding:3px 0 3px 6px;color:#666;">₱' + (r.price||0).toLocaleString() + '</td>'
-                  + '<td style="text-align:right;padding:3px 0 3px 6px;font-weight:600;color:#333;">₱' + sub.toLocaleString() + '</td>'
-                  + '</tr>';
-              });
-              bdTable += '</table></div>';
-            });
-            bdTable += '</div>';
-          }
-        }
         return '<div class="report-item">'
           +'<div class="report-item-left">'
           +'<div class="report-item-name">'+e.icon+' '+e.title+'</div>'
-          +'<div class="report-item-meta">'+e.type+(dayLbl?' · '+dayLbl:'')+' · Paid by '+e.paidBy+'</div>'
+          +'<div class="report-item-meta">'+e.type+(dayLbl?' · '+dayLbl:'')+' · Paid by <strong>'+e.paidBy+'</strong></div>'
           +'<div class="report-item-meta" style="margin-top:1px;color:#777;">'+splitStr+'</div>'
-          +personShareEl+bdTable+recEl+'</div>'
+          +personShareEl+recEl+'</div>'
           +'<div><div class="report-item-amount">₱'+e.total.toLocaleString()+'</div></div></div>';
       }).join('');
-  // Balance rows with math breakdown
+
+  // Balance rows — for item mode build a detailed per-person table with breakdown items
   var namesToShow = mode==='person' ? [personName] : Object.keys(balances);
+
   var balRows = namesToShow.map(function(name) {
-    var b = balances[name]||0;
+    var b    = balances[name]||0;
     var paid = filteredExp.reduce(function(s,e){ return s+(e.paidBy===name?e.total:0); },0);
-    var owes = filteredExp.reduce(function(s,e){ var sp=(e.splits||[]).find(function(x){ return x.name===name; }); return s+(sp?sp.amount:0); },0);
-    var mathDetail='';
-    if(mode==='person'&&filteredExp.length>0){
-      var rows=filteredExp.map(function(e){
+    var owes = filteredExp.reduce(function(s,e){
+      var sp=(e.splits||[]).find(function(x){ return x.name===name; });
+      return s+(sp?sp.amount:0);
+    },0);
+
+    var mathDetail = '';
+
+    // Show math detail table for BOTH person mode AND item mode
+    if ((mode==='person' || mode==='item') && filteredExp.length>0) {
+      var rows = filteredExp.map(function(e){
         var sp=(e.splits||[]).find(function(x){ return x.name===name; });
         if(!sp) return '';
         var isPayer=e.paidBy===name;
         var net=isPayer?(e.total-sp.amount):(-sp.amount);
+
+        // Per-item breakdown rows for this person (if they have them)
+        var bdRows = '';
+        if (sp.breakdown && sp.breakdown.length > 0) {
+          bdRows = '<tr><td colspan="4" style="padding:0 0 2px 16px;">'
+            + '<table style="width:100%;border-collapse:collapse;">';
+          sp.breakdown.forEach(function(r){
+            var sub = Math.round((r.qty||1)*(r.price||0));
+            if (!r.name && !r.price) return;
+            bdRows += '<tr style="border-top:1px solid #f5f5f5;">'
+              + '<td style="padding:2px 6px 2px 0;font-size:10px;color:#888;">'+( r.name||'—')+'</td>'
+              + '<td style="font-size:10px;color:#aaa;text-align:center;padding:2px 6px;">×'+(r.qty||1)+'</td>'
+              + '<td style="font-size:10px;color:#aaa;text-align:right;padding:2px 4px;">₱'+(r.price||0).toLocaleString()+'</td>'
+              + '<td style="font-size:10px;color:#666;text-align:right;padding:2px 0 2px 6px;font-weight:600;">₱'+sub.toLocaleString()+'</td>'
+              + '</tr>';
+          });
+          bdRows += '</table></td></tr>';
+        }
+
         return '<tr>'
-          +'<td style="padding:4px 8px 4px 0;font-size:11px;color:#555;">'+e.icon+' '+e.title+'</td>'
-          +'<td style="padding:4px 8px;font-size:11px;text-align:center;">'+(isPayer?'<span style="color:#2D6A4F;">paid ₱'+e.total.toLocaleString()+'</span>':'—')+'</td>'
-          +'<td style="padding:4px 0 4px 8px;font-size:11px;color:#C0392B;text-align:right;">−₱'+sp.amount.toLocaleString()+'</td>'
-          +'<td style="padding:4px 0 4px 12px;font-size:11px;font-weight:600;text-align:right;color:'+(net>=0?'#2D6A4F':'#C0392B')+';">'+(net>=0?'+':'')+'₱'+Math.abs(net).toLocaleString()+'</td>'
-          +'</tr>';
+          +'<td style="padding:5px 8px 5px 0;font-size:11px;color:#555;vertical-align:top;">'+e.icon+' '+e.title+'</td>'
+          +'<td style="padding:5px 8px;font-size:11px;text-align:center;vertical-align:top;">'+(isPayer?'<span style="color:#2D6A4F;font-weight:600;">paid ₱'+e.total.toLocaleString()+'</span>':'—')+'</td>'
+          +'<td style="padding:5px 0 5px 8px;font-size:11px;color:#C0392B;text-align:right;vertical-align:top;">−₱'+sp.amount.toLocaleString()+'</td>'
+          +'<td style="padding:5px 0 5px 12px;font-size:11px;font-weight:600;text-align:right;vertical-align:top;color:'+(net>=0?'#2D6A4F':'#C0392B')+';">'+(net>=0?'+':'')+'₱'+Math.abs(net).toLocaleString()+'</td>'
+          +'</tr>'
+          + bdRows;
       }).filter(Boolean).join('');
-      mathDetail='<table style="width:100%;border-collapse:collapse;margin:8px 0 4px;">'
-        +'<tr><th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:left;padding:0 8px 6px 0;" colspan="2">Expense</th>'
-        +'<th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:right;padding:0 0 6px 8px;">Share</th>'
-        +'<th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:right;padding:0 0 6px 12px;">Net</th></tr>'
-        +rows
-        +'<tr><td colspan="4"><div style="height:1px;background:#ddd;margin:4px 0;"></div></td></tr>'
-        +'<tr><td colspan="2" style="font-size:11px;color:#555;padding:4px 0;">Total paid out</td>'
-        +'<td colspan="2" style="font-size:11px;font-weight:700;text-align:right;color:#2D6A4F;">+₱'+paid.toLocaleString()+'</td></tr>'
-        +'<tr><td colspan="2" style="font-size:11px;color:#555;padding:2px 0 6px;">Total share owed</td>'
-        +'<td colspan="2" style="font-size:11px;font-weight:700;text-align:right;color:#C0392B;">−₱'+owes.toLocaleString()+'</td></tr>'
-        +'</table>';
+
+      if (rows) {
+        mathDetail = '<table style="width:100%;border-collapse:collapse;margin:10px 0 4px;">'
+          +'<tr>'
+          +'<th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:left;padding:0 8px 6px 0;" colspan="2">Expense</th>'
+          +'<th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:right;padding:0 0 6px 8px;">Share</th>'
+          +'<th style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;text-align:right;padding:0 0 6px 12px;">Net</th>'
+          +'</tr>'
+          +rows
+          +'<tr><td colspan="4"><div style="height:1px;background:#ddd;margin:4px 0;"></div></td></tr>'
+          +'<tr><td colspan="2" style="font-size:11px;color:#555;padding:4px 0;">Total paid out</td>'
+          +'<td colspan="2" style="font-size:11px;font-weight:700;text-align:right;color:#2D6A4F;">+₱'+paid.toLocaleString()+'</td></tr>'
+          +'<tr><td colspan="2" style="font-size:11px;color:#555;padding:2px 0 6px;">Total share owed</td>'
+          +'<td colspan="2" style="font-size:11px;font-weight:700;text-align:right;color:#C0392B;">−₱'+owes.toLocaleString()+'</td></tr>'
+          +'</table>';
+      }
     }
+
     return '<div style="padding:12px 0;border-bottom:1px solid #eee;">'
       +'<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
       +'<div><div style="font-weight:600;font-size:14px;color:#222;">'+name+'</div>'
-      +(mode!=='person'?'<div style="font-size:11px;color:#888;margin-top:1px;">Paid: ₱'+paid.toLocaleString()+' · Share: ₱'+owes.toLocaleString()+'</div>':'')
+      +(mode!=='person'&&mode!=='item'?'<div style="font-size:11px;color:#888;margin-top:1px;">Paid: ₱'+paid.toLocaleString()+' · Share: ₱'+owes.toLocaleString()+'</div>':'')
       +'</div>'
       +'<div style="text-align:right;">'
       +'<div style="font-size:18px;font-weight:700;color:'+(b>=0?'#2D6A4F':'#C0392B')+';">'+(b>=0?'+':'')+'₱'+Math.abs(b).toLocaleString()+'</div>'
@@ -3504,6 +3511,7 @@ function generateTripReport(mode, dayIndex, expenseId, personName) {
     +(filteredExp.length>0?'<div class="report-total-row"><span>Total</span><span>₱'+grandTotal.toLocaleString()+'</span></div>':'')
     +catRows
     +(namesToShow.length>0&&mode!=='item'?'<div class="report-section-title">'+(mode==='person'?'Balance Breakdown':'Who Owes What')+'</div>'+balRows:'')
+    +(mode==='item'&&namesToShow.length>0?'<div class="report-section-title">Who Owes What · Per Person Breakdown</div>'+balRows:'')
     +settlementNote
     +'<div class="report-footer">Generated by LakwatseroPH 🇵🇭</div>';
   goTo('s-trip-report');
@@ -3617,7 +3625,7 @@ function renderBdRows() {
       + ' oninput="_bdRows[' + i + '].qty=parseFloat(this.value)||1;refreshBdRow(' + i + ');">'
       + '<input type="number" min="0" placeholder="0" value="' + (r.price||'') + '"'
       + ' oninput="_bdRows[' + i + '].price=parseFloat(this.value)||0;refreshBdRow(' + i + ');">'
-      + '<button class="bd-item-del" onclick="removeBdItem(' + i + ')">✕</button>'
+      + '<button class="bd-item-del" onclick="removeBdItem(' + i + ')" title="Remove">✏️</button>'
       + '</div>';
   }).join('');
   refreshBdTotals();
