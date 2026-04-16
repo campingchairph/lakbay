@@ -563,7 +563,63 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 .exp-act-btn{flex:1;padding:8px;font-size:11px;font-weight:600;cursor:pointer;background:transparent;border:none;font-family:var(--ff-b);transition:background .15s;}
 .exp-act-btn:hover{background:rgba(28,16,8,.04);}
 .exp-act-btn.edit{color:var(--blue);border-right:1px solid rgba(28,16,8,.05);}
+.exp-act-btn.receipt{color:#2D6A4F;border-right:1px solid rgba(28,16,8,.05);}
 .exp-act-btn.delete{color:var(--red);}
+
+/* Breakdown button next to custom split input */
+.csr-row{display:flex;align-items:center;gap:8px;}
+.csr-breakdown-btn{
+  flex-shrink:0;min-width:30px;height:30px;border-radius:var(--r-sm);
+  background:rgba(244,168,0,.18);border:1px solid rgba(244,168,0,.35);
+  color:var(--gold);font-size:11px;font-weight:600;cursor:pointer;
+  padding:0 7px;font-family:var(--ff-b);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;white-space:nowrap;
+}
+.csr-breakdown-btn:hover{background:rgba(244,168,0,.32);}
+.csr-breakdown-btn.has-items{
+  background:rgba(244,168,0,.32);border-color:var(--gold);
+  color:#fff;background:var(--gold);
+}
+
+/* Breakdown popup overlay */
+.breakdown-overlay{
+  position:fixed;inset:0;z-index:400;
+  background:rgba(5,12,30,.75);backdrop-filter:blur(8px);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.breakdown-overlay.open{display:flex;}
+.breakdown-popup{
+  width:100%;max-width:480px;
+  background:#1a2540;border-radius:20px 20px 0 0;
+  border:1px solid rgba(255,255,255,.1);border-bottom:none;
+  max-height:88vh;display:flex;flex-direction:column;overflow:hidden;
+}
+.breakdown-hdr{
+  padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;
+}
+.breakdown-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.breakdown-person-name{font-family:var(--ff-h);font-size:16px;font-weight:700;color:var(--white);}
+.breakdown-close{background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.6);width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.breakdown-totals{display:flex;gap:6px;}
+.breakdown-total-pill{flex:1;padding:8px 10px;border-radius:var(--r-md);background:rgba(255,255,255,.07);}
+.breakdown-total-lbl{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;}
+.breakdown-total-val{font-size:15px;font-weight:700;color:var(--white);}
+.breakdown-total-val.over{color:#f08b80;}
+.breakdown-total-val.ok{color:#6ecba0;}
+.breakdown-body{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+.bd-item-row{display:grid;grid-template-columns:1fr 52px 72px 24px;gap:6px;align-items:center;}
+.bd-item-row input{padding:8px 9px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-sm);font-family:var(--ff-b);font-size:12px;color:var(--white);outline:none;width:100%;}
+.bd-item-row input:focus{border-color:var(--gold);}
+.bd-item-row input::placeholder{color:rgba(255,255,255,.25);}
+.bd-item-row input[type=number]{text-align:right;}
+.bd-item-del{background:none;border:none;color:rgba(255,255,255,.3);cursor:pointer;font-size:14px;padding:0;line-height:1;display:flex;align-items:center;justify-content:center;}
+.bd-item-del:hover{color:#f08b80;}
+.bd-col-hdr{display:grid;grid-template-columns:1fr 52px 72px 24px;gap:6px;padding:0 0 4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.3);}
+.breakdown-footer{padding:10px 14px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px;flex-shrink:0;}
+.btn-bd-add{flex:1;padding:10px;border-radius:var(--r-md);background:rgba(244,168,0,.15);border:1px solid rgba(244,168,0,.3);color:var(--gold);font-family:var(--ff-b);font-size:12px;font-weight:600;cursor:pointer;}
+.btn-bd-add:hover{background:rgba(244,168,0,.28);}
+.btn-bd-done{flex:2;padding:10px;border-radius:var(--r-md);background:var(--blue);border:none;color:var(--white);font-family:var(--ff-b);font-size:13px;font-weight:700;cursor:pointer;}
 .add-exp-btn{position:sticky;bottom:16px;width:100%;padding:13px;background:var(--green);color:var(--white);border:none;border-radius:var(--r-md);font-family:var(--ff-b);font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 4px 14px rgba(45,106,79,.3);}
 
 /* Expense sheet fields */
@@ -2500,6 +2556,7 @@ function renderExpenses() {
         + (isCustom ? splitSummary : '')
         + '<div class="exp-actions">'
         + '<button class="exp-act-btn edit" onclick="editExpense(\'' + e.id + '\')">✏️ Edit</button>'
+        + '<button class="exp-act-btn receipt" onclick="viewExpenseReceipt(\'' + e.id + '\',' + "'\"trip\"'" + ')">🧾 Receipt</button>'
         + '<button class="exp-act-btn delete" onclick="deleteExpense(\'' + e.id + '\')">🗑 Delete</button>'
         + '</div></div>';
     }).join('');
@@ -2642,14 +2699,29 @@ function calcSplit() {
 
 function renderCustomSplitInputs(splits) {
   var list = document.getElementById('custom-split-list');
-  list.innerHTML = splits.map(function(s, i) {
-    return '<div class="custom-split-row">'
+  list.innerHTML = splits.map(function(s) {
+    var hasBd = s.breakdown && s.breakdown.length > 0;
+    var namedRows = hasBd ? s.breakdown.filter(function(r){ return r.name||r.price; }).length : 0;
+    var hasItems = hasBd && namedRows > 0;
+    var btnLabel = hasItems ? '\uD83E\uDDFE ' + namedRows + ' item' + (namedRows!==1?'s':'') : '\u2261';
+    var btnClass = 'csr-breakdown-btn' + (hasItems ? ' has-items' : '');
+    return '<div class="custom-split-row" data-name="' + s.name + '">'
       + '<span class="csr-name">' + s.name + '</span>'
       + '<span style="font-size:12px;color:rgba(255,255,255,.4);flex-shrink:0;">₱</span>'
       + '<input class="csr-input" type="number" min="0" value="' + (s.amount||'') + '" placeholder="0"'
       + ' data-name="' + s.name + '" oninput="updateSplitBalance()" />'
+      + '<button class="' + btnClass + '" title="Itemize ' + s.name + '\u2019s share" onclick="openBreakdown(\'' + s.name + '\')">' + btnLabel + '</button>'
       + '</div>';
   }).join('');
+
+  // Restore breakdown arrays onto input elements (so re-editing preserves them)
+  splits.forEach(function(s) {
+    if (s.breakdown && s.breakdown.length > 0) {
+      var inp = list.querySelector('.csr-input[data-name="' + s.name + '"]');
+      if (inp) inp._breakdown = s.breakdown.slice();
+    }
+  });
+
   document.getElementById('split-balance').style.display = splits.length > 0 ? 'block' : 'none';
 }
 
@@ -2698,13 +2770,13 @@ function saveExpense() {
 
   var splits = [];
   if (S._splitMode === 'custom') {
-    // Read custom inputs
+    // Read custom inputs — also capture any breakdown data stored on element
     var inputs = document.querySelectorAll('#custom-split-list .csr-input');
     var total  = 0;
     inputs.forEach(function(inp){
       var a = parseFloat(inp.value)||0;
       total += a;
-      splits.push({name: inp.dataset.name, amount: a});
+      splits.push({name: inp.dataset.name, amount: a, breakdown: inp._breakdown || []});
     });
     // Validate
     if (Math.abs(total - amt) > 1) {
@@ -3102,8 +3174,9 @@ function renderSoloExpenses() {
       + (e.receipt ? '<img class="exp-receipt-thumb" src="' + e.receipt + '" onclick="viewReceipt(this.src)"/>' : '')
       + '</div></div>' + breakdown
       + '<div class="exp-actions">'
-      + '<button class="exp-act-btn edit" onclick="openSoloExpSheet(\'' + e.id + '\')">&#9999; Edit</button>'
-      + '<button class="exp-act-btn delete" onclick="deleteSoloExpense(\'' + e.id + '\')">&#128465; Delete</button>'
+      + '<button class="exp-act-btn edit" onclick="openSoloExpSheet(\'' + e.id + '\')">✏️ Edit</button>'
+      + '<button class="exp-act-btn receipt" onclick="viewExpenseReceipt(\'' + e.id + '\',' + "'\"solo\"'" + ')">🧾 Receipt</button>'
+      + '<button class="exp-act-btn delete" onclick="deleteSoloExpense(\'' + e.id + '\')">🗑 Delete</button>'
       + '</div></div>';
   }).join('');
 }
@@ -3313,16 +3386,41 @@ function generateTripReport(mode, dayIndex, expenseId, personName) {
         if(mode==='person'){
           var sp=splits.find(function(s){ return s.name===personName; });
           if(sp) personShareEl='<div style="font-size:11px;font-weight:700;color:#1A4FA0;margin-top:3px;">'
-            +personName+': ₱'+sp.amount.toLocaleString()
-            
-            +'</div>';
+            +personName+': ₱'+sp.amount.toLocaleString()+'</div>';
+        }
+        // In item mode: show per-person breakdown table if any person has itemized rows
+        var bdTable = '';
+        if (mode==='item') {
+          var hasAnyBd = splits.some(function(s){ return s.breakdown && s.breakdown.length > 0; });
+          if (hasAnyBd) {
+            bdTable = '<div style="margin-top:10px;border-top:1px solid #eee;padding-top:8px;">'
+              + '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#aaa;margin-bottom:6px;">Itemized breakdown</div>';
+            splits.forEach(function(s) {
+              if (!s.breakdown || s.breakdown.length === 0) return;
+              bdTable += '<div style="margin-bottom:8px;">'
+                + '<div style="font-size:11px;font-weight:700;color:#333;margin-bottom:3px;">' + s.name + ' — ₱' + s.amount.toLocaleString() + '</div>'
+                + '<table style="width:100%;border-collapse:collapse;font-size:11px;">'
+                + '<tr style="color:#aaa;"><td style="padding:2px 6px 2px 0;">Item</td><td style="text-align:center;padding:2px 6px;">Qty</td><td style="text-align:right;padding:2px 0 2px 6px;">Each</td><td style="text-align:right;padding:2px 0 2px 6px;">Subtotal</td></tr>';
+              s.breakdown.forEach(function(r) {
+                var sub = Math.round((r.qty||1)*(r.price||0));
+                bdTable += '<tr style="border-top:1px solid #f0f0f0;">'
+                  + '<td style="padding:3px 6px 3px 0;color:#444;">' + (r.name||'—') + '</td>'
+                  + '<td style="text-align:center;padding:3px 6px;color:#666;">' + (r.qty||1) + '</td>'
+                  + '<td style="text-align:right;padding:3px 0 3px 6px;color:#666;">₱' + (r.price||0).toLocaleString() + '</td>'
+                  + '<td style="text-align:right;padding:3px 0 3px 6px;font-weight:600;color:#333;">₱' + sub.toLocaleString() + '</td>'
+                  + '</tr>';
+              });
+              bdTable += '</table></div>';
+            });
+            bdTable += '</div>';
+          }
         }
         return '<div class="report-item">'
           +'<div class="report-item-left">'
           +'<div class="report-item-name">'+e.icon+' '+e.title+'</div>'
           +'<div class="report-item-meta">'+e.type+(dayLbl?' · '+dayLbl:'')+' · Paid by '+e.paidBy+'</div>'
           +'<div class="report-item-meta" style="margin-top:1px;color:#777;">'+splitStr+'</div>'
-          +personShareEl+recEl+'</div>'
+          +personShareEl+bdTable+recEl+'</div>'
           +'<div><div class="report-item-amount">₱'+e.total.toLocaleString()+'</div></div></div>';
       }).join('');
   // Balance rows with math breakdown
@@ -3470,6 +3568,157 @@ function renderPerPersonReportList() {
   }).join('');
 }
 
+/* ─── BREAKDOWN MODAL ─── */
+/* ─── BREAKDOWN POPUP ─── */
+var _bdPersonName  = null;
+var _bdRows        = [];
+var _bdExpTotal    = 0;
+
+function openBreakdown(personName) {
+  _bdPersonName = personName;
+  _bdExpTotal   = parseFloat(document.getElementById('exp-amt-in').value) || 0;
+
+  // Read existing amount for this person
+  var inp = document.querySelector('#custom-split-list .csr-input[data-name="' + personName + '"]');
+  var currentAmt = inp ? (parseFloat(inp.value) || 0) : 0;
+
+  // Load previously saved breakdown rows if present (stored on element)
+  _bdRows = (inp && inp._breakdown && inp._breakdown.length > 0)
+    ? inp._breakdown.map(function(r){ return Object.assign({}, r); })
+    : [{id: Date.now(), name:'', qty:1, price: currentAmt}];
+
+  document.getElementById('bd-person-name').textContent = personName + "'s breakdown";
+  document.getElementById('bd-cap').textContent = '₱' + currentAmt.toLocaleString();
+  renderBdRows();
+  refreshBdTotals();
+  document.getElementById('bd-overlay').classList.add('open');
+}
+
+function closeBreakdown() {
+  document.getElementById('bd-overlay').classList.remove('open');
+}
+
+function closeBdIfOutside(e) {
+  if (e.target === document.getElementById('bd-overlay')) closeBreakdown();
+}
+
+function renderBdRows() {
+  var container = document.getElementById('bd-items-list');
+  if (_bdRows.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:20px;font-size:12px;color:rgba(255,255,255,.3);">No items yet. Tap + Add item.</div>';
+    return;
+  }
+  container.innerHTML = _bdRows.map(function(r, i) {
+    var lineTotal = Math.round((r.qty||1) * (r.price||0));
+    return '<div class="bd-item-row">'
+      + '<input type="text" placeholder="Item name" value="' + (r.name||'') + '"'
+      + ' oninput="_bdRows[' + i + '].name=this.value;">'
+      + '<input type="number" min="1" value="' + (r.qty||1) + '"'
+      + ' oninput="_bdRows[' + i + '].qty=parseFloat(this.value)||1;refreshBdRow(' + i + ');">'
+      + '<input type="number" min="0" placeholder="0" value="' + (r.price||'') + '"'
+      + ' oninput="_bdRows[' + i + '].price=parseFloat(this.value)||0;refreshBdRow(' + i + ');">'
+      + '<button class="bd-item-del" onclick="removeBdItem(' + i + ')">✕</button>'
+      + '</div>';
+  }).join('');
+  refreshBdTotals();
+}
+
+function refreshBdRow(i) { refreshBdTotals(); }
+
+function refreshBdTotals() {
+  var itemsTotal = _bdRows.reduce(function(s,r){ return s + Math.round((r.qty||1)*(r.price||0)); }, 0);
+  var inp        = document.querySelector('#custom-split-list .csr-input[data-name="' + _bdPersonName + '"]');
+  var personAmt  = inp ? (parseFloat(inp.value)||0) : 0;
+  var remaining  = personAmt - itemsTotal;
+
+  var itEl  = document.getElementById('bd-items-total');
+  var remEl = document.getElementById('bd-remaining');
+  if (itEl) {
+    itEl.textContent  = '₱' + itemsTotal.toLocaleString();
+    itEl.className    = 'breakdown-total-val' + (itemsTotal > _bdExpTotal ? ' over' : '');
+  }
+  if (remEl) {
+    remEl.textContent = (remaining >= 0 ? '₱' : '-₱') + Math.abs(remaining).toLocaleString();
+    remEl.className   = 'breakdown-total-val' + (Math.abs(remaining) < 1 ? ' ok' : remaining < 0 ? ' over' : '');
+  }
+}
+
+function addBdItem() {
+  _bdRows.push({id: Date.now() + Math.random(), name:'', qty:1, price:0});
+  renderBdRows();
+  var body = document.getElementById('bd-items-list');
+  if (body) body.scrollTop = body.scrollHeight;
+}
+
+function removeBdItem(i) {
+  _bdRows.splice(i, 1);
+  renderBdRows();
+}
+
+function applyBreakdown() {
+  var itemsTotal = _bdRows.reduce(function(s,r){ return s + Math.round((r.qty||1)*(r.price||0)); }, 0);
+  var inp = document.querySelector('#custom-split-list .csr-input[data-name="' + _bdPersonName + '"]');
+  if (inp) {
+    inp.value = itemsTotal;
+    inp._breakdown = _bdRows.slice();
+    updateSplitBalance();
+    var row = inp.closest('.custom-split-row');
+    var btn = row ? row.querySelector('.csr-breakdown-btn') : null;
+    var namedRows = _bdRows.filter(function(r){ return r.name || r.price; }).length;
+    if (btn) {
+      if (namedRows > 0) {
+        btn.textContent = '🧾 ' + namedRows + ' item' + (namedRows !== 1 ? 's' : '');
+        btn.classList.add('has-items');
+      } else {
+        btn.textContent = '≡';
+        btn.classList.remove('has-items');
+      }
+    }
+  }
+  document.getElementById('bd-cap').textContent = '₱' + itemsTotal.toLocaleString();
+  closeBreakdown();
+}
+
+/* ─── VIEW EXPENSE RECEIPT (single expense report) ─── */
+function viewExpenseReceipt(id, context) {
+  if (context === 'solo') {
+    var e = SOLO_EXPENSES.find(function(x){ return x.id === id; });
+    if (!e) return;
+    var now = new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'});
+    var splits = e.splits||[];
+    var isCustom = e.splitMode === 'custom';
+    var splitStr = isCustom
+      ? splits.map(function(s){ return s.name + ' ₱' + s.amount.toLocaleString(); }).join(' · ')
+      : (splits.length > 0 ? splits.map(function(s){ return s.name; }).join(', ') + ' (₱' + splits[0].amount.toLocaleString() + ' each)' : '');
+    var recEl = e.receipt ? '<div style="margin-top:8px;"><img src="' + e.receipt + '" style="max-width:100%;border-radius:8px;"/></div>' : '';
+    document.getElementById('report-content').innerHTML =
+      '<div class="report-header">'
+      + '<div class="report-brand">LAKWAT<span>SERO</span>PH</div>'
+      + '<div class="report-title">' + e.icon + ' ' + e.title + '</div>'
+      + '<div class="report-date">Generated: ' + now + '</div></div>'
+      + '<div class="report-section-title">Expense Details</div>'
+      + '<div class="report-item"><div class="report-item-left">'
+      + '<div class="report-item-name">' + e.type + '</div>'
+      + '<div class="report-item-meta">Paid by ' + e.paidBy + '</div>'
+      + '<div class="report-item-meta" style="margin-top:2px;color:#777;">' + splitStr + '</div>'
+      + recEl + '</div>'
+      + '<div><div class="report-item-amount">₱' + e.total.toLocaleString() + '</div></div></div>'
+      + '<div class="report-section-title">Who Owes What</div>'
+      + splits.map(function(s){
+          var b = e.paidBy === s.name ? (e.total - s.amount) : (-s.amount);
+          return '<div style="padding:10px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;">'
+            + '<div style="font-weight:600;font-size:13px;">' + s.name + '</div>'
+            + '<div style="text-align:right;">'
+            + '<div style="font-size:16px;font-weight:700;color:' + (b>=0?'#2D6A4F':'#C0392B') + ';">' + (b>=0?'+':'') + '₱' + Math.abs(b).toLocaleString() + '</div>'
+            + '<div style="font-size:10px;color:#888;">' + (b>=0?'gets back':'owes') + '</div></div></div>';
+        }).join('')
+      + '<div class="report-footer">Generated by LakwatseroPH 🇵🇭</div>';
+    goTo('s-report');
+  } else {
+    generateTripReport('item', -1, id);
+  }
+}
+
 /* ─── HELPERS ─── */
 function catLbl(c) {
   const m = {beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'};
@@ -3502,6 +3751,41 @@ function catAccent(c) {
     <div class="sheet-handle"></div>
     <div class="sheet-hdr"><div class="sheet-title">Report for which expense?</div><button class="sheet-close" onclick="closeSheet('sh-item-report')">✕</button></div>
     <div class="sheet-body" id="item-report-body"></div>
+  </div>
+</div>
+<!-- Breakdown popup -->
+<div class="breakdown-overlay" id="bd-overlay" onclick="closeBdIfOutside(event)">
+  <div class="breakdown-popup" id="bd-popup">
+    <div class="breakdown-hdr">
+      <div class="breakdown-hdr-top">
+        <div class="breakdown-person-name" id="bd-person-name">Maria</div>
+        <button class="breakdown-close" onclick="closeBreakdown()">✕</button>
+      </div>
+      <div class="breakdown-totals">
+        <div class="breakdown-total-pill">
+          <div class="breakdown-total-lbl">Their amount</div>
+          <div class="breakdown-total-val" id="bd-cap">₱0</div>
+        </div>
+        <div class="breakdown-total-pill">
+          <div class="breakdown-total-lbl">Items total</div>
+          <div class="breakdown-total-val" id="bd-items-total">₱0</div>
+        </div>
+        <div class="breakdown-total-pill">
+          <div class="breakdown-total-lbl">Remaining</div>
+          <div class="breakdown-total-val" id="bd-remaining">₱0</div>
+        </div>
+      </div>
+    </div>
+    <div class="breakdown-body">
+      <div class="bd-col-hdr">
+        <span>Item</span><span style="text-align:right">Qty</span><span style="text-align:right">Price (₱)</span><span></span>
+      </div>
+      <div id="bd-items-list"></div>
+    </div>
+    <div class="breakdown-footer">
+      <button class="btn-bd-add" onclick="addBdItem()">+ Add item</button>
+      <button class="btn-bd-done" onclick="applyBreakdown()">✓ Apply total</button>
+    </div>
   </div>
 </div>
 
