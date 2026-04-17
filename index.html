@@ -1202,6 +1202,9 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       <div class="al-guest-link">
         <span onclick="enterAsGuest()">or browse as a guest →</span>
       </div>
+      <div style="text-align:center;margin-top:14px;">
+        <button onclick="viewOnboarding()" style="background:none;border:none;color:rgba(255,255,255,.28);font-family:var(--ff-b);font-size:11px;cursor:pointer;padding:4px 8px;">✨ See app features</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1279,6 +1282,9 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
       </button>
       <div class="sample-trip-link">
         <span onclick="loadSample()">or try a sample trip →</span>
+      </div>
+      <div style="text-align:center;margin-top:10px;">
+        <button onclick="viewOnboarding()" style="background:none;border:none;color:rgba(255,255,255,.3);font-family:var(--ff-b);font-size:11px;cursor:pointer;padding:4px 8px;border-radius:var(--r-pill);transition:color .2s;">✨ App Features</button>
       </div>
     </div>
 
@@ -2151,14 +2157,14 @@ function submitAuthForm() {
   S.user = { name, email };
   syncMyName();
   updateGreeting();
-  if (!localStorage.getItem('lph_onboarded')) { showOnboarding(); } else { goTo('s-home'); }
+  goTo('s-home');
 }
 
 function enterAsGuest() {
   S.user = { name:'Lakwatsero', email:'', isGuest:true };
   syncMyName();
   updateGreeting();
-  if (!localStorage.getItem('lph_onboarded')) { showOnboarding(); } else { goTo('s-home'); }
+  goTo('s-home');
 }
 
 
@@ -3895,14 +3901,12 @@ function viewExpenseReceipt(id, context) {
 var _obSlide = 0;
 var _obTotal = 4;
 var _obStartX = 0;
+var _obReturnTo = 's-auth-landing'; // default: go to auth after onboarding
 
 function showOnboarding() {
   _obSlide = 0;
-  // Personalize slide 1 name
-  var first = S.user ? S.user.name.split(' ')[0].toUpperCase() : 'LAKWATSERO';
-  var nameEl = document.getElementById('ob-name-1');
-  if (nameEl) nameEl.textContent = first + '!';
-  // Build dots on all slides (reuse same ob-dots id on slide 1, others get theirs)
+  // No personalization at app open — user hasn't signed in yet
+  // Build dots on all slides
   ['ob-dots','ob-dots-2','ob-dots-3','ob-dots-4'].forEach(function(id){
     var el = document.getElementById(id);
     if (!el) return;
@@ -3915,26 +3919,27 @@ function showOnboarding() {
   });
   var ob = document.getElementById('s-onboarding');
   ob.classList.add('active');
+  ob.style.opacity = '';
   obSetSlide(0);
-  // Touch / swipe support
-  ob.addEventListener('touchstart', function(e){ _obStartX = e.touches[0].clientX; }, {passive:true});
-  ob.addEventListener('touchend',   function(e){
-    var dx = e.changedTouches[0].clientX - _obStartX;
-    if (dx < -60) obNext();
-    else if (dx > 60) obPrev();
-  }, {passive:true});
+  // Touch / swipe support — add once
+  if (!ob._swipeAttached) {
+    ob._swipeAttached = true;
+    ob.addEventListener('touchstart', function(e){ _obStartX = e.touches[0].clientX; }, {passive:true});
+    ob.addEventListener('touchend',   function(e){
+      var dx = e.changedTouches[0].clientX - _obStartX;
+      if (dx < -60) obNext();
+      else if (dx > 60) obPrev();
+    }, {passive:true});
+  }
 }
 
 function obSetSlide(idx) {
   _obSlide = idx;
-  // Move track
   document.getElementById('ob-track').style.transform = 'translateX(-' + (idx * 100) + 'vw)';
-  // Active class for animations
   for (var i = 0; i < _obTotal; i++) {
     var s = document.getElementById('ob-slide-' + i);
     if (s) s.classList.toggle('ob-active', i === idx);
   }
-  // Update all dot groups
   document.querySelectorAll('.ob-dots').forEach(function(dotsEl){
     var dots = dotsEl.querySelectorAll('.ob-dot');
     dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
@@ -3952,6 +3957,8 @@ function obPrev() {
 
 function completeOnboarding() {
   localStorage.setItem('lph_onboarded', '1');
+  var dest = _obReturnTo || 's-auth-landing';
+  _obReturnTo = 's-auth-landing'; // reset for next time
   var ob = document.getElementById('s-onboarding');
   ob.style.transition = 'opacity .4s ease';
   ob.style.opacity    = '0';
@@ -3959,11 +3966,28 @@ function completeOnboarding() {
     ob.classList.remove('active');
     ob.style.opacity    = '';
     ob.style.transition = '';
-    goTo('s-home');
+    goTo(dest);
   }, 400);
 }
 
 /* ─── HELPERS ─── */
+
+/* ─── APP INIT ─── */
+(function initApp() {
+  if (!localStorage.getItem('lph_onboarded')) {
+    // First time opening the app — show onboarding
+    // s-auth-landing is active by default in HTML; we overlay onboarding on top
+    showOnboarding();
+  }
+  // If already onboarded, auth landing shows as normal (it's the default active screen)
+})();
+
+function viewOnboarding() {
+  // Detect where we are so we return to the right place
+  var currentScreen = document.querySelector('.screen.active');
+  _obReturnTo = currentScreen ? currentScreen.id : 's-auth-landing';
+  showOnboarding();
+}
 function catLbl(c) {
   const m = {beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'};
   return m[c] || c;
@@ -3985,7 +4009,7 @@ function catAccent(c) {
 ═══════════════════════════════════════ -->
 <div id="s-onboarding">
   <div class="ob-topbar">
-    <button class="ob-skip" onclick="completeOnboarding()">Skip</button>
+    <button class="ob-skip" onclick="completeOnboarding()">Skip →</button>
   </div>
 
   <div class="ob-track" id="ob-track">
@@ -4026,7 +4050,7 @@ function catAccent(c) {
       </div>
       <div class="ob-text">
         <div class="ob-eyebrow" style="color:var(--red);">🇵🇭 Welcome</div>
-        <div class="ob-headline">MABUHAY,<br/><span id="ob-name-1" style="color:var(--red);">LAKWATSERO!</span></div>
+        <div class="ob-headline">MABUHAY,<br/><span id="ob-name-1" style="color:var(--red);">LAKWATSEROPH!</span></div>
         <div class="ob-body">Your Philippine adventure starts here. LakwatseroPH is your barkada's trip HQ — plan, budget, and explore the country together.</div>
       </div>
       <div class="ob-bottom">
@@ -4202,7 +4226,7 @@ function catAccent(c) {
       </div>
       <div class="ob-bottom">
         <div class="ob-dots" id="ob-dots-4"></div>
-        <button class="ob-cta ob-cta-4" onclick="completeOnboarding()">Start planning! 🚀</button>
+        <button class="ob-cta ob-cta-4" onclick="completeOnboarding()">Get Started 🚀</button>
       </div>
     </div>
 
