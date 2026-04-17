@@ -998,6 +998,169 @@ html,body{height:100%;overflow:hidden;font-family:var(--ff-b);background:#0a0a14
 }
 .exp-split-chip.me{background:var(--blue-l);color:var(--blue);}
 
+/* ═══════════════════════════════════════
+   ONBOARDING SLIDES
+═══════════════════════════════════════ */
+#s-onboarding{
+  position:fixed;inset:0;z-index:500;
+  background:#05080f;
+  display:none;flex-direction:column;
+  overflow:hidden;
+}
+#s-onboarding.active{ display:flex; }
+
+/* Slides track */
+.ob-track{
+  flex:1;display:flex;
+  transition:transform .38s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+
+/* Single slide */
+.ob-slide{
+  min-width:100vw;height:100%;
+  display:flex;flex-direction:column;
+  padding:0;overflow:hidden;position:relative;
+}
+
+/* Slide backgrounds with subtle radial glow */
+.ob-slide-1{ background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(192,57,43,.22) 0%,#05080f 70%); }
+.ob-slide-2{ background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(26,79,160,.22) 0%,#05080f 70%); }
+.ob-slide-3{ background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(244,168,0,.18) 0%,#05080f 70%); }
+.ob-slide-4{ background:radial-gradient(ellipse 80% 60% at 50% 30%,rgba(45,106,79,.22) 0%,#05080f 70%); }
+
+/* Top bar — skip */
+.ob-topbar{
+  position:absolute;top:0;left:0;right:0;z-index:10;
+  display:flex;justify-content:flex-end;
+  padding:52px 20px 0;
+}
+.ob-skip{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.45);font-family:var(--ff-b);font-size:11px;font-weight:600;
+  padding:6px 14px;border-radius:var(--r-pill);cursor:pointer;
+  transition:all .2s;
+}
+.ob-skip:hover{ background:rgba(255,255,255,.15);color:rgba(255,255,255,.7); }
+
+/* Illustration area */
+.ob-illus{
+  flex:0 0 52vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+
+/* Text area */
+.ob-text{
+  flex:1;padding:0 28px 0;display:flex;flex-direction:column;justify-content:flex-start;
+}
+.ob-eyebrow{
+  font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  margin-bottom:8px;
+  opacity:0;animation:ob-fadeUp .5s ease forwards;animation-delay:.1s;
+}
+.ob-headline{
+  font-family:var(--ff-d);font-size:clamp(36px,10vw,52px);letter-spacing:.03em;
+  color:var(--white);line-height:1;margin-bottom:8px;
+  opacity:0;animation:ob-fadeUp .5s ease forwards;animation-delay:.2s;
+}
+.ob-body{
+  font-size:14px;line-height:1.6;color:rgba(255,255,255,.55);
+  margin-bottom:0;
+  opacity:0;animation:ob-fadeUp .5s ease forwards;animation-delay:.35s;
+}
+
+/* Bottom — dots + CTA */
+.ob-bottom{
+  padding:16px 28px 40px;display:flex;flex-direction:column;gap:14px;
+  flex-shrink:0;
+}
+.ob-dots{
+  display:flex;gap:6px;justify-content:center;
+}
+.ob-dot{
+  height:5px;border-radius:3px;
+  background:rgba(255,255,255,.18);
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  width:5px;
+}
+.ob-dot.active{
+  width:24px;background:var(--white);
+}
+.ob-cta{
+  width:100%;padding:16px;border-radius:var(--r-md);
+  border:none;font-family:var(--ff-b);font-size:15px;font-weight:700;
+  cursor:pointer;transition:transform .15s,opacity .15s;
+  opacity:0;animation:ob-fadeUp .5s ease forwards;animation-delay:.5s;
+}
+.ob-cta:active{ transform:scale(.97); }
+.ob-cta-1{ background:var(--red);    color:var(--white); }
+.ob-cta-2{ background:var(--blue);   color:var(--white); }
+.ob-cta-3{ background:var(--gold);   color:var(--earth); }
+.ob-cta-4{ background:linear-gradient(135deg,var(--green),#1B4332); color:var(--white); }
+
+/* Keyframes */
+@keyframes ob-fadeUp{
+  from{ opacity:0;transform:translateY(18px); }
+  to{   opacity:1;transform:translateY(0); }
+}
+@keyframes ob-pinDrop{
+  0%{   transform:translateY(-80px) scale(.8);opacity:0; }
+  60%{  transform:translateY(8px)  scale(1.08);opacity:1; }
+  80%{  transform:translateY(-4px) scale(.96); }
+  100%{ transform:translateY(0)   scale(1);opacity:1; }
+}
+@keyframes ob-ripple{
+  0%{   transform:scale(0);opacity:.7; }
+  100%{ transform:scale(4);opacity:0; }
+}
+@keyframes ob-float{
+  0%,100%{ transform:translateY(0); }
+  50%{     transform:translateY(-10px); }
+}
+@keyframes ob-lineGrow{
+  from{ stroke-dashoffset:300; }
+  to{   stroke-dashoffset:0; }
+}
+@keyframes ob-popIn{
+  0%{   transform:scale(0) rotate(-8deg);opacity:0; }
+  70%{  transform:scale(1.12) rotate(2deg);opacity:1; }
+  100%{ transform:scale(1) rotate(0deg);opacity:1; }
+}
+@keyframes ob-countUp{
+  from{ opacity:0;transform:translateY(6px); }
+  to{   opacity:1;transform:translateY(0); }
+}
+@keyframes ob-rotate{
+  from{ transform:rotate(0deg); }
+  to{   transform:rotate(360deg); }
+}
+@keyframes ob-wave{
+  0%,100%{ d:path("M0,20 Q20,10 40,20 Q60,30 80,20 Q100,10 120,20 L120,40 L0,40Z"); }
+  50%{     d:path("M0,20 Q20,30 40,20 Q60,10 80,20 Q100,30 120,20 L120,40 L0,40Z"); }
+}
+@keyframes ob-twinkle{
+  0%,100%{ opacity:.2;transform:scale(.8); }
+  50%{     opacity:1; transform:scale(1.2); }
+}
+@keyframes ob-blink{
+  0%,80%,100%{ opacity:1; }
+  40%{ opacity:0; }
+}
+/* Slide-in for illustration elements — triggered by .ob-active class */
+.ob-slide .ob-illus *{ animation-play-state:paused; }
+.ob-slide.ob-active .ob-illus *{ animation-play-state:running; }
+.ob-slide.ob-active .ob-eyebrow,
+.ob-slide.ob-active .ob-headline,
+.ob-slide.ob-active .ob-body,
+.ob-slide.ob-active .ob-cta{ animation-play-state:running; }
+/* Reset animations when slide is not active */
+.ob-slide:not(.ob-active) .ob-eyebrow,
+.ob-slide:not(.ob-active) .ob-headline,
+.ob-slide:not(.ob-active) .ob-body,
+.ob-slide:not(.ob-active) .ob-cta{
+  opacity:0;animation:none;
+}
+
 .hidden{display:none!important;}
 
 </style>
@@ -1988,15 +2151,16 @@ function submitAuthForm() {
   S.user = { name, email };
   syncMyName();
   updateGreeting();
-  goTo('s-home');
+  if (!localStorage.getItem('lph_onboarded')) { showOnboarding(); } else { goTo('s-home'); }
 }
 
 function enterAsGuest() {
   S.user = { name:'Lakwatsero', email:'', isGuest:true };
   syncMyName();
   updateGreeting();
-  goTo('s-home');
+  if (!localStorage.getItem('lph_onboarded')) { showOnboarding(); } else { goTo('s-home'); }
 }
+
 
 function updateGreeting() {
   const el = document.getElementById('home-greeting');
@@ -3727,6 +3891,78 @@ function viewExpenseReceipt(id, context) {
   }
 }
 
+/* ─── ONBOARDING ─── */
+var _obSlide = 0;
+var _obTotal = 4;
+var _obStartX = 0;
+
+function showOnboarding() {
+  _obSlide = 0;
+  // Personalize slide 1 name
+  var first = S.user ? S.user.name.split(' ')[0].toUpperCase() : 'LAKWATSERO';
+  var nameEl = document.getElementById('ob-name-1');
+  if (nameEl) nameEl.textContent = first + '!';
+  // Build dots on all slides (reuse same ob-dots id on slide 1, others get theirs)
+  ['ob-dots','ob-dots-2','ob-dots-3','ob-dots-4'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '';
+    for (var i = 0; i < _obTotal; i++) {
+      var d = document.createElement('div');
+      d.className = 'ob-dot' + (i === 0 ? ' active' : '');
+      el.appendChild(d);
+    }
+  });
+  var ob = document.getElementById('s-onboarding');
+  ob.classList.add('active');
+  obSetSlide(0);
+  // Touch / swipe support
+  ob.addEventListener('touchstart', function(e){ _obStartX = e.touches[0].clientX; }, {passive:true});
+  ob.addEventListener('touchend',   function(e){
+    var dx = e.changedTouches[0].clientX - _obStartX;
+    if (dx < -60) obNext();
+    else if (dx > 60) obPrev();
+  }, {passive:true});
+}
+
+function obSetSlide(idx) {
+  _obSlide = idx;
+  // Move track
+  document.getElementById('ob-track').style.transform = 'translateX(-' + (idx * 100) + 'vw)';
+  // Active class for animations
+  for (var i = 0; i < _obTotal; i++) {
+    var s = document.getElementById('ob-slide-' + i);
+    if (s) s.classList.toggle('ob-active', i === idx);
+  }
+  // Update all dot groups
+  document.querySelectorAll('.ob-dots').forEach(function(dotsEl){
+    var dots = dotsEl.querySelectorAll('.ob-dot');
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+  });
+}
+
+function obNext() {
+  if (_obSlide < _obTotal - 1) { obSetSlide(_obSlide + 1); }
+  else { completeOnboarding(); }
+}
+
+function obPrev() {
+  if (_obSlide > 0) obSetSlide(_obSlide - 1);
+}
+
+function completeOnboarding() {
+  localStorage.setItem('lph_onboarded', '1');
+  var ob = document.getElementById('s-onboarding');
+  ob.style.transition = 'opacity .4s ease';
+  ob.style.opacity    = '0';
+  setTimeout(function(){
+    ob.classList.remove('active');
+    ob.style.opacity    = '';
+    ob.style.transition = '';
+    goTo('s-home');
+  }, 400);
+}
+
 /* ─── HELPERS ─── */
 function catLbl(c) {
   const m = {beach:'Beach',restaurant:'Restaurant',tourist_spot:'Tourist Spot',shopping:'Shopping',souvenirs:'Souvenirs',nightlife:'Night Life',camping:'Camping',nature_hike:'Nature & Hike',water_sports:'Water Sports',cultural:'Cultural'};
@@ -3744,7 +3980,236 @@ function catAccent(c) {
   const m = {beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'};
   return m[c] || '#888';
 }
-</script><!-- Day report picker -->
+</script><!-- ═══════════════════════════════════════
+     ONBOARDING SLIDES
+═══════════════════════════════════════ -->
+<div id="s-onboarding">
+  <div class="ob-topbar">
+    <button class="ob-skip" onclick="completeOnboarding()">Skip</button>
+  </div>
+
+  <div class="ob-track" id="ob-track">
+
+    <!-- ── SLIDE 1 · MABUHAY ── -->
+    <div class="ob-slide ob-slide-1 ob-active" id="ob-slide-0">
+      <div class="ob-illus">
+
+        <!-- Philippine map + animated pin -->
+        <svg width="260" height="240" viewBox="0 0 260 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Luzon -->
+          <path d="M115,30 Q125,24 134,28 Q142,34 140,46 Q144,52 148,58 Q152,66 150,76 Q154,82 152,92 Q148,100 142,104 Q138,110 134,116 Q128,122 122,118 Q116,114 114,104 Q108,98 106,88 Q104,78 108,70 Q106,62 110,54 Q112,44 115,30Z"
+            fill="rgba(192,57,43,.35)" stroke="rgba(192,57,43,.6)" stroke-width="1"/>
+          <!-- Visayas dots -->
+          <ellipse cx="130" cy="140" rx="10" ry="7" fill="rgba(244,168,0,.35)" stroke="rgba(244,168,0,.6)" stroke-width="1"
+            style="animation:ob-blink 2.4s ease infinite;animation-delay:.4s;"/>
+          <ellipse cx="108" cy="148" rx="7" ry="5" fill="rgba(244,168,0,.3)" stroke="rgba(244,168,0,.5)" stroke-width="1"
+            style="animation:ob-blink 2.4s ease infinite;animation-delay:.8s;"/>
+          <ellipse cx="148" cy="146" rx="8" ry="5" fill="rgba(244,168,0,.3)" stroke="rgba(244,168,0,.5)" stroke-width="1"
+            style="animation:ob-blink 2.4s ease infinite;animation-delay:1.2s;"/>
+          <!-- Mindanao -->
+          <path d="M110,168 Q120,162 134,164 Q146,166 152,174 Q158,182 154,192 Q150,200 140,204 Q130,206 120,202 Q110,198 106,188 Q102,178 110,168Z"
+            fill="rgba(26,79,160,.35)" stroke="rgba(26,79,160,.6)" stroke-width="1"/>
+
+          <!-- Animated pin dropping onto Luzon -->
+          <g style="animation:ob-pinDrop .7s cubic-bezier(.4,0,.2,1) forwards;animation-delay:.5s;opacity:0;">
+            <circle cx="130" cy="76" r="16" fill="var(--red)" opacity=".9"/>
+            <path d="M130,76 L130,98" stroke="var(--red)" stroke-width="3" stroke-linecap="round"/>
+            <text x="130" y="81" text-anchor="middle" font-size="12" fill="white">📍</text>
+          </g>
+          <!-- Ripple from pin -->
+          <circle cx="130" cy="76" r="16" fill="none" stroke="rgba(192,57,43,.5)" stroke-width="2"
+            style="animation:ob-ripple 1.2s ease-out infinite;animation-delay:1.2s;"/>
+          <circle cx="130" cy="76" r="16" fill="none" stroke="rgba(192,57,43,.3)" stroke-width="2"
+            style="animation:ob-ripple 1.2s ease-out infinite;animation-delay:1.7s;"/>
+        </svg>
+
+      </div>
+      <div class="ob-text">
+        <div class="ob-eyebrow" style="color:var(--red);">🇵🇭 Welcome</div>
+        <div class="ob-headline">MABUHAY,<br/><span id="ob-name-1" style="color:var(--red);">LAKWATSERO!</span></div>
+        <div class="ob-body">Your Philippine adventure starts here. LakwatseroPH is your barkada's trip HQ — plan, budget, and explore the country together.</div>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-dots" id="ob-dots"></div>
+        <button class="ob-cta ob-cta-1" onclick="obNext()">Let's go →</button>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 2 · PLAN A TRIP ── -->
+    <div class="ob-slide ob-slide-2" id="ob-slide-1">
+      <div class="ob-illus">
+
+        <svg width="260" height="220" viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Vertical timeline line drawing itself -->
+          <line x1="70" y1="20" x2="70" y2="200" stroke="rgba(26,79,160,.3)" stroke-width="2" stroke-dasharray="300" stroke-dashoffset="300"
+            style="animation:ob-lineGrow .9s ease forwards;animation-delay:.4s;"/>
+
+          <!-- Day 1 card -->
+          <g style="animation:ob-popIn .5s ease forwards;animation-delay:.5s;opacity:0;">
+            <circle cx="70" cy="50" r="8" fill="var(--blue)"/>
+            <rect x="90" y="36" width="140" height="28" rx="8" fill="rgba(26,79,160,.25)" stroke="rgba(26,79,160,.5)" stroke-width="1"/>
+            <text x="104" y="54" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.8)">Day 1  🏖️ Beach day</text>
+          </g>
+          <!-- Day 2 card -->
+          <g style="animation:ob-popIn .5s ease forwards;animation-delay:.75s;opacity:0;">
+            <circle cx="70" cy="110" r="8" fill="var(--blue)"/>
+            <rect x="90" y="96" width="140" height="28" rx="8" fill="rgba(26,79,160,.25)" stroke="rgba(26,79,160,.5)" stroke-width="1"/>
+            <text x="104" y="114" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.8)">Day 2  🍜 Food trip</text>
+          </g>
+          <!-- Day 3 card -->
+          <g style="animation:ob-popIn .5s ease forwards;animation-delay:1s;opacity:0;">
+            <circle cx="70" cy="170" r="8" fill="var(--blue)"/>
+            <rect x="90" y="156" width="140" height="28" rx="8" fill="rgba(26,79,160,.25)" stroke="rgba(26,79,160,.5)" stroke-width="1"/>
+            <text x="104" y="174" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.8)">Day 3  🤿 Adventure</text>
+          </g>
+
+          <!-- Floating map pin -->
+          <text x="30" y="110" font-size="22" style="animation:ob-float 2.8s ease-in-out infinite;animation-delay:.2s;">🗺️</text>
+        </svg>
+
+      </div>
+      <div class="ob-text">
+        <div class="ob-eyebrow" style="color:var(--blue);">🗺️ Plan</div>
+        <div class="ob-headline">BUILD YOUR<br/><span style="color:#4A8FE0;">PERFECT TRIP</span></div>
+        <div class="ob-body">Pick your destination and build a day-by-day itinerary. Add beaches, restaurants, and activities from our curated places list — all in one place.</div>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-dots" id="ob-dots-2"></div>
+        <button class="ob-cta ob-cta-2" onclick="obNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 3 · SPLIT THE BILL ── -->
+    <div class="ob-slide ob-slide-3" id="ob-slide-2">
+      <div class="ob-illus">
+
+        <svg width="260" height="220" viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Center bill icon -->
+          <g style="animation:ob-popIn .5s ease forwards;animation-delay:.3s;opacity:0;">
+            <circle cx="130" cy="110" r="28" fill="rgba(244,168,0,.2)" stroke="rgba(244,168,0,.6)" stroke-width="2"/>
+            <text x="130" y="118" text-anchor="middle" font-size="22">💸</text>
+          </g>
+
+          <!-- 4 avatar circles + lines -->
+          <!-- Top-left: You -->
+          <g style="animation:ob-popIn .4s ease forwards;animation-delay:.55s;opacity:0;">
+            <line x1="105" y1="93" x2="74" y2="62" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <circle cx="60" cy="50" r="22" fill="#1A4FA0"/>
+            <text x="60" y="55" text-anchor="middle" font-size="10" fill="white" font-weight="bold">YOU</text>
+            <rect x="42" y="65" width="36" height="16" rx="8" fill="rgba(45,106,79,.8)"/>
+            <text x="60" y="77" text-anchor="middle" font-size="9" fill="white">+₱2,400</text>
+          </g>
+          <!-- Top-right: Juan -->
+          <g style="animation:ob-popIn .4s ease forwards;animation-delay:.75s;opacity:0;">
+            <line x1="155" y1="93" x2="186" y2="62" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <circle cx="200" cy="50" r="22" fill="#2D6A4F"/>
+            <text x="200" y="55" text-anchor="middle" font-size="10" fill="white" font-weight="bold">JUAN</text>
+            <rect x="183" y="65" width="34" height="16" rx="8" fill="rgba(192,57,43,.8)"/>
+            <text x="200" y="77" text-anchor="middle" font-size="9" fill="white">−₱580</text>
+          </g>
+          <!-- Bottom-left: Maria -->
+          <g style="animation:ob-popIn .4s ease forwards;animation-delay:.95s;opacity:0;">
+            <line x1="105" y1="127" x2="74" y2="158" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <circle cx="60" cy="170" r="22" fill="#C0392B"/>
+            <text x="60" y="175" text-anchor="middle" font-size="10" fill="white" font-weight="bold">MARIA</text>
+            <rect x="43" y="185" width="34" height="16" rx="8" fill="rgba(192,57,43,.8)"/>
+            <text x="60" y="197" text-anchor="middle" font-size="9" fill="white">−₱320</text>
+          </g>
+          <!-- Bottom-right: Carlo -->
+          <g style="animation:ob-popIn .4s ease forwards;animation-delay:1.15s;opacity:0;">
+            <line x1="155" y1="127" x2="186" y2="158" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <circle cx="200" cy="170" r="22" fill="#B8860B"/>
+            <text x="200" y="175" text-anchor="middle" font-size="10" fill="white" font-weight="bold">CARLO</text>
+            <rect x="183" y="185" width="34" height="16" rx="8" fill="rgba(192,57,43,.8)"/>
+            <text x="200" y="197" text-anchor="middle" font-size="9" fill="white">−₱450</text>
+          </g>
+        </svg>
+
+      </div>
+      <div class="ob-text">
+        <div class="ob-eyebrow" style="color:var(--gold);">💸 Budget</div>
+        <div class="ob-headline">NO MORE<br/><span style="color:var(--gold);">AWKWARD MATH</span></div>
+        <div class="ob-body">Log every expense, split equally or customize per person. Generate a receipt anyone can print. Everyone pays exactly what they owe — no drama.</div>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-dots" id="ob-dots-3"></div>
+        <button class="ob-cta ob-cta-3" onclick="obNext()">Next →</button>
+      </div>
+    </div>
+
+    <!-- ── SLIDE 4 · ENJOY ── -->
+    <div class="ob-slide ob-slide-4" id="ob-slide-3">
+      <div class="ob-illus">
+
+        <svg width="280" height="220" viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Sky / stars -->
+          <circle cx="40"  cy="30" r="2" fill="white" style="animation:ob-twinkle 2.1s ease-in-out infinite;animation-delay:0s;"/>
+          <circle cx="90"  cy="18" r="1.5" fill="white" style="animation:ob-twinkle 2.1s ease-in-out infinite;animation-delay:.4s;"/>
+          <circle cx="200" cy="24" r="2" fill="white" style="animation:ob-twinkle 2.1s ease-in-out infinite;animation-delay:.8s;"/>
+          <circle cx="240" cy="40" r="1.5" fill="white" style="animation:ob-twinkle 2.1s ease-in-out infinite;animation-delay:1.2s;"/>
+          <circle cx="155" cy="14" r="1" fill="white" style="animation:ob-twinkle 2.1s ease-in-out infinite;animation-delay:.6s;"/>
+          <circle cx="60"  cy="55" r="1" fill="white" style="animation:ob-twinkle 2.1s ease-in-out infinite;animation-delay:1.5s;"/>
+
+          <!-- Sun -->
+          <g style="animation:ob-rotate 18s linear infinite;transform-origin:140px 55px;">
+            <circle cx="140" cy="55" r="22" fill="rgba(244,168,0,.25)" stroke="rgba(244,168,0,.4)" stroke-width="1"/>
+            <line x1="140" y1="24" x2="140" y2="18" stroke="rgba(244,168,0,.5)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="140" y1="86" x2="140" y2="92" stroke="rgba(244,168,0,.5)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="109" y1="55" x2="103" y2="55" stroke="rgba(244,168,0,.5)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="171" y1="55" x2="177" y2="55" stroke="rgba(244,168,0,.5)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="118" y1="34" x2="114" y2="30" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="162" y1="34" x2="166" y2="30" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="118" y1="76" x2="114" y2="80" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="162" y1="76" x2="166" y2="80" stroke="rgba(244,168,0,.4)" stroke-width="1.5" stroke-linecap="round"/>
+          </g>
+          <circle cx="140" cy="55" r="14" fill="rgba(244,168,0,.6)"/>
+          <text x="140" y="60" text-anchor="middle" font-size="14">☀️</text>
+
+          <!-- Palm tree -->
+          <path d="M80,190 Q82,160 85,130 Q87,120 90,110" stroke="rgba(45,106,79,.8)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- Fronds -->
+          <path d="M90,110 Q70,98 55,105" stroke="rgba(45,106,79,.7)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M90,110 Q78,92 82,76"  stroke="rgba(45,106,79,.7)" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M90,110 Q102,96 112,100" stroke="rgba(45,106,79,.7)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+          <!-- Person on beach chair, floating -->
+          <g style="animation:ob-float 3.2s ease-in-out infinite;">
+            <rect x="130" y="148" width="60" height="22" rx="6" fill="rgba(26,79,160,.5)" stroke="rgba(26,79,160,.8)" stroke-width="1"/>
+            <!-- Chair legs -->
+            <line x1="136" y1="170" x2="130" y2="186" stroke="rgba(26,79,160,.6)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="184" y1="170" x2="190" y2="186" stroke="rgba(26,79,160,.6)" stroke-width="2" stroke-linecap="round"/>
+            <!-- Person sitting -->
+            <circle cx="152" cy="138" r="10" fill="rgba(192,57,43,.7)" stroke="rgba(192,57,43,.9)" stroke-width="1"/>
+            <text x="152" y="143" text-anchor="middle" font-size="11">😎</text>
+            <!-- Drink -->
+            <text x="185" y="148" font-size="14">🍹</text>
+          </g>
+
+          <!-- Ocean waves at bottom -->
+          <path d="M0,196 Q35,186 70,196 Q105,206 140,196 Q175,186 210,196 Q245,206 280,196 L280,220 L0,220Z"
+            fill="rgba(26,79,160,.35)"
+            style="animation:ob-float 2.5s ease-in-out infinite;"/>
+          <path d="M0,204 Q35,194 70,204 Q105,214 140,204 Q175,194 210,204 Q245,214 280,204 L280,220 L0,220Z"
+            fill="rgba(26,79,160,.5)"
+            style="animation:ob-float 2.5s ease-in-out infinite;animation-delay:.6s;"/>
+        </svg>
+
+      </div>
+      <div class="ob-text">
+        <div class="ob-eyebrow" style="color:#6ecba0;">✨ The Point</div>
+        <div class="ob-headline">LESS STRESS.<br/><span style="color:#6ecba0;">MORE LAKWATSA.</span></div>
+        <div class="ob-body">LakwatseroPH handles the organizing so you can focus on the part that actually matters — making memories with your barkada.</div>
+      </div>
+      <div class="ob-bottom">
+        <div class="ob-dots" id="ob-dots-4"></div>
+        <button class="ob-cta ob-cta-4" onclick="completeOnboarding()">Start planning! 🚀</button>
+      </div>
+    </div>
+
+  </div><!-- end ob-track -->
+</div><!-- end s-onboarding -->
+
+<!-- Day report picker -->
 <div class="overlay" id="sh-day-report" onclick="closeSheetOut(event,'sh-day-report')">
   <div class="sheet">
     <div class="sheet-handle"></div>
