@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
 <title>LakwatseroPH</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="lakwatsero-ph.css">
-  <link rel="icon" href="data:,">
 </head>
 <body>
 
@@ -418,7 +417,7 @@
         <div class="rv-title" id="rv-t">Boracay Trip 🌴</div>
         <div class="rv-row"><span class="rv-k">Duration</span><span class="rv-v" id="rv-days">3 days</span></div>
         <div class="rv-row"><span class="rv-k">Group size</span><span class="rv-v" id="rv-grp">4 people</span></div>
-        <div class="rv-row"><span class="rv-k">Budget</span><span class="rv-v" id="rv-bud">₱3k–5k / person</span></div>
+        <div class="rv-row"><span class="rv-k">Budget</span><span class="rv-v" id="rv-bud">₱20,000 total</span></div>
         <div class="rv-row"><span class="rv-k">Interests</span><div id="rv-flt" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:60%;"></div></div>
       </div>
       <div style="background:var(--gold-l);border:1px solid rgba(244,168,0,.28);border-radius:var(--r-md);padding:11px;font-size:12px;color:var(--gold-d);line-height:1.6;">🌟 You'll build your own day-by-day plan — browse places, add to days, and track your budget.</div>
@@ -467,6 +466,7 @@
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('tour',this)">Tour</button>
       <button class="tab-btn" onclick="switchTab('budget',this)">Budget</button>
+      <button class="tab-btn" onclick="switchTab('mybudget',this)">My Budget</button>
       <button class="tab-btn" onclick="switchTab('map',this);initMap()">Map</button>
       <button class="tab-btn" onclick="switchTab('group',this)">Group</button>
     </div>
@@ -506,7 +506,55 @@
       <div class="budget-day-tabs" id="budget-day-tabs"></div>
       <div class="exp-sec-title" id="budget-day-label">All expenses</div>
       <div id="exp-list"></div>
-      <button class="add-exp-btn" onclick="openExpSheet(null)">+ Log Expense</button>
+      <div id="budget-log-btn-wrap"><button class="add-exp-btn" onclick="openExpSheet(null)">+ Log Expense</button></div>
+    </div>
+
+    <!-- MY BUDGET -->
+    <div class="tab-pane" id="tab-mybudget">
+      <div class="bud-summary" style="margin:-16px -16px 14px;">
+        <div class="bud-total-lbl">My personal spend</div>
+        <div class="bud-total-val" id="mb-total">₱0</div>
+        <div class="bud-bar-wrap"><div class="bud-bar-fill" id="mb-bar" style="width:0%"></div></div>
+        <div class="bud-bar-lbls">
+          <span class="bud-bar-lbl" id="mb-count">0 expenses</span>
+          <span class="bud-bar-lbl" id="mb-note">Personal only · not shared</span>
+        </div>
+      </div>
+      <div class="exp-sec-title">My Expenses</div>
+      <div id="mb-exp-list"></div>
+      <button class="add-exp-btn" style="background:var(--green-d);" onclick="openMyBudgetSheet(null)">+ Log Personal Expense</button>
+    </div>
+
+    <!-- MY BUDGET -->
+    <div class="tab-pane" id="tab-mybudget">
+      <div class="bud-summary" style="margin:-16px -16px 14px;">
+        <div class="bud-total-lbl">My personal spend</div>
+        <div class="bud-total-val" id="mb-total">₱0</div>
+        <div class="bud-bar-wrap"><div class="bud-bar-fill" id="mb-bar" style="width:0%"></div></div>
+        <div class="bud-bar-lbls">
+          <span class="bud-bar-lbl" id="mb-count">0 expenses</span>
+          <span class="bud-bar-lbl" id="mb-note">Personal only · not shared</span>
+        </div>
+      </div>
+      <div class="exp-sec-title">My Expenses</div>
+      <div id="mb-exp-list"></div>
+      <button class="add-exp-btn" style="background:var(--green-d);" onclick="openMyBudgetSheet(null)">+ Log Personal Expense</button>
+    </div>
+
+    <!-- MY BUDGET -->
+    <div class="tab-pane" id="tab-mybudget">
+      <div class="bud-summary" style="margin:-16px -16px 14px;">
+        <div class="bud-total-lbl">My personal spend</div>
+        <div class="bud-total-val" id="mb-total">&#x20B1;0</div>
+        <div class="bud-bar-wrap"><div class="bud-bar-fill" id="mb-bar" style="width:0%"></div></div>
+        <div class="bud-bar-lbls">
+          <span class="bud-bar-lbl" id="mb-count">0 expenses</span>
+          <span class="bud-bar-lbl" id="mb-note">Personal only &middot; not shared</span>
+        </div>
+      </div>
+      <div class="exp-sec-title">My Expenses</div>
+      <div id="mb-exp-list"></div>
+      <button class="add-exp-btn" style="background:var(--green-d);" onclick="openMyBudgetSheet(null)">+ Log Personal Expense</button>
     </div>
 
     <!-- MAP -->
@@ -693,6 +741,114 @@
           </div>
         </div>
         <button class="btn-save-exp" onclick="saveExpense()">Save Expense</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- My Budget Sheet -->
+<div class="overlay" id="sh-mybudget" onclick="closeSheetOut(event,'sh-mybudget')">
+  <div class="sheet">
+    <div class="sheet-header">
+      <div class="sheet-title" id="mb-sheet-title">Log Personal Expense</div>
+      <button class="sheet-close" onclick="closeSheet('sh-mybudget')">&#x2715;</button>
+    </div>
+    <div style="padding:0 16px 20px;">
+      <!-- Expense type chips (reuse same categories) -->
+      <div style="margin-bottom:12px;">
+        <div class="flbl" style="margin-bottom:7px;">Category</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;" id="mb-type-chips"></div>
+      </div>
+      <div id="mb-form" style="display:none;">
+        <div class="fld"><label class="flbl">Amount (&#x20B1;)</label><input class="finp" type="number" id="mb-amt" placeholder="0.00" oninput="renderMbItems()"/></div>
+        <div class="fld"><label class="flbl">Note (optional)</label><input class="finp" type="text" id="mb-note-in" placeholder="What was this for?"/></div>
+        <!-- Itemized breakdown -->
+        <div style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <span class="flbl" style="margin:0;">Items (optional)</span>
+            <button onclick="addMbItem()" style="font-size:11px;padding:4px 10px;background:var(--blue);color:#fff;border:none;border-radius:var(--r-sm);cursor:pointer;font-family:var(--ff-b);">+ Add Item</button>
+          </div>
+          <div id="mb-items-list"></div>
+        </div>
+        <!-- Receipt -->
+        <div class="fld" style="margin-top:10px;">
+          <label class="flbl">Receipt (optional)</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px dashed rgba(28,16,8,.18);border-radius:var(--r-md);font-size:12px;color:var(--earth-l);">
+            <span>&#x1F4CE;</span><span id="mb-receipt-lbl">Tap to attach receipt photo</span>
+            <input type="file" accept="image/*" style="display:none;" onchange="handleMbReceipt(event)"/>
+          </label>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-top:14px;" onclick="saveMbExpense()">Save Expense</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- My Budget Sheet -->
+<div class="overlay" id="sh-mybudget" onclick="closeSheetOut(event,'sh-mybudget')">
+  <div class="sheet">
+    <div class="sheet-header">
+      <div class="sheet-title" id="mb-sheet-title">Log Personal Expense</div>
+      <button class="sheet-close" onclick="closeSheet('sh-mybudget')">✕</button>
+    </div>
+    <div style="padding:0 16px 20px;">
+      <div style="margin-bottom:12px;">
+        <div class="flbl" style="margin-bottom:7px;">Category</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;" id="mb-type-chips"></div>
+      </div>
+      <div id="mb-form" style="display:none;">
+        <div class="fld"><label class="flbl">Amount (₱)</label><input class="finp" type="number" id="mb-amt" placeholder="0.00"/></div>
+        <div class="fld"><label class="flbl">Note (optional)</label><input class="finp" type="text" id="mb-note-in" placeholder="What was this for?"/></div>
+        <div style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <span class="flbl" style="margin:0;">Items (optional)</span>
+            <button onclick="addMbItem()" style="font-size:11px;padding:4px 10px;background:var(--blue);color:#fff;border:none;border-radius:var(--r-sm);cursor:pointer;font-family:var(--ff-b);">+ Add Item</button>
+          </div>
+          <div id="mb-items-list"></div>
+        </div>
+        <div class="fld" style="margin-top:10px;">
+          <label class="flbl">Receipt (optional)</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px dashed rgba(28,16,8,.18);border-radius:var(--r-md);font-size:12px;color:var(--earth-l);">
+            <span>📎</span><span id="mb-receipt-lbl">Tap to attach receipt photo</span>
+            <input type="file" accept="image/*" style="display:none;" onchange="handleMbReceipt(event)"/>
+          </label>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-top:14px;" onclick="saveMbExpense()">Save Expense</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- My Budget Sheet -->
+<div class="overlay" id="sh-mybudget" onclick="closeSheetOut(event,'sh-mybudget')">
+  <div class="sheet">
+    <div class="sheet-header">
+      <div class="sheet-title" id="mb-sheet-title">Log Personal Expense</div>
+      <button class="sheet-close" onclick="closeSheet('sh-mybudget')">✕</button>
+    </div>
+    <div style="padding:0 16px 20px;">
+      <div style="margin-bottom:12px;">
+        <div class="flbl" style="margin-bottom:7px;">Category</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;" id="mb-type-chips"></div>
+      </div>
+      <div id="mb-form" style="display:none;">
+        <div class="fld"><label class="flbl">Amount (₱)</label><input class="finp" type="number" id="mb-amt" placeholder="0.00"/></div>
+        <div class="fld"><label class="flbl">Note (optional)</label><input class="finp" type="text" id="mb-note-in" placeholder="What was this for?"/></div>
+        <div style="margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <span class="flbl" style="margin:0;">Items (optional)</span>
+            <button onclick="addMbItem()" style="font-size:11px;padding:4px 10px;background:var(--blue);color:#fff;border:none;border-radius:var(--r-sm);cursor:pointer;font-family:var(--ff-b);">+ Add Item</button>
+          </div>
+          <div id="mb-items-list"></div>
+        </div>
+        <div class="fld" style="margin-top:10px;">
+          <label class="flbl">Receipt (optional)</label>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px 12px;border:1.5px dashed rgba(28,16,8,.18);border-radius:var(--r-md);font-size:12px;color:var(--earth-l);">
+            <span>📎</span><span id="mb-receipt-lbl">Tap to attach receipt photo</span>
+            <input type="file" accept="image/*" style="display:none;" onchange="handleMbReceipt(event)"/>
+          </label>
+        </div>
+        <button class="btn-primary" style="width:100%;margin-top:14px;" onclick="saveMbExpense()">Save Expense</button>
       </div>
     </div>
   </div>
