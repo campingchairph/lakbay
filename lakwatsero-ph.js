@@ -87,7 +87,7 @@ function syncMyName() {
 const S = {
   dest:'Boracay', destKey:'boracay', days:3, group:4,
   budgetAmount:20000, budgetType:'total', wizStep:0, isOwner:true,
-  tripDays:[], currentDay:0, user:null,
+  tripDays:[], currentDay:0, user:null, tripStart:null,
   selectedET:null, editingExpId:null,
   mapInit:false, leafMap:null,
   roleMemberId:null,
@@ -613,6 +613,17 @@ function setBType(t) {
   onBudgetInput();
 }
 
+function onStartDateInput() {
+  var v = document.getElementById('inp-startdate').value;
+  S.tripStart = v || null;
+  var hint = document.getElementById('startdate-hint');
+  if (hint && v) {
+    var d = new Date(v + 'T00:00:00');
+    var opts = {weekday:'short', month:'short', day:'numeric'};
+    hint.textContent = 'Trip starts ' + d.toLocaleDateString('en-PH', opts);
+  }
+}
+
 function onBudgetInput() {
   var inp = document.getElementById('inp-budget');
   if (!inp) return;
@@ -676,7 +687,16 @@ function buildTripUI() {
   document.getElementById('grp-trip-title').textContent = S.dest + ' Trip 🌴';
   document.getElementById('grp-trip-sub').textContent   = S.days + ' days · ' + S.group + ' people · ' + budDisp;
   S.tripDays = Array.from({length:S.days}, function(_,i) {
-    return {id:'d'+(i+1), num:i+1, label:'Day '+(i+1), stops:[]};
+    var label = 'Day '+(i+1);
+    var dateStr = '';
+    if (S.tripStart) {
+      var d = new Date(S.tripStart + 'T00:00:00');
+      d.setDate(d.getDate() + i);
+      var opts = {weekday:'short', month:'short', day:'numeric'};
+      dateStr = d.toLocaleDateString('en-PH', opts);
+      label = 'Day '+(i+1)+' · '+dateStr;
+    }
+    return {id:'d'+(i+1), num:i+1, label:label, date:dateStr, stops:[]};
   });
   renderDayTabs();
   buildBudgetDayTabs();
@@ -706,7 +726,8 @@ function renderDayTabs() {
 
 function renderDayPanel(panel, day, idx) {
   const meRole = MEMBERS.find(function(m){ return m.name==='You'; });
-  const canEdit = S.isOwner || (meRole && ROLES[meRole.role] && ROLES[meRole.role].canEditTour);
+  var _myRoles = meRole ? (meRole.roles || [meRole.role]) : [];
+  const canEdit = S.isOwner || _myRoles.some(function(r){ return ROLES[r] && ROLES[r].canEditTour; });
   if (day.stops.length === 0) {
     panel.innerHTML = '<div class="day-empty"><div class="day-empty-icon">🗺️</div>'
       + '<div class="day-empty-title">Day ' + day.num + ' is empty</div>'
@@ -870,11 +891,15 @@ function renderExpenses() {
 function applyRoleUI() {
   var canEditBudget = S.isOwner || (function(){
     var me = MEMBERS.find(function(m){ return m.name===myName(); });
-    return me && ROLES[me.role] && ROLES[me.role].canEditBudget;
+    if (!me) return false;
+    var roles = me.roles || [me.role];
+    return roles.some(function(r){ return ROLES[r] && ROLES[r].canEditBudget; });
   })();
   var canEditTour = S.isOwner || (function(){
     var me = MEMBERS.find(function(m){ return m.name===myName(); });
-    return me && ROLES[me.role] && ROLES[me.role].canEditTour;
+    if (!me) return false;
+    var roles = me.roles || [me.role];
+    return roles.some(function(r){ return ROLES[r] && ROLES[r].canEditTour; });
   })();
   // Budget tab: hide log expense button if no edit rights
   var logWrap = document.getElementById('budget-log-btn-wrap');
@@ -1202,18 +1227,44 @@ function renderMembers() {
 
 function openRoleSheet(memberId) {
   S.roleMemberId = memberId;
-  const m = MEMBERS.find(function(x){ return x.id === memberId; });
+  var m = MEMBERS.find(function(x){ return x.id === memberId; });
+  _pendingRoles = m ? (m.roles ? m.roles.slice() : (m.role ? [m.role] : [])) : [];
+  ['guest','tour_org','budget_mgr','co_owner'].forEach(function(r){
+    var c = document.getElementById('rc-'+r);
+    if (c) c.classList.toggle('active', _pendingRoles.indexOf(r) !== -1);
+  });
   if (!m) return;
-  document.getElementById('role-sheet-title').textContent = 'Assign Role to ' + m.name.split(' ')[0];
+  document.getElementById('role-sheet-title').textContent = 'Assign Roles to ' + m.name.split(' ')[0];
   document.getElementById('role-member-name').textContent = 'Currently: ' + (ROLES[m.role]||ROLES.guest).label;
   openSheet('sh-role');
 }
 
-function selectRole(role) {
-  const m = MEMBERS.find(function(x){ return x.id === S.roleMemberId; });
-  if (m) {
-    m.role = role;
-    const ri = ROLES[role] || ROLES.guest;
+// legacy stub
+function selectRole(role) { toggleRole(role); }
+
+var _pendingRoles = [];
+
+function toggleRole(role) {
+  var chip = document.getElementById('rc-' + role);
+  var idx = _pendingRoles.indexOf(role);
+  if (idx === -1) {
+    _pendingRoles.push(role);
+    if (chip) chip.classList.add('active');
+  } else {
+    _pendingRoles.splice(idx, 1);
+    if (chip) chip.classList.remove('active');
+  }
+}
+
+function saveRoles() {
+  var m = MEMBERS.find(function(x){ return x.id === S.roleMemberId; });
+  if (m && _pendingRoles.length > 0) {
+    // Primary role = highest permission role in the set
+    var priority = ['co_owner','tour_org','budget_mgr','guest'];
+    var primary = priority.find(function(r){ return _pendingRoles.indexOf(r) !== -1; }) || 'guest';
+    m.role = primary;
+    m.roles = _pendingRoles.slice();
+    var ri = ROLES[primary] || ROLES.guest;
     m.bg = ri.color;
     m.fg = ri.fg;
   }
@@ -2256,4 +2307,26 @@ function saveMbExpense() {
   }
   closeSheet('sh-mybudget');
   renderMyBudget();
+}
+/* ─── FLOATING MAP FAB ─── */
+function openMapForToday() {
+  var dayIdx = S.currentDay || 0;
+  if (S.tripStart) {
+    var today = new Date();
+    var start = new Date(S.tripStart + 'T00:00:00');
+    var diff = Math.floor((today - start) / 86400000);
+    if (diff >= 0 && diff < S.tripDays.length) dayIdx = diff;
+  }
+  var day = S.tripDays[dayIdx];
+  if (!day || !day.stops || day.stops.length === 0) {
+    alert('No stops on ' + (day ? day.label : 'this day') + ' yet. Add an activity first!');
+    return;
+  }
+  var firstStop = day.stops[0];
+  var query = encodeURIComponent(firstStop.name + (S.dest ? ' ' + S.dest : ''));
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  var url = isIOS
+    ? 'maps://maps.apple.com/?q=' + query
+    : 'https://www.google.com/maps/search/?api=1&query=' + query;
+  window.open(url, '_blank');
 }
