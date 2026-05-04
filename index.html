@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-  <link rel="stylesheet" href="lakwatsero-ph.css?v=4">
+  <link rel="stylesheet" href="lakwatsero-ph.css?v=5">
 </head>
 <body>
 
@@ -223,7 +223,9 @@
     <div class="exp-sec-title">Expenses</div>
     <div id="solo-exp-list"></div>
     <button class="add-exp-btn" style="background:var(--green-d);" onclick="openSoloExpSheet(null)">+ Log Expense</button>
-  </div>
+    <!-- Floating map button -->
+  <button id="fab-map" onclick="openMapForToday()" style="position:fixed;bottom:24px;right:20px;z-index:900;width:52px;height:52px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:22px;box-shadow:0 4px 16px rgba(192,57,43,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Open in Maps">&#x1F5FA;&#xFE0F;</button>
+</div>
 </div>
 
 <!-- ═══ EXPENSE REPORT SCREEN ═══ -->
@@ -366,6 +368,11 @@
         <div class="preset" onclick="setDays(5,this)">Week<br/><b>5D</b></div>
         <div class="preset" onclick="setDays(7,this)">Long<br/><b>7D</b></div>
       </div>
+      <div class="fld" style="margin-top:18px;">
+        <label class="flbl">&#x1F4C5; Start date <span style="font-weight:400;color:var(--earth-l);">(optional)</span></label>
+        <input class="finp" type="date" id="inp-startdate" oninput="onStartDateInput()"/>
+        <div style="font-size:11px;color:var(--earth-l);margin-top:5px;" id="startdate-hint">We'll stamp each day with the right date.</div>
+      </div>
     </div>
 
     <!-- STEP 2: Group & Budget -->
@@ -496,7 +503,6 @@
       <button class="tab-btn active" onclick="switchTab('tour',this)">Tour</button>
       <button class="tab-btn" onclick="switchTab('budget',this)">Budget</button>
       <button class="tab-btn" onclick="switchTab('mybudget',this)">My Budget</button>
-      <button class="tab-btn" onclick="switchTab('map',this);initMap()">Map</button>
       <button class="tab-btn" onclick="switchTab('group',this)">Group</button>
     </div>
   </div>
@@ -586,13 +592,8 @@
       <button class="add-exp-btn" style="background:var(--green-d);" onclick="openMyBudgetSheet(null)">+ Log Personal Expense</button>
     </div>
 
-    <!-- MAP -->
-    <div class="tab-pane" id="tab-map">
-      <div class="map-filter" id="map-filter-row">
-        <button class="map-f-btn active" onclick="filterMap('all',this)">All days</button>
-      </div>
-      <div id="map-el"></div>
-    </div>
+    <!-- MAP pane kept empty for legacy refs -->
+    <div class="tab-pane" id="tab-map" style="display:none!important;"></div>
 
     <!-- GROUP -->
     <div class="tab-pane" id="tab-group">
@@ -893,28 +894,30 @@
     </div>
     <div class="sheet-body">
       <div style="font-size:12px;color:rgba(255,255,255,.38);margin-bottom:14px;" id="role-member-name">Assigning role to member</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;">Tap to toggle — multiple roles allowed</div>
       <div class="role-grid">
-        <div class="role-chip" onclick="selectRole('guest')">
+        <div class="role-chip" id="rc-guest" onclick="toggleRole('guest')">
           <div class="role-chip-icon">👁️</div>
           <div class="role-chip-name">Pasahero</div>
           <div class="role-chip-desc">View-only access to tour and budget</div>
         </div>
-        <div class="role-chip" onclick="selectRole('tour_org')">
+        <div class="role-chip" id="rc-tour_org" onclick="toggleRole('tour_org')">
           <div class="role-chip-icon">🗺️</div>
           <div class="role-chip-name">Tour Maestro</div>
           <div class="role-chip-desc">Can edit tour days and add stops</div>
         </div>
-        <div class="role-chip" onclick="selectRole('budget_mgr')">
+        <div class="role-chip" id="rc-budget_mgr" onclick="toggleRole('budget_mgr')">
           <div class="role-chip-icon">💰</div>
           <div class="role-chip-name">Kwentador</div>
           <div class="role-chip-desc">Can log and manage all expenses</div>
         </div>
-        <div class="role-chip" onclick="selectRole('co_owner')">
+        <div class="role-chip" id="rc-co_owner" onclick="toggleRole('co_owner')">
           <div class="role-chip-icon">🤝</div>
           <div class="role-chip-name">Katuwang</div>
           <div class="role-chip-desc">Full access — co-organizer</div>
         </div>
       </div>
+      <button class="btn-primary" style="width:100%;margin-top:14px;" onclick="saveRoles()">Save Roles</button>
       <div class="role-access-note">
         <strong style="color:rgba(255,255,255,.6);">Access levels:</strong><br/>
         👑 Organizer — full control (you)<br/>
@@ -951,7 +954,7 @@
   </div>
 </div>
 
-<script src="lakwatsero-ph.js?v=4"></script><!-- ═══════════════════════════════════════
+<script src="lakwatsero-ph.js?v=5"></script><!-- ═══════════════════════════════════════
      ONBOARDING SLIDES
 ═══════════════════════════════════════ -->
 <div id="s-onboarding">
