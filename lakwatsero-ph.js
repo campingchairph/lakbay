@@ -2080,4 +2080,3 @@ function catAccent(c) {
   const m = {beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'};
   return m[c] || '#888';
 }
-</script><!-- ═══════════════════════════════════════
