@@ -614,10 +614,12 @@ function setBType(t) {
 }
 
 function onBudgetInput() {
-  var v = parseFloat(document.getElementById('inp-budget').value)||0;
+  var inp = document.getElementById('inp-budget');
+  if (!inp) return;
+  var v = parseFloat(inp.value)||0;
   S.budgetAmount = v;
-  var pp = S.budgetType==='pp' ? v : Math.round(v/(S.group||1));
-  document.getElementById('rv-bud').textContent = '₱' + v.toLocaleString() + (S.budgetType==='pp' ? ' / person' : ' total');
+  var rvBud = document.getElementById('rv-bud');
+  if (rvBud) rvBud.textContent = '₱' + v.toLocaleString() + (S.budgetType==='pp' ? ' / person' : ' total');
 }
 function pickBud(el, r) {
   // legacy stub — no-op
