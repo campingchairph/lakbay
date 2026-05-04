@@ -54,10 +54,10 @@ let EXPENSES = [
 /* ─── ROLES ─── */
 const ROLES = {
   owner:      {label:'👑 Organizer',  color:'#C0392B',fg:'#FDEAEA', canEditTour:true, canEditBudget:true, canManageRoles:true},
-  co_owner:   {label:'🤝 Katuwang',   color:'#1A4FA0',fg:'#E6EFFC', canEditTour:true, canEditBudget:true, canManageRoles:false},
-  tour_org:   {label:'🗺️ Tour Maestro',color:'#2D6A4F',fg:'#E8F5EE', canEditTour:true, canEditBudget:false,canManageRoles:false},
-  budget_mgr: {label:'💰 Kwentador',  color:'#B8860B',fg:'#FEF3D0', canEditTour:false,canEditBudget:true, canManageRoles:false},
-  guest:      {label:'👁️ Pasahero',   color:'#7A5C4A',fg:'#FAF0D7', canEditTour:false,canEditBudget:false,canManageRoles:false}
+  co_owner:   {label:'🤝 Katuwang',   color:'#1A4FA0',fg:'#E6EFFC', canEditTour:true,  canEditBudget:false,canManageRoles:false},
+  tour_org:   {label:'🗺️ Tour Maestro',color:'#2D6A4F',fg:'#E8F5EE', canEditTour:true,  canEditBudget:false,canManageRoles:false},
+  budget_mgr: {label:'💰 Kwentador',  color:'#B8860B',fg:'#FEF3D0', canEditTour:false, canEditBudget:true, canManageRoles:false},
+  guest:      {label:'👁️ Pasahero',   color:'#7A5C4A',fg:'#FAF0D7', canEditTour:false, canEditBudget:false,canManageRoles:false}
 };
 
 /* ─── MEMBERS ─── */
@@ -86,7 +86,7 @@ function syncMyName() {
 /* ─── STATE ─── */
 const S = {
   dest:'Boracay', destKey:'boracay', days:3, group:4,
-  budgetRange:'₱3k–5k', wizStep:0, isOwner:true,
+  budgetAmount:20000, budgetType:'total', wizStep:0, isOwner:true,
   tripDays:[], currentDay:0, user:null,
   selectedET:null, editingExpId:null,
   mapInit:false, leafMap:null,
@@ -105,6 +105,48 @@ let SOLO_EXPENSES = [];
 let SOLO_MEMBERS  = ['Me'];
 let _soloEditingId   = null;
 let _soloSelectedET  = null;
+
+/* ─── MY BUDGET (personal, per-member, inside trip) ─── */
+let MY_EXPENSES = [];
+let _mbEditingId = null;
+
+function renderMyBudget() {
+  var list = document.getElementById('mb-exp-list');
+  if (!list) return;
+  var total = MY_EXPENSES.reduce(function(s,e){ return s+e.total; },0);
+  document.getElementById('mb-total').textContent = '₱'+total.toLocaleString();
+  document.getElementById('mb-count').textContent = MY_EXPENSES.length + ' expense'+(MY_EXPENSES.length!==1?'s':'');
+  if (MY_EXPENSES.length===0) {
+    list.innerHTML = '<div style="text-align:center;padding:32px 16px;color:var(--earth-l);font-size:13px;">No personal expenses yet.<br>Tap + to log one.</div>';
+    return;
+  }
+  list.innerHTML = MY_EXPENSES.map(function(e) {
+    var itemsHtml = (e.items&&e.items.length) ? '<div style="font-size:10px;color:var(--earth-l);margin-top:3px;">'+e.items.map(function(it){return it.name+' x'+it.qty+' = ₱'+it.subtotal.toLocaleString();}).join(' &middot; ')+'</div>' : '';
+    return '<div class="exp-card" style="margin-bottom:8px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;">'
+      +'<div><span style="font-size:15px;">'+(e.icon||'💸')+'</span> <strong style="font-size:13px;">'+e.label+'</strong></div>'
+      +'<div style="display:flex;gap:6px;align-items:center;">'
+      +'<span style="font-size:14px;font-weight:700;color:var(--green-d)">₱'+e.total.toLocaleString()+'</span>'
+      +'<button style="background:none;border:none;cursor:pointer;color:var(--earth-l);font-size:11px;" onclick="editMbExpense(''+e.id+'')">✏️</button>'
+      +'<button style="background:none;border:none;cursor:pointer;color:#c0392b;font-size:11px;" onclick="deleteMbExpense(''+e.id+'')">✕</button>'
+      +'</div></div>'
+      +(e.note?'<div style="font-size:11px;color:var(--earth-l);margin-top:2px;">'+e.note+'</div>':'')
+      +itemsHtml
+      +(e.receipt?'<div style="font-size:10px;color:var(--blue);margin-top:3px;">📎 Receipt attached</div>':'')
+      +'</div>';
+  }).join('');
+}
+
+function deleteMbExpense(id) {
+  MY_EXPENSES = MY_EXPENSES.filter(function(e){ return e.id!==id; });
+  renderMyBudget();
+}
+
+function editMbExpense(id) {
+  openMyBudgetSheet(id);
+}
+
+// openMyBudgetSheet defined below
 
 /* ─── ISLAND GROUP DATA ─── */
 const ISLAND_GROUPS = {
@@ -563,13 +605,22 @@ function setDays(n, el) {
 }
 
 function setBType(t) {
+  S.budgetType = t;
   document.getElementById('btp-tot').classList.toggle('active', t==='total');
   document.getElementById('btp-pp').classList.toggle('active',  t==='pp');
+  var hint = document.getElementById('bud-type-hint');
+  if (hint) hint.textContent = t==='pp' ? 'Per person budget' : 'Total budget for all travellers';
+  onBudgetInput();
 }
 
+function onBudgetInput() {
+  var v = parseFloat(document.getElementById('inp-budget').value)||0;
+  S.budgetAmount = v;
+  var pp = S.budgetType==='pp' ? v : Math.round(v/(S.group||1));
+  document.getElementById('rv-bud').textContent = '₱' + v.toLocaleString() + (S.budgetType==='pp' ? ' / person' : ' total');
+}
 function pickBud(el, r) {
-  document.querySelectorAll('.bud-opt').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
+  // legacy stub — no-op
   S.budgetRange = r;
 }
 
@@ -577,7 +628,8 @@ function buildReview() {
   document.getElementById('rv-t').textContent    = S.dest + ' Trip 🌴';
   document.getElementById('rv-days').textContent = S.days + ' day' + (S.days > 1 ? 's' : '');
   document.getElementById('rv-grp').textContent  = (document.getElementById('inp-grp').value || 4) + ' people';
-  document.getElementById('rv-bud').textContent  = S.budgetRange + ' / person';
+  var _v=parseFloat(document.getElementById('inp-budget')?document.getElementById('inp-budget').value:20000)||20000; S.budgetAmount=_v;
+  document.getElementById('rv-bud').textContent = '₱'+_v.toLocaleString()+(S.budgetType==='pp'?' / person':' total');
   const fc = document.getElementById('rv-flt');
   fc.innerHTML = '';
   document.querySelectorAll('#wp3 .flt-chip.active').forEach(f => {
@@ -617,9 +669,10 @@ function buildTripUI() {
   document.getElementById('app-dest').textContent = S.dest.toUpperCase();
   document.getElementById('app-dtag').textContent = S.days + ' days';
   document.getElementById('app-gtag').textContent = S.group + ' people';
-  document.getElementById('app-btag').textContent = S.budgetRange;
+  var budDisp = '₱' + (S.budgetAmount||20000).toLocaleString() + (S.budgetType==='pp' ? '/person' : ' total');
+  document.getElementById('app-btag').textContent = budDisp;
   document.getElementById('grp-trip-title').textContent = S.dest + ' Trip 🌴';
-  document.getElementById('grp-trip-sub').textContent   = S.days + ' days · ' + S.group + ' people · ' + S.budgetRange + '/person';
+  document.getElementById('grp-trip-sub').textContent   = S.days + ' days · ' + S.group + ' people · ' + budDisp;
   S.tripDays = Array.from({length:S.days}, function(_,i) {
     return {id:'d'+(i+1), num:i+1, label:'Day '+(i+1), stops:[]};
   });
@@ -809,12 +862,33 @@ function renderExpenses() {
   }
   renderBudgetStats();
   renderMembers();
+  applyRoleUI();
+}
+
+function applyRoleUI() {
+  var canEditBudget = S.isOwner || (function(){
+    var me = MEMBERS.find(function(m){ return m.name===myName(); });
+    return me && ROLES[me.role] && ROLES[me.role].canEditBudget;
+  })();
+  var canEditTour = S.isOwner || (function(){
+    var me = MEMBERS.find(function(m){ return m.name===myName(); });
+    return me && ROLES[me.role] && ROLES[me.role].canEditTour;
+  })();
+  // Budget tab: hide log expense button if no edit rights
+  var logWrap = document.getElementById('budget-log-btn-wrap');
+  if (logWrap) logWrap.style.display = canEditBudget ? 'block' : 'none';
+  // Tour tab: add-activity buttons controlled per-day in renderDayPanel
+  // Group tab: only owner sees it
+  document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    var txt = btn.textContent.trim();
+    if (txt === 'Group') btn.style.display = S.isOwner ? '' : 'none';
+    if (txt === 'Map') btn.style.display = '';  // everyone sees map
+  });
 }
 
 function renderBudgetStats() {
   const total = EXPENSES.reduce(function(s,e){ return s+e.total; }, 0);
-  const budgetMap = {'₱3k–5k':5000,'₱5k–10k':10000,'₱10k–20k':20000,'₱20k+':30000};
-  const budget = S.group * (budgetMap[S.budgetRange] || 5000);
+  const budget = S.budgetType==='pp' ? S.budgetAmount * S.group : (S.budgetAmount || 20000);
   const pct    = Math.min(100, Math.round(total/budget*100));
   const left   = budget - total;
   const myTotal = EXPENSES.reduce(function(s,e){
@@ -1226,6 +1300,7 @@ function filterMap(f, btn) {
 
 /* ─── TABS / SHEETS ─── */
 function switchTab(name, btn) {
+  if (name==='mybudget') renderMyBudget();
   document.querySelectorAll('.tab-btn').forEach(function(t){ t.classList.remove('active'); });
   btn.classList.add('active');
   document.querySelectorAll('.tab-pane').forEach(function(t){ t.classList.remove('active'); });
@@ -1244,11 +1319,11 @@ function joinTrip(skip) {
     MEMBERS.push({id:'m'+Date.now(), name:name, role:'guest', bg:'#888780', fg:'#F1EFE8'});
   }
   S.isOwner = false;
+  S.user = {name: name || 'Guest'};
   loadSample();
-  S.tripDays.forEach(function(day, i) {
-    const p = document.getElementById('dp'+i);
-    if (p) renderDayPanel(p, day, i);
-  });
+  buildTripUI();
+  applyRoleUI();
+  goTo('s-app');
 }
 
 /* ─── COPY ─── */
@@ -1585,7 +1660,8 @@ function generateTripReport(mode, dayIndex, expenseId, personName) {
   if (mode === 'all') {
     filteredExp = EXPENSES;
     reportTitle = S.dest + ' Trip — Full Expense Report';
-    reportSub   = S.days + ' days · ' + S.group + ' people · ' + S.budgetRange + '/person';
+    var _bd = '₱'+(S.budgetAmount||20000).toLocaleString()+(S.budgetType==='pp'?'/person':' total');
+    reportSub   = S.days + ' days · ' + S.group + ' people · ' + _bd;
   } else if (mode === 'day') {
     filteredExp = EXPENSES.filter(function(e){ return e.day === dayIndex; });
     var dayLabel = dayIndex === -1 ? 'Pre-trip expenses' : (S.tripDays[dayIndex] ? S.tripDays[dayIndex].label : 'Day '+(dayIndex+1));
@@ -2079,4 +2155,104 @@ function catColor(c) {
 function catAccent(c) {
   const m = {beach:'#0086B3',restaurant:'#E8512A',tourist_spot:'#1A4FA0',shopping:'#F4A800',nightlife:'#3D2B1F',camping:'#2D6A4F',nature_hike:'#2D6A4F',water_sports:'#1A4FA0',cultural:'#7D3C98'};
   return m[c] || '#888';
+}
+
+/* ─── MY BUDGET JS ─── */
+var MB_TYPES = [
+  {icon:'🍴',label:'Food',cat:'food'},
+  {icon:'🛒',label:'Shopping',cat:'shopping'},
+  {icon:'🚗',label:'Transport',cat:'transport'},
+  {icon:'🏨',label:'Hotel',cat:'hotel'},
+  {icon:'🎡',label:'Activity',cat:'activity'},
+  {icon:'💸',label:'Other',cat:'other'}
+];
+var _mbSelType = null;
+var _mbItems   = [];
+var _mbReceipt = null;
+
+function openMyBudgetSheet(idOrNull) {
+  _mbEditingId = idOrNull;
+  _mbSelType = null;
+  _mbItems = [];
+  _mbReceipt = null;
+  var prefill = idOrNull ? MY_EXPENSES.find(function(e){ return e.id===idOrNull; }) : null;
+  document.getElementById('mb-sheet-title').textContent = idOrNull ? 'Edit Expense' : 'Log Personal Expense';
+  document.getElementById('mb-amt').value = prefill ? prefill.total : '';
+  document.getElementById('mb-note-in').value = prefill ? (prefill.note||'') : '';
+  document.getElementById('mb-receipt-lbl').textContent = 'Tap to attach receipt photo';
+  document.getElementById('mb-form').style.display = prefill ? 'block' : 'none';
+  if (prefill) { _mbSelType = {icon:prefill.icon,label:prefill.label,cat:prefill.cat}; _mbItems = prefill.items||[]; }
+  // Render type chips
+  document.getElementById('mb-type-chips').innerHTML = MB_TYPES.map(function(t){
+    var active = prefill && prefill.cat===t.cat ? ' active' : '';
+    return '<div class="exp-type-chip'+active+'" onclick="pickMbType(this,''+t.icon+'',''+t.label+'',''+t.cat+'')">'+t.icon+' '+t.label+'</div>';
+  }).join('');
+  renderMbItemsList();
+  openSheet('sh-mybudget');
+}
+
+function pickMbType(el, icon, label, cat) {
+  document.querySelectorAll('#mb-type-chips .exp-type-chip').forEach(function(c){ c.classList.remove('active'); });
+  el.classList.add('active');
+  _mbSelType = {icon:icon, label:label, cat:cat};
+  document.getElementById('mb-form').style.display = 'block';
+}
+
+function addMbItem() {
+  _mbItems.push({name:'',qty:1,price:0,subtotal:0});
+  renderMbItemsList();
+}
+
+function renderMbItemsList() {
+  var el = document.getElementById('mb-items-list');
+  if (!el) return;
+  if (!_mbItems.length) { el.innerHTML=''; return; }
+  el.innerHTML = _mbItems.map(function(it,i){
+    return '<div style="display:flex;gap:5px;margin-bottom:6px;align-items:center;">'
+      +'<input class="finp" style="flex:2;font-size:12px;padding:7px 9px;" placeholder="Item name" value="'+it.name+'" oninput="updateMbItem('+i+','name',this.value)"/>'
+      +'<input class="finp" style="width:44px;font-size:12px;padding:7px 6px;text-align:center;" type="number" min="1" value="'+it.qty+'" oninput="updateMbItem('+i+','qty',this.value)"/>'
+      +'<input class="finp" style="flex:1;font-size:12px;padding:7px 9px;" type="number" min="0" placeholder="₱" value="'+(it.price||'')+'" oninput="updateMbItem('+i+','price',this.value)"/>'
+      +'<button onclick="removeMbItem('+i+')" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:14px;">✕</button>'
+      +'</div>';
+  }).join('');
+}
+
+function updateMbItem(i, field, val) {
+  _mbItems[i][field] = field==='name' ? val : (parseFloat(val)||0);
+  _mbItems[i].subtotal = (_mbItems[i].qty||1)*(_mbItems[i].price||0);
+  // auto-sum into amount field
+  var total = _mbItems.reduce(function(s,it){ return s+it.subtotal; },0);
+  if (total>0) document.getElementById('mb-amt').value = total;
+}
+
+function removeMbItem(i) {
+  _mbItems.splice(i,1);
+  renderMbItemsList();
+}
+
+function handleMbReceipt(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  _mbReceipt = file.name;
+  document.getElementById('mb-receipt-lbl').textContent = '✔ '+file.name;
+}
+
+function saveMbExpense() {
+  if (!_mbSelType) { alert('Pick a category first.'); return; }
+  var amt = parseFloat(document.getElementById('mb-amt').value)||0;
+  if (!amt) { document.getElementById('mb-amt').focus(); return; }
+  var note = document.getElementById('mb-note-in').value.trim();
+  var expData = {
+    icon:_mbSelType.icon, label:_mbSelType.label, cat:_mbSelType.cat,
+    total:amt, note:note, items:_mbItems.slice(), receipt:_mbReceipt,
+    date: new Date().toLocaleDateString('en-PH',{month:'short',day:'numeric'})
+  };
+  if (_mbEditingId) {
+    var idx = MY_EXPENSES.findIndex(function(e){ return e.id===_mbEditingId; });
+    if (idx>-1) MY_EXPENSES[idx] = Object.assign({id:_mbEditingId}, expData);
+  } else {
+    MY_EXPENSES.push(Object.assign({id:'mb'+Date.now()}, expData));
+  }
+  closeSheet('sh-mybudget');
+  renderMyBudget();
 }
