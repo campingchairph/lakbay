@@ -127,8 +127,8 @@ function renderMyBudget() {
       +'<div><span style="font-size:15px;">'+(e.icon||'💸')+'</span> <strong style="font-size:13px;">'+e.label+'</strong></div>'
       +'<div style="display:flex;gap:6px;align-items:center;">'
       +'<span style="font-size:14px;font-weight:700;color:var(--green-d)">₱'+e.total.toLocaleString()+'</span>'
-      +'<button style="background:none;border:none;cursor:pointer;color:var(--earth-l);font-size:11px;" onclick="editMbExpense(''+e.id+'')">✏️</button>'
-      +'<button style="background:none;border:none;cursor:pointer;color:#c0392b;font-size:11px;" onclick="deleteMbExpense(''+e.id+'')">✕</button>'
+      +'<button style="background:none;border:none;cursor:pointer;color:var(--earth-l);font-size:11px;" onclick="editMbExpense(\'' + e.id + '\')">✏️</button>'
+      +'<button style="background:none;border:none;cursor:pointer;color:#c0392b;font-size:11px;" onclick="deleteMbExpense(\'' + e.id + '\')">✕</button>'
       +'</div></div>'
       +(e.note?'<div style="font-size:11px;color:var(--earth-l);margin-top:2px;">'+e.note+'</div>':'')
       +itemsHtml
@@ -2185,7 +2185,7 @@ function openMyBudgetSheet(idOrNull) {
   // Render type chips
   document.getElementById('mb-type-chips').innerHTML = MB_TYPES.map(function(t){
     var active = prefill && prefill.cat===t.cat ? ' active' : '';
-    return '<div class="exp-type-chip'+active+'" onclick="pickMbType(this,''+t.icon+'',''+t.label+'',''+t.cat+'')">'+t.icon+' '+t.label+'</div>';
+    return '<div class="exp-type-chip'+active+'" onclick="pickMbType(this,\'' + t.icon + '\',\'' + t.label + '\',\'' + t.cat + '\')">'+t.icon+' '+t.label+'</div>';
   }).join('');
   renderMbItemsList();
   openSheet('sh-mybudget');
@@ -2206,14 +2206,13 @@ function addMbItem() {
 function renderMbItemsList() {
   var el = document.getElementById('mb-items-list');
   if (!el) return;
-  if (!_mbItems.length) { el.innerHTML=''; return; }
-  el.innerHTML = _mbItems.map(function(it,i){
-    return '<div style="display:flex;gap:5px;margin-bottom:6px;align-items:center;">'
-      +'<input class="finp" style="flex:2;font-size:12px;padding:7px 9px;" placeholder="Item name" value="'+it.name+'" oninput="updateMbItem('+i+','name',this.value)"/>'
-      +'<input class="finp" style="width:44px;font-size:12px;padding:7px 6px;text-align:center;" type="number" min="1" value="'+it.qty+'" oninput="updateMbItem('+i+','qty',this.value)"/>'
-      +'<input class="finp" style="flex:1;font-size:12px;padding:7px 9px;" type="number" min="0" placeholder="₱" value="'+(it.price||'')+'" oninput="updateMbItem('+i+','price',this.value)"/>'
-      +'<button onclick="removeMbItem('+i+')" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:14px;">✕</button>'
-      +'</div>';
+  if (!_mbItems.length) { el.innerHTML = ''; return; }
+  el.innerHTML = _mbItems.map(function(it, i) {
+    var nameIn = '<input class="finp" style="flex:2;font-size:12px;padding:7px 9px;" placeholder="Item name" value="' + it.name + '" oninput="updateMbItem(' + i + ',\'name\',this.value)"/>';
+    var qtyIn  = '<input class="finp" style="width:44px;font-size:12px;padding:7px 6px;text-align:center;" type="number" min="1" value="' + it.qty + '" oninput="updateMbItem(' + i + ',\'qty\',this.value)"/>';
+    var priceIn= '<input class="finp" style="flex:1;font-size:12px;padding:7px 9px;" type="number" min="0" placeholder="\u20b1" value="' + (it.price || '') + '" oninput="updateMbItem(' + i + ',\'price\',this.value)"/>';
+    var delBtn = '<button onclick="removeMbItem(' + i + ')" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:14px;">\u2715</button>';
+    return '<div style="display:flex;gap:5px;margin-bottom:6px;align-items:center;">' + nameIn + qtyIn + priceIn + delBtn + '</div>';
   }).join('');
 }
 
