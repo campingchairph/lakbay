@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-  <link rel="stylesheet" href="lakwatsero-ph.css?v=5">
+  <link rel="stylesheet" href="lakwatsero-ph.css?v=6">
 </head>
 <body>
 
@@ -223,8 +223,6 @@
     <div class="exp-sec-title">Expenses</div>
     <div id="solo-exp-list"></div>
     <button class="add-exp-btn" style="background:var(--green-d);" onclick="openSoloExpSheet(null)">+ Log Expense</button>
-    <!-- Floating map button -->
-  <button id="fab-map" onclick="openMapForToday()" style="position:fixed;bottom:24px;right:20px;z-index:900;width:52px;height:52px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:22px;box-shadow:0 4px 16px rgba(192,57,43,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Open in Maps">&#x1F5FA;&#xFE0F;</button>
 </div>
 </div>
 
@@ -518,7 +516,7 @@
     <!-- BUDGET -->
     <div class="tab-pane" id="tab-budget">
       <div class="bud-summary">
-        <div class="bud-total-lbl">Total budget</div>
+        <div class="bud-total-lbl" style="display:flex;align-items:center;gap:6px;">Total budget <button onclick="openBudgetEdit()" style="background:rgba(255,255,255,.15);border:none;border-radius:20px;color:#fff;font-size:10px;padding:2px 8px;cursor:pointer;font-family:var(--ff-b);">✏️ Edit</button></div>
         <div class="bud-total-val" id="bud-total">₱20,000</div>
         <div class="bud-bar-wrap"><div class="bud-bar-fill" id="bud-bar" style="width:42%"></div></div>
         <div class="bud-bar-lbls"><span class="bud-bar-lbl" id="bud-pct">42% spent</span><span class="bud-bar-lbl" id="bud-left">₱11,580 left</span></div>
@@ -605,6 +603,7 @@
           <button class="copy-btn" onclick="copyLink()">Copy</button>
         </div>
       </div>
+      <button onclick="testAsJoiner()" style="width:100%;margin-bottom:14px;padding:11px;background:var(--gold-l);border:1.5px dashed var(--gold);border-radius:var(--r-md);color:var(--gold-d);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--ff-b);">🧪 Preview as Joiner (test roles)</button>
       <div class="group-hdr">
         <div class="group-hdr-title" id="grp-trip-title">Boracay Trip 🌴</div>
         <div class="group-hdr-sub" id="grp-trip-sub">3 days · 4 people · ₱5k/person</div>
@@ -772,6 +771,30 @@
         </div>
         <button class="btn-save-exp" onclick="saveExpense()">Save Expense</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Budget Edit Sheet -->
+<div class="overlay" id="sh-budget-edit" onclick="closeSheetOut(event,'sh-budget-edit')">
+  <div class="sheet">
+    <div class="sheet-header">
+      <div class="sheet-title">Update Trip Budget</div>
+      <button class="sheet-close" onclick="closeSheet('sh-budget-edit')">✕</button>
+    </div>
+    <div style="padding:0 16px 20px;">
+      <div class="fld">
+        <label class="flbl">Budget type</label>
+        <div class="tog-row"><div class="tog-opt active" id="be-tot" onclick="setBudgetEditType('total')">Total</div><div class="tog-opt" id="be-pp" onclick="setBudgetEditType('pp')">Per person</div></div>
+      </div>
+      <div class="fld">
+        <label class="flbl">Amount (₱)</label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--earth-m);">₱</span>
+          <input class="finp" type="number" id="be-amt" min="0" step="500" style="padding-left:24px;" placeholder="0"/>
+        </div>
+      </div>
+      <button class="btn-primary" style="width:100%;margin-top:6px;" onclick="saveBudgetEdit()">Update Budget</button>
     </div>
   </div>
 </div>
@@ -954,7 +977,7 @@
   </div>
 </div>
 
-<script src="lakwatsero-ph.js?v=5"></script><!-- ═══════════════════════════════════════
+<script src="lakwatsero-ph.js?v=6"></script><!-- ═══════════════════════════════════════
      ONBOARDING SLIDES
 ═══════════════════════════════════════ -->
 <div id="s-onboarding">
@@ -1236,5 +1259,12 @@
   </div>
 </div>
 
+
+<!-- ═══ FLOATING MAP FAB ═══ -->
+<button id="fab-map" onclick="openMapForToday()" style="display:none;position:fixed;bottom:28px;right:22px;z-index:9999;width:56px;height:56px;border-radius:50%;background:var(--red);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(192,57,43,.5),0 1px 4px rgba(0,0,0,.2);align-items:center;justify-content:center;flex-direction:column;gap:1px;font-size:10px;font-family:var(--ff-b);font-weight:700;transition:transform .15s,box-shadow .15s;" onmouseenter="this.style.transform='scale(1.1)'" onmouseleave="this.style.transform='scale(1)'" title="Open in Maps">
+  <span style="font-size:20px;line-height:1;">&#x1F5FA;&#xFE0F;</span>
+  <span style="font-size:8px;letter-spacing:.02em;opacity:.85;">MAP</span>
+  <span style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:var(--gold);border:2px solid #fff;"></span>
+</button>
 </body>
 </html>
