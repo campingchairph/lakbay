@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-  <link rel="stylesheet" href="lakwatsero-ph.css">
+  <link rel="stylesheet" href="lakwatsero-ph.css?v=3">
 </head>
 <body>
 
@@ -376,12 +376,42 @@
         <div class="tog-row"><div class="tog-opt active" id="btp-tot" onclick="setBType('total')">Total budget</div><div class="tog-opt" id="btp-pp" onclick="setBType('pp')">Per person</div></div>
       </div>
       <div class="fld">
-        <label class="flbl">Budget range (PHP)</label>
-        <div class="bud-grid">
-          <div class="bud-opt active" onclick="pickBud(this,'₱3k–5k')"><div class="boc-t">Budget</div><div class="boc-a">₱3,000–5,000</div><div class="boc-d">Backpacker</div></div>
-          <div class="bud-opt" onclick="pickBud(this,'₱5k–10k')"><div class="boc-t">Mid-range</div><div class="boc-a">₱5,000–10,000</div><div class="boc-d">Comfortable</div></div>
-          <div class="bud-opt" onclick="pickBud(this,'₱10k–20k')"><div class="boc-t">Premium</div><div class="boc-a">₱10,000–20,000</div><div class="boc-d">Upscale</div></div>
-          <div class="bud-opt" onclick="pickBud(this,'₱20k+')"><div class="boc-t">Luxury</div><div class="boc-a">₱20,000+</div><div class="boc-d">No limits</div></div>
+        <label class="flbl">Budget amount (PHP)</label>
+        <div style="position:relative;">
+          <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:700;color:var(--earth-m);font-size:15px;">&#x20B1;</span>
+          <input class="finp" type="number" id="inp-budget" min="0" step="500" placeholder="e.g. 20000" style="padding-left:28px;" oninput="onBudgetInput()" value="20000"/>
+        </div>
+        <div style="font-size:11px;color:var(--earth-l);margin-top:5px;" id="bud-type-hint">Total budget for all travellers</div>
+      </div>
+
+      <!-- Budget infographic -->
+      <div style="margin-top:16px;background:linear-gradient(135deg,#0d1b3e 0%,#1a2f5e 100%);border-radius:14px;padding:20px 16px;overflow:hidden;position:relative;">
+        <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(26,79,160,.25);border-radius:50%;"></div>
+        <div style="position:absolute;bottom:-30px;left:-15px;width:80px;height:80px;background:rgba(244,168,0,.12);border-radius:50%;"></div>
+        <div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:rgba(149,213,178,.7);margin-bottom:6px;text-transform:uppercase;">&#x1F4CB; Plan</div>
+        <div style="font-size:18px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:4px;">BUILD YOUR<br><span style="color:#4A9EE8;">PERFECT BUDGET</span></div>
+        <div style="font-size:11px;color:rgba(255,255,255,.55);line-height:1.6;margin-bottom:16px;">Set your group budget, log every expense, and split costs — all in one place.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:11px 10px;">
+            <div style="font-size:18px;margin-bottom:4px;">&#x1F4B8;</div>
+            <div style="font-size:11px;font-weight:700;color:#fff;">Group Budget</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.4;">Track shared expenses and see who owes what</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:11px 10px;">
+            <div style="font-size:18px;margin-bottom:4px;">&#x1F4CA;</div>
+            <div style="font-size:11px;font-weight:700;color:#fff;">My Budget</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.4;">Log personal spend — shopping, food, pasalubong</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:11px 10px;">
+            <div style="font-size:18px;margin-bottom:4px;">&#x2696;&#xFE0F;</div>
+            <div style="font-size:11px;font-weight:700;color:#fff;">Auto Split</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.4;">Equal or custom splits per barkada member</div>
+          </div>
+          <div style="background:rgba(255,255,255,.07);border-radius:10px;padding:11px 10px;">
+            <div style="font-size:18px;margin-bottom:4px;">&#x1F4C4;</div>
+            <div style="font-size:11px;font-weight:700;color:#fff;">Reports</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.45);line-height:1.4;">Generate expense reports to share with the group</div>
+          </div>
         </div>
       </div>
     </div>
@@ -923,7 +953,7 @@
   </div>
 </div>
 
-<script src="lakwatsero-ph.js"></script><!-- ═══════════════════════════════════════
+<script src="lakwatsero-ph.js?v=3"></script><!-- ═══════════════════════════════════════
      ONBOARDING SLIDES
 ═══════════════════════════════════════ -->
 <div id="s-onboarding">
