@@ -1221,24 +1221,29 @@ function renderMembers() {
     const bal      = balances[m.name] || 0;
     const initials = m.name.split(' ').map(function(n){ return n[0]; }).join('').slice(0,2).toUpperCase();
     const roleInfo = ROLES[m.role] || ROLES.guest;
-    const canChange = S.isOwner && m.role !== 'owner';
-    return '<div class="member-row">'
-      + '<div class="member-av" style="background:' + m.bg + ';color:' + m.fg + '">' + initials + '</div>'
-      + '<div style="flex:1;min-width:0;">'
-      + '<div class="member-nm">' + m.name + '</div>'
-      + (function(){
-          var roles = m.roles && m.roles.length ? m.roles : [m.role || 'guest'];
-          return roles.map(function(r){
-            var ri = ROLES[r] || ROLES.guest;
-            return '<div class="member-role-badge" style="background:'+ri.color+'22;color:'+ri.color+';display:inline-block;margin-right:3px;">'+ri.label+'</div>';
-          }).join('');
-        })()
-      + (canChange ? '<button class="role-change-btn" onclick="openRoleSheet(\'' + m.id + '\')">Change role ↓</button>' : '')
-      + '</div>'
-      + '<div class="member-bal">'
-      + '<div class="member-bal-val" style="color:' + (bal>=0 ? 'var(--green)' : 'var(--red)') + '">' + (bal>=0?'+':'') + '₱' + Math.abs(bal).toLocaleString() + '</div>'
-      + '<div class="member-bal-lbl">' + (bal>=0 ? 'gets back' : 'owes') + '</div>'
-      + '</div></div>';
+    var isUnnamed = m.isGuest && /^Guest \d+$/.test(m.name);
+    var nameHtml = S.isOwner
+      ? '<input class="member-name-inp" value="' + m.name + '" placeholder="Enter name" style="border:none;border-bottom:1.5px solid rgba(28,16,8,.18);background:transparent;font-size:13px;font-weight:600;color:var(--earth);font-family:var(--ff-b);width:130px;outline:none;padding:2px 0;" onchange="renameMember(\'' + m.id + '\',this.value)"/>'
+      : '<div class="member-nm">' + m.name + '</div>';
+    var shareHtml = '';
+    if (S.isOwner && !isUnnamed) {
+      shareHtml = '<button onclick="shareMemberLink(\'' + m.id + '\')" style="margin-top:7px;width:100%;padding:7px;background:var(--red);color:#fff;border:none;border-radius:var(--r-sm);font-size:11px;font-weight:700;cursor:pointer;font-family:var(--ff-b);">&#x2197; Share link with ' + m.name.split(' ')[0] + '</button>';
+    } else if (S.isOwner && isUnnamed) {
+      shareHtml = '<div style="font-size:10px;color:var(--earth-l);margin-top:4px;">✏️ Name this person to unlock their share link</div>';
+    }
+    var rolesBadges = (m.roles && m.roles.length ? m.roles : [m.role || 'guest']).map(function(r) {
+      var ri = ROLES[r] || ROLES.guest;
+      return '<div class="member-role-badge" style="background:' + ri.color + '22;color:' + ri.color + ';display:inline-block;margin-right:3px;">' + ri.label + '</div>';
+    }).join('');
+    var html = '<div class="member-row" style="flex-direction:column;align-items:stretch;gap:0;">';
+    html += '<div style="display:flex;align-items:center;gap:10px;">';
+    html += '<div class="member-av" style="background:' + m.bg + ';color:' + m.fg + '">' + initials + '</div>';
+    html += '<div style="flex:1;min-width:0;">' + nameHtml + rolesBadges;
+    html += canChange ? '<button class="role-change-btn" onclick="openRoleSheet(\'' + m.id + '\')">Change role</button>' : '';
+    html += '</div>';
+    html += '<div class="member-bal"><div class="member-bal-val" style="color:' + (bal>=0 ? 'var(--green)' : 'var(--red)') + '">' + (bal>=0?'+':'') + '₱' + Math.abs(bal).toLocaleString() + '</div><div class="member-bal-lbl">' + (bal>=0 ? 'gets back' : 'owes') + '</div></div>';
+    html += '</div>' + shareHtml + '</div>';
+    return html;
   }).join('');
   renderPerPersonReportList();
 }
