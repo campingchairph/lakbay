@@ -732,7 +732,8 @@ function renderDayTabs() {
 }
 
 function renderDayPanel(panel, day, idx) {
-  const meRole = MEMBERS.find(function(m){ return m.name==='You'; });
+  var _viewerName = S.user && S.user.name ? S.user.name : null;
+  var meRole = _viewerName ? MEMBERS.find(function(m){ return m.name===_viewerName; }) : null;
   var _myRoles = meRole ? (meRole.roles || [meRole.role]) : [];
   const canEdit = S.isOwner || _myRoles.some(function(r){ return ROLES[r] && ROLES[r].canEditTour; });
   if (day.stops.length === 0) {
