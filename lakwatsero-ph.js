@@ -695,6 +695,16 @@ function buildTripUI() {
   document.getElementById('app-btag').textContent = budDisp;
   document.getElementById('grp-trip-title').textContent = S.dest + ' Trip \U0001f334';
   document.getElementById('grp-trip-sub').textContent   = S.days + ' days \xb7 ' + S.group + ' people \xb7 ' + budDisp;
+  // Rebuild members list: owner + Guest 1..N based on group size
+  var ownerMember = MEMBERS.find(function(m){ return m.role==='owner'; }) || MEMBERS[0];
+  MEMBERS = [ownerMember];
+  var colors = ['#2D6A4F','#C0392B','#F4A800','#1A4FA0','#7D3C98','#2874A6','#117A65','#BA4A00'];
+  var fgs    = ['#E8F5EE','#FDEAEA','#FEF3D0','#E6EFFC','#F5EEF8','#D6EAF8','#D1F2EB','#FAE5D3'];
+  for (var gi=1; gi<(S.group||1); gi++) {
+    MEMBERS.push({id:'g'+gi, name:'Guest '+gi, role:'guest', roles:['guest'],
+      bg:colors[(gi-1)%colors.length], fg:fgs[(gi-1)%fgs.length], isGuest:true});
+  }
+
   S.tripDays = Array.from({length:S.days}, function(_,i) {
     var label = 'Day '+(i+1);
     if (S.tripStart) {
@@ -1353,10 +1363,13 @@ function filterMap(f, btn) {
 
 /* ─── TABS / SHEETS ─── */
 function switchTab(name, btn) {
+  if (name==='mybudget') renderMyBudget();
   document.querySelectorAll('.tab-btn').forEach(function(t){ t.classList.remove('active'); });
   btn.classList.add('active');
   document.querySelectorAll('.tab-pane').forEach(function(t){ t.classList.remove('active'); });
   document.getElementById('tab-' + name).classList.add('active');
+  var fab = document.getElementById('fab-map');
+  if (fab) fab.style.display = name==='tour' ? 'flex' : 'none';
 }
 
 function openSheet(id)  { document.getElementById(id).classList.add('open'); }
@@ -2348,30 +2361,32 @@ function testAsJoiner() {
   alert('Viewing as "' + jName + '" (Pasahero). Use Group tab > Change Role to test permissions. Go Home to return as organizer.');
 }
 
-/* --- DRAGGABLE FAB --- */
+/* --- DRAGGABLE FAB (full screen) --- */
 function initDraggableFab() {
   var fab = document.getElementById('fab-map');
   if (!fab) return;
-  var dragging = false, startX, startY, origX, origY;
+  var startX, startY, origX, origY;
   fab.addEventListener('pointerdown', function(e) {
-    dragging = false;
-    startX = e.clientX; startY = e.clientY;
+    e.preventDefault();
     var rect = fab.getBoundingClientRect();
-    origX = rect.left; origY = rect.top;
+    // Switch to absolute positioning from fixed so we can drag freely
+    fab.style.left   = rect.left + 'px';
+    fab.style.top    = rect.top + 'px';
+    fab.style.right  = 'auto';
+    fab.style.bottom = 'auto';
+    startX = e.clientX; startY = e.clientY;
+    origX  = rect.left;  origY = rect.top;
     fab.setPointerCapture(e.pointerId);
     fab._dragMoved = false;
   });
   fab.addEventListener('pointermove', function(e) {
     var dx = e.clientX - startX, dy = e.clientY - startY;
-    if (!fab._dragMoved && Math.sqrt(dx*dx+dy*dy) < 6) return;
+    if (!fab._dragMoved && Math.sqrt(dx*dx+dy*dy) < 5) return;
     fab._dragMoved = true;
-    var nx = origX + dx, ny = origY + dy;
-    nx = Math.max(8, Math.min(window.innerWidth - fab.offsetWidth - 8, nx));
-    ny = Math.max(8, Math.min(window.innerHeight - fab.offsetHeight - 8, ny));
+    var nx = Math.max(8, Math.min(window.innerWidth  - fab.offsetWidth  - 8, origX + dx));
+    var ny = Math.max(8, Math.min(window.innerHeight - fab.offsetHeight - 8, origY + dy));
     fab.style.left = nx + 'px';
     fab.style.top  = ny + 'px';
-    fab.style.right = 'auto';
-    fab.style.bottom = 'auto';
   });
   fab.addEventListener('pointerup', function(e) {
     if (fab._dragMoved) e.preventDefault();
@@ -2381,3 +2396,36 @@ function initDraggableFab() {
   }, true);
 }
 document.addEventListener('DOMContentLoaded', initDraggableFab);
+
+/* --- MEMBER RENAME + SHARE --- */
+function renameMember(id, newName) {
+  newName = newName.trim();
+  if (!newName) return;
+  var m = MEMBERS.find(function(x){ return x.id===id; });
+  if (!m) return;
+  var old = m.name;
+  m.name = newName;
+  m.isGuest = false;
+  // Update expenses that referenced old name
+  EXPENSES.forEach(function(e){
+    if (e.paidBy===old) e.paidBy = newName;
+    (e.splits||[]).forEach(function(s){ if(s.name===old) s.name=newName; });
+  });
+  renderMembers();
+}
+
+function shareMemberLink(id) {
+  var m = MEMBERS.find(function(x){ return x.id===id; });
+  if (!m) return;
+  var link = 'lakbay.ph/trip/brc-3d-x9k2?join=' + encodeURIComponent(m.name) + '&role=' + (m.role||'guest');
+  if (navigator.share) {
+    navigator.share({title:'Join our trip!', text:'Hey '+m.name.split(' ')[0]+'! Join our trip on Lakwatsero.', url:'https://'+link});
+  } else {
+    var el = document.createElement('input');
+    el.value = 'https://'+link;
+    document.body.appendChild(el);
+    el.select(); document.execCommand('copy');
+    document.body.removeChild(el);
+    alert('Link copied for ' + m.name + '!\n\nhttps://' + link);
+  }
+}
