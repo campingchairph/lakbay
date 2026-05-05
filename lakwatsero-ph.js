@@ -1263,6 +1263,13 @@ function saveRoles() {
     var ri = ROLES[primary] || ROLES.guest; m.bg = ri.color; m.fg = ri.fg;
   }
   closeSheet('sh-role'); renderMembers();
+  // Re-render day panels so edit buttons reflect new roles immediately
+  if (m && m.name === myName()) {
+    S.tripDays.forEach(function(day, i) {
+      var p = document.getElementById('dp'+i);
+      if (p) renderDayPanel(p, day, i);
+    });
+  }
 }
 
 /* ─── MAP ─── */
@@ -2333,6 +2340,44 @@ function testAsJoiner() {
   S.isOwner = false;
   S.user = {name: jName};
   applyRoleUI();
+  S.tripDays.forEach(function(day, i) {
+    var p = document.getElementById('dp'+i);
+    if (p) renderDayPanel(p, day, i);
+  });
   switchTab('tour', document.querySelector('.tab-btn'));
   alert('Viewing as "' + jName + '" (Pasahero). Use Group tab > Change Role to test permissions. Go Home to return as organizer.');
 }
+
+/* --- DRAGGABLE FAB --- */
+function initDraggableFab() {
+  var fab = document.getElementById('fab-map');
+  if (!fab) return;
+  var dragging = false, startX, startY, origX, origY;
+  fab.addEventListener('pointerdown', function(e) {
+    dragging = false;
+    startX = e.clientX; startY = e.clientY;
+    var rect = fab.getBoundingClientRect();
+    origX = rect.left; origY = rect.top;
+    fab.setPointerCapture(e.pointerId);
+    fab._dragMoved = false;
+  });
+  fab.addEventListener('pointermove', function(e) {
+    var dx = e.clientX - startX, dy = e.clientY - startY;
+    if (!fab._dragMoved && Math.sqrt(dx*dx+dy*dy) < 6) return;
+    fab._dragMoved = true;
+    var nx = origX + dx, ny = origY + dy;
+    nx = Math.max(8, Math.min(window.innerWidth - fab.offsetWidth - 8, nx));
+    ny = Math.max(8, Math.min(window.innerHeight - fab.offsetHeight - 8, ny));
+    fab.style.left = nx + 'px';
+    fab.style.top  = ny + 'px';
+    fab.style.right = 'auto';
+    fab.style.bottom = 'auto';
+  });
+  fab.addEventListener('pointerup', function(e) {
+    if (fab._dragMoved) e.preventDefault();
+  });
+  fab.addEventListener('click', function(e) {
+    if (fab._dragMoved) { fab._dragMoved = false; e.stopImmediatePropagation(); }
+  }, true);
+}
+document.addEventListener('DOMContentLoaded', initDraggableFab);
