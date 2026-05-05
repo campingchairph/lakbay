@@ -243,10 +243,7 @@ function goTo(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   var fab = document.getElementById('fab-map');
-  if (fab) {
-    var hiddenOn = ['s-home','s-auth-landing','s-onboarding','s-wizard','s-join'];
-    fab.style.display = hiddenOn.indexOf(id) === -1 ? 'flex' : 'none';
-  }
+  if (fab) fab.style.display = 'none';  // switchTab controls it on s-app
 }
 
 /* ─── AUTH LANDING ─── */
@@ -533,6 +530,7 @@ function initWizard() {
 
 function renderWiz() {
   var s = S.wizStep;
+  if (s === 1) setTimeout(setDatePickerMin, 50);
   document.querySelectorAll('.wiz-panel').forEach(function(p,i){ p.classList.toggle('active', i===s); });
   document.querySelectorAll('.wdot').forEach(function(d,i){
     d.classList.toggle('done',   i < s);
@@ -622,7 +620,18 @@ function setBType(t) {
   onBudgetInput();
 }
 
+function setDatePickerMin() {
+  var el = document.getElementById('inp-startdate');
+  if (!el) return;
+  var today = new Date();
+  var yyyy = today.getFullYear();
+  var mm = String(today.getMonth()+1).padStart(2,'0');
+  var dd = String(today.getDate()).padStart(2,'0');
+  el.min = yyyy+'-'+mm+'-'+dd;
+}
+
 function onStartDateInput() {
+  setDatePickerMin();
   var v = document.getElementById('inp-startdate').value;
   S.tripStart = v || null;
   updateWizFooter();
@@ -1231,6 +1240,7 @@ function renderMembers() {
     } else if (S.isOwner && isUnnamed) {
       shareHtml = '<div style="font-size:10px;color:var(--earth-l);margin-top:4px;">✏️ Name this person to unlock their share link</div>';
     }
+    var canChange = S.isOwner && m.role !== 'owner';
     var rolesBadges = (m.roles && m.roles.length ? m.roles : [m.role || 'guest']).map(function(r) {
       var ri = ROLES[r] || ROLES.guest;
       return '<div class="member-role-badge" style="background:' + ri.color + '22;color:' + ri.color + ';display:inline-block;margin-right:3px;">' + ri.label + '</div>';
