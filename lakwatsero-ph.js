@@ -907,6 +907,11 @@ function applyRoleUI() {
   document.querySelectorAll('.tab-btn').forEach(function(btn) {
     if (btn.textContent.trim() === 'Group') btn.style.display = S.isOwner ? '' : 'none';
   });
+  var homeBtn = document.querySelector('#app-home-bar .home-bar-btn');
+  if (homeBtn) homeBtn.style.display = S.isOwner ? '' : 'none';
+  var viewerName = S.user && S.user.name ? S.user.name : 'Lakwatsero';
+  var barUser = document.getElementById('app-bar-user');
+  if (barUser) barUser.innerHTML = 'Hey, <strong>' + viewerName + '</strong> &#x1F44B;';
 }
 
 function renderBudgetStats() {
@@ -1210,7 +1215,13 @@ function renderMembers() {
       + '<div class="member-av" style="background:' + m.bg + ';color:' + m.fg + '">' + initials + '</div>'
       + '<div style="flex:1;min-width:0;">'
       + '<div class="member-nm">' + m.name + '</div>'
-      + '<div class="member-role-badge" style="background:' + roleInfo.color + '22;color:' + roleInfo.color + '">' + roleInfo.label + '</div>'
+      + (function(){
+          var roles = m.roles && m.roles.length ? m.roles : [m.role || 'guest'];
+          return roles.map(function(r){
+            var ri = ROLES[r] || ROLES.guest;
+            return '<div class="member-role-badge" style="background:'+ri.color+'22;color:'+ri.color+';display:inline-block;margin-right:3px;">'+ri.label+'</div>';
+          }).join('');
+        })()
       + (canChange ? '<button class="role-change-btn" onclick="openRoleSheet(\'' + m.id + '\')">Change role ↓</button>' : '')
       + '</div>'
       + '<div class="member-bal">'
